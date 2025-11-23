@@ -8,7 +8,11 @@ public class DBConnection {
 
     // --- CẤU HÌNH THÍ NGHIỆM ---
     // SQL Server (Windows Authentication) bỏ qua SSL warning
-    private static final String URL = "jdbc:sqlserver://LENOVO\\\\HUY123;databaseName=StudentManagementDB;integratedSecurity=true;encrypt=true;trustServerCertificate=true";
+    private static final String JDBC_URL = "jdbc:sqlserver://LENOVO\\HUY123:1433;"
+            + "databaseName=StudentManagementDB;"
+            + "integratedSecurity=true;"
+            + "encrypt=true;"
+            + "trustServerCertificate=true";
 
     static {
         try {
@@ -21,6 +25,6 @@ public class DBConnection {
 
     public static Connection getConnection() throws SQLException {
         // Dùng integratedSecurity=true nên không cần USER, PASS
-        return DriverManager.getConnection(URL);
+        return DriverManager.getConnection(JDBC_URL);
     }
 }

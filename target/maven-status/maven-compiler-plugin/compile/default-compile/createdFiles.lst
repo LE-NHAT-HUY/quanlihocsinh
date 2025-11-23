@@ -1,3 +1,9 @@
-com\quanlihocsinh\Controller\admin\HomeController.class
-com\quanlihocsinh\util\DBConnection.class
 com\quanlihocsinh\Controller\admin\DbTestController.class
+com\quanlihocsinh\Controller\admin\HomeController.class
+com\quanlihocsinh\dao\CohortDAO.class
+com\quanlihocsinh\model\AdminMenu.class
+com\quanlihocsinh\Controller\advice\AdminMenuAvice.class
+com\quanlihocsinh\Controller\admin\CohortController.class
+com\quanlihocsinh\dao\AdminMenuDAO.class
+com\quanlihocsinh\util\DBConnection.class
+com\quanlihocsinh\model\Cohort.class

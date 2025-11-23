@@ -17,6 +17,11 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>5.3.29</version> <!-- chọn phiên bản tương thích -->
+    </dependency>
     <!-- Servlet API -->
     <dependency>
       <groupId>javax.servlet</groupId>

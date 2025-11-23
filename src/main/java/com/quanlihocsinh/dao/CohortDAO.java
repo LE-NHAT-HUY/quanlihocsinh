@@ -1,0 +1,156 @@
+package com.quanlihocsinh.dao;
+
+import com.quanlihocsinh.model.Cohort;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CohortDAO {
+
+    private final String URL = "jdbc:sqlserver://LENOVO\\HUY123:1433;"
+            + "databaseName=StudentManagementDB;"
+            + "integratedSecurity=true;"
+            + "encrypt=true;"
+            + "trustServerCertificate=true";
+
+    private final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+
+    public CohortDAO() {
+        try {
+            Class.forName(DRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL);
+    }
+
+    // Lấy tất cả bản ghi
+    public List<Cohort> getAll() {
+        List<Cohort> list = new ArrayList<>();
+        String sql = "SELECT CohortID, CohortName, StartYear, EndYear, IsActive FROM dbo.tblCohort ORDER BY CohortID";
+
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Cohort c = new Cohort();
+                c.setCohortID(rs.getInt("CohortID"));
+                c.setCohortName(rs.getInt("CohortName"));
+                c.setStartYear(rs.getInt("StartYear"));
+                c.setEndYear(rs.getInt("EndYear"));
+                c.setIsActive(rs.getBoolean("IsActive"));
+                list.add(c);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // Lấy theo ID
+    public Cohort getById(int id) {
+        Cohort c = null;
+        String sql = "SELECT CohortID, CohortName, StartYear, EndYear, IsActive FROM dbo.tblCohort WHERE CohortID = ?";
+
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    c = new Cohort();
+                    c.setCohortID(rs.getInt("CohortID"));
+                    c.setCohortName(rs.getInt("CohortName"));
+                    c.setStartYear(rs.getInt("StartYear"));
+                    c.setEndYear(rs.getInt("EndYear"));
+                    c.setIsActive(rs.getBoolean("IsActive"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return c;
+    }
+
+    // Thêm mới bản ghi
+    public void add(Cohort c) {
+        String sql = "INSERT INTO dbo.tblCohort (CohortName, StartYear, EndYear, IsActive) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, c.getCohortName());
+            ps.setInt(2, c.getStartYear());
+            ps.setInt(3, c.getEndYear());
+            ps.setBoolean(4, c.getIsActive());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Cập nhật bản ghi
+    public void update(Cohort c) {
+        String sql = "UPDATE dbo.tblCohort SET CohortName=?, StartYear=?, EndYear=?, IsActive=? WHERE CohortID=?";
+
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, c.getCohortName());
+            ps.setInt(2, c.getStartYear());
+            ps.setInt(3, c.getEndYear());
+            ps.setBoolean(4, c.getIsActive());
+            ps.setInt(5, c.getCohortID());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Xóa bản ghi
+    public void delete(int id) {
+        String sql = "DELETE FROM dbo.tblCohort WHERE CohortID=?";
+
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Test kết nối DB
+    public void testConnection() {
+        String sql = "SELECT TOP 5 CohortID, CohortName, StartYear, EndYear, IsActive FROM dbo.tblCohort";
+
+        try (Connection conn = getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            System.out.println("Kết nối DB thành công!");
+            while (rs.next()) {
+                System.out.println(rs.getInt("CohortID") + " | " +
+                        rs.getInt("CohortName") + " | " +
+                        rs.getInt("StartYear") + " | " +
+                        rs.getInt("EndYear") + " | " +
+                        rs.getBoolean("IsActive"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

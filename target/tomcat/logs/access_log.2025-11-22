@@ -1,9 +1,0 @@
-0:0:0:0:0:0:0:1 - - [22/Nov/2025:19:04:50 +0700] "GET /quanlihocsinh/admin/dbtest HTTP/1.1" 200 481 http-bio-8080-exec-2 3052
-0:0:0:0:0:0:0:1 - - [22/Nov/2025:19:04:54 +0700] "GET /quanlihocsinh/admin/dbtest HTTP/1.1" 200 481 http-bio-8080-exec-3 2049
-0:0:0:0:0:0:0:1 - - [22/Nov/2025:19:05:34 +0700] "GET /quanlihocsinh/admin/dbtest HTTP/1.1" 200 481 http-bio-8080-exec-6 2036
-0:0:0:0:0:0:0:1 - - [22/Nov/2025:19:10:14 +0700] "GET /quanlihocsinh/admin/dbtest HTTP/1.1" 200 481 http-bio-8080-exec-9 2070
-0:0:0:0:0:0:0:1 - - [22/Nov/2025:19:10:19 +0700] "GET /quanlihocsinh/admin/dbtest HTTP/1.1" 200 481 http-bio-8080-exec-10 2046
-0:0:0:0:0:0:0:1 - - [22/Nov/2025:19:10:20 +0700] "GET /quanlihocsinh/ HTTP/1.1" 200 162 http-bio-8080-exec-2 132
-0:0:0:0:0:0:0:1 - - [22/Nov/2025:19:10:22 +0700] "GET /quanlihocsinh/admin/home HTTP/1.1" 200 121 http-bio-8080-exec-1 56
-0:0:0:0:0:0:0:1 - - [22/Nov/2025:19:10:29 +0700] "GET /quanlihocsinh/admin/dbtest HTTP/1.1" 200 481 http-bio-8080-exec-6 2032
-0:0:0:0:0:0:0:1 - - [22/Nov/2025:19:18:45 +0700] "GET /quanlihocsinh/admin/dbtest HTTP/1.1" 200 148 http-bio-8080-exec-2 702

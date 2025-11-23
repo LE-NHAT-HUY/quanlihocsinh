@@ -1,9 +1,7 @@
 package com.quanlihocsinh.Controller.admin;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,6 +26,26 @@ public class DbTestController extends HttpServlet {
         String message;
         try (Connection conn = DriverManager.getConnection(JDBC_URL)) {
             message = "DB Connection Successful!";
+
+            // Truy vấn dữ liệu từ tblCohort
+            String sql = "SELECT TOP 5 CohortID, CohortName, StartYear, EndYear, IsActive FROM tblCohort";
+            try (Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                System.out.println("----- Sample Data from tblCohort -----");
+                while (rs.next()) {
+                    int id = rs.getInt("CohortID");
+                    int name = rs.getInt("CohortName");
+                    int start = rs.getInt("StartYear");
+                    int end = rs.getInt("EndYear");
+                    boolean active = rs.getBoolean("IsActive");
+
+                    System.out.println("ID: " + id + ", Cohort: " + name +
+                            ", Start: " + start + ", End: " + end + ", Active: " + active);
+                }
+                System.out.println("-------------------------------------");
+            }
+
         } catch (SQLException e) {
             message = "DB Connection Failed! Error: " + e.getMessage();
             e.printStackTrace();
