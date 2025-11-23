@@ -1,35 +1,43 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.quanlihocsinh.model.Cohort" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
 
-<h2>Chỉnh sửa Niên khóa</h2>
-
-<form action="${pageContext.request.contextPath}/admin/cohort/edit" method="post">
-    <!-- Hidden field chứa ID -->
-    <input type="hidden" name="cohortID" value="${cohort.cohortID}" />
-
-    <div>
-        <label for="cohortName">Mã khóa:</label>
-        <input type="number" id="cohortName" name="cohortName" value="${cohort.cohortName}" required />
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h2>Chỉnh sửa niên khóa</h2>
     </div>
 
-    <div>
-        <label for="startYear">Năm vào:</label>
-        <input type="number" id="startYear" name="startYear" value="${cohort.startYear}" required />
-    </div>
-
-    <div>
-        <label for="endYear">Năm ra:</label>
-        <input type="number" id="endYear" name="endYear" value="${cohort.endYear}" required />
-    </div>
-
-    <div>
-        <label for="isActive">Hiển thị:</label>
-        <input type="checkbox" id="isActive" name="isActive"
-            <c:if test="${cohort.isActive}">checked</c:if> />
-    </div>
-
-    <div>
-        <button type="submit">Cập nhật</button>
-        <a href="${pageContext.request.contextPath}/admin/cohort/list">Hủy</a>
-    </div>
-</form>
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body mt-4">
+                        <form action="${pageContext.request.contextPath}/admin/cohort/edit" method="post">
+                            <input type="hidden" name="cohortID" value="${cohort.cohortID}" />
+                            
+                            <div class="mb-3">
+                                <label for="cohortName" class="form-label">Niên khóa</label>
+                                <input type="text" class="form-control" id="cohortName" name="cohortName" value="${cohort.cohortName}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="startYear" class="form-label">Năm vào</label>
+                                <input type="number" class="form-control" id="startYear" name="startYear" value="${cohort.startYear}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="endYear" class="form-label">Năm ra</label>
+                                <input type="number" class="form-control" id="endYear" name="endYear" value="${cohort.endYear}" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="isActive" name="isActive" ${cohort.isActive ? 'checked' : ''}>
+                                <label class="form-check-label" for="isActive">Hiển thị</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-pencil"></i> Cập nhật</button>
+                            <a href="${pageContext.request.contextPath}/admin/cohort/list" class="btn btn-secondary">Hủy</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

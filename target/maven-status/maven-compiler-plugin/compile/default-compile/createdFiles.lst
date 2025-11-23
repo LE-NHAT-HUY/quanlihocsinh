@@ -1,9 +1,15 @@
 com\quanlihocsinh\Controller\admin\DbTestController.class
+com\quanlihocsinh\Controller\admin\GradeController.class
 com\quanlihocsinh\Controller\admin\HomeController.class
-com\quanlihocsinh\dao\CohortDAO.class
 com\quanlihocsinh\model\AdminMenu.class
+com\quanlihocsinh\dao\ClassDAO.class
 com\quanlihocsinh\Controller\advice\AdminMenuAvice.class
 com\quanlihocsinh\Controller\admin\CohortController.class
-com\quanlihocsinh\dao\AdminMenuDAO.class
 com\quanlihocsinh\util\DBConnection.class
 com\quanlihocsinh\model\Cohort.class
+com\quanlihocsinh\model\tblClass.class
+com\quanlihocsinh\model\Grade.class
+com\quanlihocsinh\dao\CohortDAO.class
+com\quanlihocsinh\dao\GradeDAO.class
+com\quanlihocsinh\dao\AdminMenuDAO.class
+com\quanlihocsinh\Controller\admin\ClassController.class

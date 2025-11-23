@@ -1,14 +1,43 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<h2>Chỉnh sửa Cohort</h2>
-<form:form method="post" modelAttribute="cohort">
-    <form:hidden path="cohortID"/>
-    <label>CohortName:</label>
-    <form:input path="cohortName"/><br/>
-    <label>StartYear:</label>
-    <form:input path="startYear"/><br/>
-    <label>EndYear:</label>
-    <form:input path="endYear"/><br/>
-    <label>IsActive:</label>
-    <form:checkbox path="isActive"/><br/>
-    <input type="submit" value="Update"/>
-</form:form>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.quanlihocsinh.model.Cohort" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h2>Chỉnh sửa niên khóa</h2>
+    </div>
+
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body mt-4">
+                        <form action="${pageContext.request.contextPath}/admin/cohort/edit" method="post">
+                            <input type="hidden" name="cohortID" value="${cohort.cohortID}" />
+                            
+                            <div class="mb-3">
+                                <label for="cohortName" class="form-label">Niên khóa</label>
+                                <input type="text" class="form-control" id="cohortName" name="cohortName" value="${cohort.cohortName}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="startYear" class="form-label">Năm vào</label>
+                                <input type="number" class="form-control" id="startYear" name="startYear" value="${cohort.startYear}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="endYear" class="form-label">Năm ra</label>
+                                <input type="number" class="form-control" id="endYear" name="endYear" value="${cohort.endYear}" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="isActive" name="isActive" ${cohort.isActive ? 'checked' : ''}>
+                                <label class="form-check-label" for="isActive">Hiển thị</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-pencil"></i> Cập nhật</button>
+                            <a href="${pageContext.request.contextPath}/admin/cohort/list" class="btn btn-secondary">Hủy</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
