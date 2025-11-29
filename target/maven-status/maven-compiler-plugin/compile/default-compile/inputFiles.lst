@@ -4,6 +4,7 @@ C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controlle
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\admin\GradeController.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\admin\HomeController.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\admin\MenuController.java
+C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\admin\SubjectController.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\admin\YearSemesterController.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\advice\AdminMenuAvice.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\AdminMenuDAO.java
@@ -11,11 +12,13 @@ C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\Class
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\CohortDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\GradeDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\MenuDAO.java
+C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\SubjectDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\YearSemesterDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\AdminMenu.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Cohort.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Grade.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\menu.java
+C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Subject.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\tblClass.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\YearSemester.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\util\DBConnection.java

@@ -4,7 +4,9 @@ com\quanlihocsinh\Controller\admin\GradeController.class
 com\quanlihocsinh\model\YearSemester.class
 com\quanlihocsinh\Controller\admin\HomeController.class
 com\quanlihocsinh\model\AdminMenu.class
+com\quanlihocsinh\model\Subject.class
 com\quanlihocsinh\dao\ClassDAO.class
+com\quanlihocsinh\Controller\admin\SubjectController.class
 com\quanlihocsinh\Controller\advice\AdminMenuAvice.class
 com\quanlihocsinh\dao\MenuDAO.class
 com\quanlihocsinh\model\menu.class
@@ -16,6 +18,7 @@ com\quanlihocsinh\Controller\admin\MenuController.class
 com\quanlihocsinh\model\Grade.class
 com\quanlihocsinh\Controller\admin\YearSemesterController.class
 com\quanlihocsinh\dao\CohortDAO.class
+com\quanlihocsinh\dao\SubjectDAO.class
 com\quanlihocsinh\dao\GradeDAO.class
 com\quanlihocsinh\dao\AdminMenuDAO.class
 com\quanlihocsinh\Controller\admin\ClassController.class

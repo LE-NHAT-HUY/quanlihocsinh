@@ -1,12 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="com.quanlihocsinh.model.menu" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
 
 <main id="main" class="main">
     <div class="pagetitle">
         <h2>Danh sách Menu</h2>
-        <a href="${pageContext.request.contextPath}/admin/menu/add" class="btn btn-success mb-2">
+        <a href="${pageContext.request.contextPath}/admin/menu?action=add" class="btn btn-success mb-2">
             <i class="bi bi-plus-circle"></i> Thêm mới
         </a>
     </div>
@@ -48,20 +47,18 @@
                                         <td class="text-center">${item.position}</td>
 
                                         <td class="text-center">
-                                            <form action="${pageContext.request.contextPath}/admin/menu/toggleStatus" method="post">
+                                            <form action="${pageContext.request.contextPath}/admin/menu" method="post">
+                                                <input type="hidden" name="action" value="toggleStatus" />
                                                 <input type="hidden" name="id" value="${item.menuID}" />
-                                                <input type="checkbox" name="isActive" ${item.isActive ? 'checked' : ''} onchange="this.form.submit()" />
+                                                <input type="checkbox" name="isActive" ${item.isActive ? "checked" : ""} onchange="this.form.submit()" />
                                             </form>
                                         </td>
 
                                         <td class="text-center">
-                                            <a href="${pageContext.request.contextPath}/admin/menu/edit?id=${item.menuID}"
-                                               class="btn btn-primary btn-sm">
+                                            <a href="${pageContext.request.contextPath}/admin/menu?action=edit&id=${item.menuID}" class="btn btn-primary btn-sm">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-
-                                            <a href="${pageContext.request.contextPath}/admin/menu/delete?id=${item.menuID}"
-                                               class="btn btn-danger btn-sm"
+                                            <a href="${pageContext.request.contextPath}/admin/menu?action=delete&id=${item.menuID}" class="btn btn-danger btn-sm"
                                                onclick="return confirm('Bạn có chắc muốn xóa menu này không?');">
                                                 <i class="bi bi-trash"></i>
                                             </a>
@@ -72,8 +69,22 @@
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 </main>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.datatable').DataTable({
+        "pageLength": 10,
+        "lengthMenu": [5,10,25,50,100],
+        "order": [],
+        "columnDefs": [ { "orderable": false, "targets": [9,10] } ]
+    });
+});
+</script>
