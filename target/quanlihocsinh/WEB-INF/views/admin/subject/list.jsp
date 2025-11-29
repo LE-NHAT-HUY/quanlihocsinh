@@ -4,8 +4,8 @@
 
 <main id="main" class="main">
     <div class="pagetitle">
-        <h2>Danh sách Giáo viên</h2>
-        <a href="${pageContext.request.contextPath}/admin/teacher?action=add" class="btn btn-success mb-2">
+        <h2>Danh sách Môn học</h2>
+        <a href="${pageContext.request.contextPath}/admin/subject?action=add" class="btn btn-success mb-2">
             <i class="bi bi-plus-circle"></i> Thêm mới
         </a>
     </div>
@@ -20,42 +20,40 @@
                                 <tr>
                                     <th class="text-center">STT</th>
                                     <th class="text-center">ID</th>
-                                    <th class="text-center">Mã GV</th>
-                                    <th class="text-center">Họ tên</th>
-                                    <th class="text-center">Ngày sinh</th>
-                                    <th class="text-center">Giới tính</th>
-                                    <th class="text-center">Địa chỉ</th>
-                                    <th class="text-center">Trạng thái</th>
+                                    <th class="text-center">Tên môn học</th>
+                                    <th class="text-center">Số tiết</th>
+                                    <th class="text-center">Học kỳ</th>
+                                    <th class="text-center">Phòng ban</th>
+                                    <th class="text-center">Hiển thị</th>
                                     <th class="text-center">Chức năng</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <c:set var="stt" value="0"/>
-                                <c:forEach var="teacher" items="${listTeacher}">
+                                <c:forEach var="item" items="${subjects}">
                                     <c:set var="stt" value="${stt + 1}" />
                                     <tr>
                                         <td class="text-center">${stt}</td>
-                                        <td class="text-center">${teacher.id}</td>
-                                        <td class="text-center">${teacher.teacherID}</td>
-                                        <td class="text-center">${teacher.fullName}</td>
-                                        <td class="text-center">${teacher.birth}</td>
-                                        <td class="text-center">${teacher.gender}</td>
-                                        <td class="text-center">${teacher.address}</td>
+                                        <td class="text-center">${item.subjectID}</td>
+                                        <td class="text-center">${item.subjectName}</td>
+                                        <td class="text-center">${item.numberOfLesson}</td>
+                                        <td class="text-center">${item.semester}</td>
+                                        <td class="text-center">${item.departmentID}</td>
 
                                         <td class="text-center">
-                                            <form action="${pageContext.request.contextPath}/admin/teacher" method="post">
-                                                <input type="hidden" name="action" value="toggle"/>
-                                                <input type="hidden" name="id" value="${teacher.id}" />
-                                                <input type="checkbox" name="isActive" ${teacher.isActive ? "checked" : ""} onchange="this.form.submit()" />
+                                            <form action="${pageContext.request.contextPath}/admin/subject" method="post">
+                                                <input type="hidden" name="action" value="toggleStatus" />
+                                                <input type="hidden" name="id" value="${item.subjectID}" />
+                                                <input type="checkbox" name="isActive" ${item.isActive ? "checked" : ""} onchange="this.form.submit()" />
                                             </form>
                                         </td>
 
                                         <td class="text-center">
-                                            <a href="${pageContext.request.contextPath}/admin/teacher?action=edit&id=${teacher.id}" class="btn btn-primary btn-sm">
+                                            <a href="${pageContext.request.contextPath}/admin/subject?action=edit&id=${item.subjectID}" class="btn btn-primary btn-sm">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <a href="${pageContext.request.contextPath}/admin/teacher?action=delete&id=${teacher.id}" class="btn btn-danger btn-sm"
-                                               onclick="return confirm('Bạn có chắc muốn xóa giáo viên này không?');">
+                                            <a href="${pageContext.request.contextPath}/admin/subject?action=delete&id=${item.subjectID}" class="btn btn-danger btn-sm"
+                                               onclick="return confirm('Bạn có chắc muốn xóa môn học này không?');">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                         </td>
@@ -80,7 +78,7 @@ $(document).ready(function() {
         "pageLength": 10,
         "lengthMenu": [5,10,25,50,100],
         "order": [],
-        "columnDefs": [ { "orderable": false, "targets": [7,8] } ]
+        "columnDefs": [ { "orderable": false, "targets": [6,7] } ]
     });
 });
 </script>

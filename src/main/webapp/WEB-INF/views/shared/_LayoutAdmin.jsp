@@ -378,6 +378,31 @@
     </ul>
 </li>
 
+  <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#student-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-person-vcard"></i>
+          <span>Quản lý Học sinh</span>
+          <i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+
+      <ul id="student-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li>
+              <a href="${pageContext.request.contextPath}/admin/student?action=add">
+                  <i class="bi bi-circle"></i>
+                  <span>Thêm mới học sinh</span>
+              </a>
+          </li>
+
+          <li>
+              <a href="${pageContext.request.contextPath}/admin/student?action=list">
+                  <i class="bi bi-circle"></i>
+                  <span>Danh sách học sinh</span>
+              </a>
+          </li>
+      </ul>
+  </li>
+
+
 <!-- Quản lý Giáo viên -->
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#teacher-nav" data-bs-toggle="collapse" href="#">

@@ -25,7 +25,7 @@
                                     <th class="text-center">Ngày sinh</th>
                                     <th class="text-center">Giới tính</th>
                                     <th class="text-center">Địa chỉ</th>
-                                    <th class="text-center">Trạng thái</th>
+                                    <th class="text-center">Hoạt động</th>
                                     <th class="text-center">Chức năng</th>
                                 </tr>
                             </thead>
@@ -38,22 +38,16 @@
                                         <td class="text-center">${teacher.id}</td>
                                         <td class="text-center">${teacher.teacherID}</td>
                                         <td class="text-center">${teacher.fullName}</td>
-                                        <td class="text-center">
-                                            <c:if test="${not empty teacher.birth}">
-                                                <fmt:formatDate value="${teacher.birth}" pattern="yyyy-MM-dd"/>
-                                            </c:if>
-                                        </td>
+                                        <td class="text-center">${teacher.birth}</td>
                                         <td class="text-center">${teacher.gender}</td>
                                         <td class="text-center">${teacher.address}</td>
-
                                         <td class="text-center">
-                                            <form action="${pageContext.request.contextPath}/admin/teacher" method="post">
+                                            <form action="${pageContext.request.contextPath}/admin/teacher" method="get">
                                                 <input type="hidden" name="action" value="toggleStatus"/>
                                                 <input type="hidden" name="id" value="${teacher.id}" />
-                                                <input type="checkbox" name="isActive" ${teacher.isActive ? "checked" : ""} onchange="this.form.submit()" />
+                                                <input type="checkbox" name="isActive" ${teacher.isActive ? "checked" : ""} onchange="this.form.submit()"/>
                                             </form>
                                         </td>
-
                                         <td class="text-center">
                                             <a href="${pageContext.request.contextPath}/admin/teacher?action=edit&id=${teacher.id}" class="btn btn-primary btn-sm">
                                                 <i class="bi bi-pencil"></i>

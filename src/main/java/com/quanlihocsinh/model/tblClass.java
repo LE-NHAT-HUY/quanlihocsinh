@@ -4,7 +4,7 @@ public class tblClass {
     private int classID;
     private String className;
     private int gradeID;
-    private Integer cohortID; // có thể null
+    private Integer cohortID;
     private int maxStudents;
     private int currentStudents;
     private String schoolYear;

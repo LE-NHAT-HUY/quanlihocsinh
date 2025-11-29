@@ -1,62 +1,54 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
-<%@ page import="com.quanlihocsinh.model.tblClass" %>
+
 <main id="main" class="main">
-    <div class="pagetitle">
-        <h2>Chỉnh sửa lớp học</h2>
-    </div>
+  <div class="pagetitle">
+    <h2>Sửa thông tin Lớp</h2>
+    <a href="${pageContext.request.contextPath}/admin/class?action=list" class="btn btn-secondary">Quay lại</a>
+  </div>
 
-    <section class="section">
-        <form action="${pageContext.request.contextPath}/admin/class/edit" method="post">
-            <!-- ID lớp học -->
-            <input type="hidden" name="classID" value="${classObj.classID}" />
+  <section class="section mt-3">
+    <form action="${pageContext.request.contextPath}/admin/class" method="post">
+      <input type="hidden" name="action" value="edit" />
+      <input type="hidden" name="id" value="${classItem.classID}" />
 
-            <!-- Tên lớp -->
-            <div class="mb-3">
-                <label for="className" class="form-label">Tên lớp</label>
-                <input type="text" class="form-control" id="className" name="className" value="${classObj.className}" required />
-            </div>
+      <div class="mb-3">
+        <label class="form-label">Tên lớp</label>
+        <input type="text" name="className" class="form-control" value="${classItem.className}" required />
+      </div>
 
-                        <div class="mb-3">
-                    <label for="gradeID">Khối</label>
-                    <select id="gradeID" name="gradeID" class="form-control">
-                        <c:forEach var="g" items="${grades}">
-                            <option value="${g.gradeID}">${g.gradeName}</option>
-                        </c:forEach>
-                    </select>
-                </div>
+      <div class="mb-3">
+        <label class="form-label">Khối (GradeID)</label>
+        <input type="number" name="gradeID" class="form-control" value="${classItem.gradeID}" required />
+      </div>
 
-                <div class="mb-3">
-                    <label for="cohortID">Khóa học</label>
-                    <select id="cohortID" name="cohortID" class="form-control">
-                        <c:forEach var="c" items="${cohorts}">
-                            <option value="${c.cohortID}">${c.cohortName}</option>
-                        </c:forEach>
-                    </select>
-                </div>
+      <div class="mb-3">
+        <label class="form-label">Khóa (CohortID)</label>
+        <input type="number" name="cohortID" class="form-control" value="${classItem.cohortID}" />
+      </div>
 
+      <div class="mb-3">
+        <label class="form-label">Số tối đa</label>
+        <input type="number" name="maxStudents" class="form-control" value="${classItem.maxStudents}" />
+      </div>
 
-            <!-- Sĩ số tối đa -->
-            <div class="mb-3">
-                <label for="maxStudents" class="form-label">Sĩ số tối đa</label>
-                <input type="number" class="form-control" id="maxStudents" name="maxStudents" value="${classObj.maxStudents}" required />
-            </div>
+      <div class="mb-3">
+        <label class="form-label">Số hiện tại</label>
+        <input type="number" name="currentStudents" class="form-control" value="${classItem.currentStudents}" />
+      </div>
 
-            <!-- Sĩ số hiện tại (readonly) -->
-            <div class="mb-3">
-                <label for="currentStudents" class="form-label">Sĩ số hiện tại</label>
-                <input type="number" class="form-control" id="currentStudents" name="currentStudents" value="${classObj.currentStudents}" readonly />
-            </div>
+      <div class="mb-3">
+        <label class="form-label">Niên khóa</label>
+        <input type="text" name="schoolYear" class="form-control" value="${classItem.schoolYear}" />
+      </div>
 
-            <!-- Hiển thị -->
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="isActive" name="isActive" ${classObj.isActive ? 'checked' : ''} />
-                <label class="form-check-label" for="isActive">Hiển thị</label>
-            </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" name="isActive" class="form-check-input" id="isActive" <c:if test="${classItem.active}">checked</c:if>/>
+        <label class="form-check-label" for="isActive">Hoạt động</label>
+      </div>
 
-            <!-- Nút Lưu và Hủy -->
-            <button type="submit" class="btn btn-primary">Cập nhật</button>
-            <a href="${pageContext.request.contextPath}/admin/class/list" class="btn btn-secondary">Hủy</a>
-        </form>
-    </section>
+      <button type="submit" class="btn btn-primary">Cập nhật</button>
+    </form>
+  </section>
 </main>
