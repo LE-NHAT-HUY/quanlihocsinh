@@ -1,27 +1,53 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
-<%@ page import="com.quanlihocsinh.model.tblClass" %>
-<main id="main" class="main">
-    <div class="pagetitle">
-        <h2>Thêm lớp học mới</h2>
-    </div>
 
-    <section class="section">
-        <form action="${pageContext.request.contextPath}/admin/class/add" method="post">
-            <div class="mb-3">
-                <label for="className" class="form-label">Tên lớp</label>
-                <input type="text" class="form-control" id="className" name="className" required />
-            </div>
-            <div class="mb-3">
-                <label for="maxStudents" class="form-label">Sĩ số tối đa</label>
-                <input type="number" class="form-control" id="maxStudents" name="maxStudents" required />
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="isActive" name="isActive" checked />
-                <label class="form-check-label" for="isActive">Hiển thị</label>
-            </div>
-            <button type="submit" class="btn btn-success">Thêm mới</button>
-            <a href="${pageContext.request.contextPath}/admin/class/list" class="btn btn-secondary">Hủy</a>
-        </form>
-    </section>
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h2>Thêm lớp mới</h2>
+    <a href="${pageContext.request.contextPath}/admin/class?action=list" class="btn btn-secondary">Quay lại</a>
+  </div>
+
+  <section class="section mt-3">
+    <form action="${pageContext.request.contextPath}/admin/class" method="post">
+      <input type="hidden" name="action" value="add" />
+
+      <div class="mb-3">
+        <label class="form-label">Tên lớp</label>
+        <input type="text" name="className" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Khối (GradeID)</label>
+        <input type="number" name="gradeID" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Khóa (CohortID)</label>
+        <input type="number" name="cohortID" class="form-control" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Số tối đa</label>
+        <input type="number" name="maxStudents" class="form-control" value="30" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Số hiện tại</label>
+        <input type="number" name="currentStudents" class="form-control" value="0" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Niên khóa (ví dụ: 2024-2025)</label>
+        <input type="text" name="schoolYear" class="form-control" />
+      </div>
+
+      <div class="mb-3 form-check">
+        <input type="checkbox" name="isActive" class="form-check-input" id="isActive" checked />
+        <label class="form-check-label" for="isActive">Hoạt động</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Thêm</button>
+    </form>
+  </section>
 </main>

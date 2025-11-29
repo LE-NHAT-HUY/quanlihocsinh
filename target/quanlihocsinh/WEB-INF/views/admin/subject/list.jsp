@@ -1,46 +1,86 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
 
-<main class="main">
+<main id="main" class="main">
     <div class="pagetitle">
-        <h2>Danh sách Môn học</h2>
-        <a href="add" class="btn btn-primary">Thêm môn học mới</a>
+        <h2>Danh sách Giáo viên</h2>
+        <a href="${pageContext.request.contextPath}/admin/teacher?action=add" class="btn btn-success mb-2">
+            <i class="bi bi-plus-circle"></i> Thêm mới
+        </a>
     </div>
 
-    <table class="table table-bordered table-hover mt-3">
-        <thead class="table-light">
-            <tr>
-                <th>ID</th>
-                <th>Tên môn</th>
-                <th>Số tiết</th>
-                <th>Học kỳ</th>
-                <th>Trạng thái</th>
-                <th>Phòng ban</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="subject" items="${subjectList}">
-                <tr>
-                    <td>${subject.subjectID}</td>
-                    <td>${subject.subjectName}</td>
-                    <td>${subject.numberOfLesson}</td>
-                    <td>${subject.semester}</td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${subject.isActive}">Hoạt động</c:when>
-                            <c:otherwise>Không hoạt động</c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>${subject.departmentID}</td>
-                    <td>
-                        <a href="edit?id=${subject.subjectID}" class="btn btn-warning btn-sm">Sửa</a>
-                        <a href="delete?id=${subject.subjectID}" class="btn btn-danger btn-sm"
-                           onclick="return confirm('Bạn có chắc muốn xóa môn học này?');">Xóa</a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body mt-4">
+                        <table class="table table-borderless datatable">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">STT</th>
+                                    <th class="text-center">ID</th>
+                                    <th class="text-center">Mã GV</th>
+                                    <th class="text-center">Họ tên</th>
+                                    <th class="text-center">Ngày sinh</th>
+                                    <th class="text-center">Giới tính</th>
+                                    <th class="text-center">Địa chỉ</th>
+                                    <th class="text-center">Trạng thái</th>
+                                    <th class="text-center">Chức năng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:set var="stt" value="0"/>
+                                <c:forEach var="teacher" items="${listTeacher}">
+                                    <c:set var="stt" value="${stt + 1}" />
+                                    <tr>
+                                        <td class="text-center">${stt}</td>
+                                        <td class="text-center">${teacher.id}</td>
+                                        <td class="text-center">${teacher.teacherID}</td>
+                                        <td class="text-center">${teacher.fullName}</td>
+                                        <td class="text-center">${teacher.birth}</td>
+                                        <td class="text-center">${teacher.gender}</td>
+                                        <td class="text-center">${teacher.address}</td>
+
+                                        <td class="text-center">
+                                            <form action="${pageContext.request.contextPath}/admin/teacher" method="post">
+                                                <input type="hidden" name="action" value="toggle"/>
+                                                <input type="hidden" name="id" value="${teacher.id}" />
+                                                <input type="checkbox" name="isActive" ${teacher.isActive ? "checked" : ""} onchange="this.form.submit()" />
+                                            </form>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <a href="${pageContext.request.contextPath}/admin/teacher?action=edit&id=${teacher.id}" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/admin/teacher?action=delete&id=${teacher.id}" class="btn btn-danger btn-sm"
+                                               onclick="return confirm('Bạn có chắc muốn xóa giáo viên này không?');">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.datatable').DataTable({
+        "pageLength": 10,
+        "lengthMenu": [5,10,25,50,100],
+        "order": [],
+        "columnDefs": [ { "orderable": false, "targets": [7,8] } ]
+    });
+});
+</script>

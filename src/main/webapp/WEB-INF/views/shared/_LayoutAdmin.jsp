@@ -274,28 +274,29 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
       
-     <li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#cohort-nav" data-bs-toggle="collapse" href="#">
+     <!-- Quản lý Menu -->
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-grid"></i>
         <span>Quản Lí Menu</span>
         <i class="bi bi-chevron-down ms-auto"></i>
     </a>
-    <ul id="cohort-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+    <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
-            <a href="${pageContext.request.contextPath}/admin/cohort/add">
+            <a href="${pageContext.request.contextPath}/admin/menu?action=add">
                 <i class="bi bi-circle"></i><span>Thêm mới Menu</span>
             </a>
         </li>
-         <li>
-            <a href="${pageContext.request.contextPath}/admin/cohort/list">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/menu?action=list">
                 <i class="bi bi-circle"></i><span>Danh sách Menu</span>
             </a>
         </li>
     </ul>
 </li>
-<!--end quản lí menu-->
 
-      <li class="nav-item">
+<!-- Quản lý Khối -->
+<li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#grade-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-journal-text"></i>
         <span>Quản Lí Khối</span>
@@ -303,20 +304,20 @@
     </a>
     <ul id="grade-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
-            <a href="${pageContext.request.contextPath}/admin/grade/add">
+            <a href="${pageContext.request.contextPath}/admin/grade?action=add">
                 <i class="bi bi-circle"></i><span>Thêm mới Khối</span>
             </a>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/admin/grade/list">
+            <a href="${pageContext.request.contextPath}/admin/grade?action=list">
                 <i class="bi bi-circle"></i><span>Danh sách Khối</span>
             </a>
         </li>
     </ul>
 </li>
-<!-- Quản Lí Lớp -->
 
-     <li class="nav-item">
+<!-- Quản lý Khóa Học -->
+<li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#cohort-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-layers"></i>
         <span>Quản Lí Khóa Học</span>
@@ -324,115 +325,100 @@
     </a>
     <ul id="cohort-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
-            <a href="${pageContext.request.contextPath}/admin/cohort/add">
+            <a href="${pageContext.request.contextPath}/admin/cohort?action=add">
                 <i class="bi bi-circle"></i><span>Thêm mới Khóa Học</span>
             </a>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/admin/cohort/list">
+            <a href="${pageContext.request.contextPath}/admin/cohort?action=list">
                 <i class="bi bi-circle"></i><span>Danh sách Khóa Học</span>
             </a>
         </li>
     </ul>
 </li>
-<!-- End Quản Lí Khối Lớp-->
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bar-chart"></i><span>Charts</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="charts-chartjs.html">
-              <i class="bi bi-circle"></i><span>Chart.js</span>
+<!-- Quản lý Môn học -->
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#subject-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-grid"></i>
+        <span>Quản lý môn học</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="subject-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/subject?action=add">
+                <i class="bi bi-circle"></i><span>Thêm mới môn học</span>
             </a>
-          </li>
-          <li>
-            <a href="charts-apexcharts.html">
-              <i class="bi bi-circle"></i><span>ApexCharts</span>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/subject?action=list">
+                <i class="bi bi-circle"></i><span>Danh sách môn học</span>
             </a>
-          </li>
-          <li>
-            <a href="charts-echarts.html">
-              <i class="bi bi-circle"></i><span>ECharts</span>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#class-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-building"></i>
+        <span>Quản lý Lớp</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="class-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/class?action=add">
+                <i class="bi bi-circle"></i><span>Thêm mới lớp</span>
             </a>
-          </li>
-        </ul>
-      </li><!-- End Charts Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-gem"></i><span>Icons</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="icons-bootstrap.html">
-              <i class="bi bi-circle"></i><span>Bootstrap Icons</span>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/class?action=list">
+                <i class="bi bi-circle"></i><span>Danh sách lớp</span>
             </a>
-          </li>
-          <li>
-            <a href="icons-remix.html">
-              <i class="bi bi-circle"></i><span>Remix Icons</span>
+        </li>
+    </ul>
+</li>
+
+<!-- Quản lý Giáo viên -->
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#teacher-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-people"></i>
+        <span>Quản lý giáo viên</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="teacher-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/teacher?action=add">
+                <i class="bi bi-circle"></i><span>Thêm mới giáo viên</span>
             </a>
-          </li>
-          <li>
-            <a href="icons-boxicons.html">
-              <i class="bi bi-circle"></i><span>Boxicons</span>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/teacher?action=list">
+                <i class="bi bi-circle"></i><span>Danh sách giáo viên</span>
             </a>
-          </li>
-        </ul>
-      </li><!-- End Icons Nav -->
+        </li>
+    </ul>
+</li>
 
-      <li class="nav-heading">Pages</li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-faq.html">
-          <i class="bi bi-question-circle"></i>
-          <span>F.A.Q</span>
-        </a>
-      </li><!-- End F.A.Q Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-contact.html">
-          <i class="bi bi-envelope"></i>
-          <span>Contact</span>
-        </a>
-      </li><!-- End Contact Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
-          <i class="bi bi-card-list"></i>
-          <span>Register</span>
-        </a>
-      </li><!-- End Register Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-login.html">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span>Login</span>
-        </a>
-      </li><!-- End Login Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-error-404.html">
-          <i class="bi bi-dash-circle"></i>
-          <span>Error 404</span>
-        </a>
-      </li><!-- End Error 404 Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
-          <i class="bi bi-file-earmark"></i>
-          <span>Blank</span>
-        </a>
-      </li><!-- End Blank Page Nav -->
+<!-- Quản lý Năm học – Học kỳ -->
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#yearsemester-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-calendar"></i>
+        <span>Quản lý Năm học – Học kỳ</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="yearsemester-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/yearsemester?action=add">
+                <i class="bi bi-circle"></i><span>Thêm mới năm học – học kỳ</span>
+            </a>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/yearsemester?action=list">
+                <i class="bi bi-circle"></i><span>Danh sách năm học – học kỳ</span>
+            </a>
+        </li>
+    </ul>
+</li>
 
     </ul>
   </aside><!-- End Sidebar-->
