@@ -1,10 +1,14 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
 <%@ page import="com.quanlihocsinh.model.tblClass" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
+
 <main id="main" class="main">
     <div class="pagetitle">
         <h2>Danh sách lớp học</h2>
+        <a href="${pageContext.request.contextPath}/admin/class/add" class="btn btn-success mb-2">
+            <i class="bi bi-plus-circle"></i> Thêm lớp mới
+        </a>
     </div>
 
     <section class="section dashboard">
@@ -12,7 +16,6 @@
             <div class="col-12">
                 <div class="card recent-sales overflow-auto">
                     <div class="card-body mt-4">
-                        <a href="${pageContext.request.contextPath}/admin/class/add" class="btn btn-success mb-3">Thêm lớp mới</a>
                         <table class="table table-borderless datatable">
                             <thead>
                                 <tr>
@@ -44,8 +47,13 @@
                                             </form>
                                         </td>
                                         <td class="text-center">
-                                            <a href="${pageContext.request.contextPath}/admin/class/edit?id=${cls.classID}" class="btn btn-primary btn-sm"><i class="bi bi-pencil"></i></a>
-                                            <a href="${pageContext.request.contextPath}/admin/class/delete?id=${cls.classID}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa lớp này không?');"><i class="bi bi-trash"></i></a>
+                                            <a href="${pageContext.request.contextPath}/admin/class/edit?id=${cls.classID}" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/admin/class/delete?id=${cls.classID}" class="btn btn-danger btn-sm" 
+                                               onclick="return confirm('Bạn có chắc muốn xóa lớp này không?');">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </c:forEach>

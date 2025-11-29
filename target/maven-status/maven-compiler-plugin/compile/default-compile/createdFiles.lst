@@ -6,10 +6,13 @@ com\quanlihocsinh\Controller\admin\HomeController.class
 com\quanlihocsinh\model\AdminMenu.class
 com\quanlihocsinh\dao\ClassDAO.class
 com\quanlihocsinh\Controller\advice\AdminMenuAvice.class
+com\quanlihocsinh\dao\MenuDAO.class
+com\quanlihocsinh\model\menu.class
 com\quanlihocsinh\Controller\admin\CohortController.class
 com\quanlihocsinh\util\DBConnection.class
 com\quanlihocsinh\model\Cohort.class
 com\quanlihocsinh\model\tblClass.class
+com\quanlihocsinh\Controller\admin\MenuController.class
 com\quanlihocsinh\model\Grade.class
 com\quanlihocsinh\Controller\admin\YearSemesterController.class
 com\quanlihocsinh\dao\CohortDAO.class
