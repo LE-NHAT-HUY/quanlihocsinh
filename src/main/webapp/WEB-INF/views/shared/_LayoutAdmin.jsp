@@ -444,6 +444,40 @@
         </li>
     </ul>
 </li>
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#schedule-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-calendar2-week"></i>
+        <span>Quản lý Thời khóa biểu</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="schedule-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/schedule?action=add">
+                <i class="bi bi-circle"></i><span>Thêm mới thời khóa biểu</span>
+            </a>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/schedule?action=list">
+                <i class="bi bi-circle"></i><span>Danh sách thời khóa biểu</span>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#role-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-person-check"></i>
+        <span>Quản lý Phân quyền</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="role-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/assign-role">
+                <i class="bi bi-circle"></i><span>Danh sách người dùng</span>
+            </a>
+        </li>
+    </ul>
+</li>
 
     </ul>
   </aside><!-- End Sidebar-->

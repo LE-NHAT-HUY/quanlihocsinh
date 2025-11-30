@@ -17,23 +17,23 @@
                             <input type="hidden" name="action" value="add" />
 
                             <div class="mb-3">
-                                <label>SemesterID</label>
+                                <label>Học kỳ</label>
                                 <input type="number" name="semesterID" class="form-control" required />
                             </div>
                             <div class="mb-3">
-                                <label>ClassID</label>
+                                <label>Lớp</label>
                                 <input type="number" name="classID" class="form-control" required />
                             </div>
                             <div class="mb-3">
-                                <label>SubjectID</label>
+                                <label>Môn học</label>
                                 <input type="number" name="subjectID" class="form-control" required />
                             </div>
                             <div class="mb-3">
-                                <label>TeacherID</label>
+                                <label>Giáo viên</label>
                                 <input type="text" name="teacherID" class="form-control" required />
                             </div>
                             <div class="mb-3">
-                                <label>Notes</label>
+                                <label>Ghi chú</label>
                                 <textarea name="notes" class="form-control"></textarea>
                             </div>
                             <div class="mb-3 form-check">
@@ -41,29 +41,30 @@
                                 <label class="form-check-label">Kích hoạt</label>
                             </div>
                             <div class="mb-3">
-                                <label>StartDate</label>
+                                <label>Ngày bắt đầu</label>
                                 <input type="date" name="startDate" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>EndDate</label>
+                                <label>Ngày kết thúc</label>
                                 <input type="date" name="endDate" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>Period</label>
+                                <label>Tiết học</label>
                                 <input type="number" name="period" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>DayOfWeek</label>
+                                <label>Thứ trong tuần</label>
                                 <input type="number" name="dayOfWeek" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>HomeroomTeacher</label>
+                                <label>Giáo viên chủ nhiệm</label>
                                 <input type="text" name="homeroomTeacher" class="form-control" maxlength="1" />
                             </div>
                             <div class="mb-3">
-                                <label>WeekNumber</label>
+                                <label>Tuần</label>
                                 <input type="number" name="weekNumber" class="form-control" />
                             </div>
+
 
                             <button type="submit" class="btn btn-success">Thêm mới</button>
                         </form>

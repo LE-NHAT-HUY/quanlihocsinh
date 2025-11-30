@@ -1,0 +1,71 @@
+:root {
+    --primary: #1976d2;
+    --primary-light: #e3f2fd;
+    --sidebar-bg: #ffffff;
+    --sidebar-border: #e0e0e0;
+    --text-muted: #6c757d;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: #f5f7fb;
+    color: #1f2933;
+}
+.layout { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar { width: 260px; background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border); flex-direction: column; padding: 16px 12px; position: sticky; top: 0; height: 100vh; display: flex; }
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; padding: 4px 10px; }
+.brand-logo { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #1565c0, #42a5f5); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 18px; }
+.brand-title span:first-child { font-weight: 700; font-size: 30px; text-transform: uppercase; }
+
+.sidebar-section-title { font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--text-muted); padding: 10px 10px 4px; }
+.sidebar-nav { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; }
+.sidebar-link { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: #374151; text-decoration: none; font-size: 14px; }
+.sidebar-link i { font-size: 16px; width: 18px; text-align: center; }
+.sidebar-link:hover { background: var(--primary-light); color: var(--primary); }
+.sidebar-link.active { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; }
+.topbar { height: 64px; background: #ffffff; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; padding: 0 24px; justify-content: space-between; }
+.content { padding: 20px 24px 24px; }
+.card-shadow { box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08); border: none; border-radius: 12px; }
+
+.brand-title span {
+    font-family: 'Roboto Slab', serif; /* hoặc 'Georgia', 'Times New Roman' nếu muốn kiểu chữ lơp hơn */
+    font-weight: 700;                  /* chữ đậm */
+    font-size: 100px;                   /* cỡ chữ lớn hơn */
+    color: #0D47A1;                    /* xanh đậm */
+}
+
+.brand-title span:last-child { font-size: 16px; color: #0D47A1;; }
+
+.intro-img {
+    border-radius: 12px;
+    object-fit: cover;
+    width: 100%;       /* chiếm hết chiều ngang cột chứa */
+    max-height: 200px; /* giới hạn chiều cao */
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center; /* căn theo trục ngang */
+    gap: 12px;           /* khoảng cách giữa các phần tử */
+}
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e3f2fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--primary);
+}
+.user-name {
+    font-size: 14px;
+    font-weight: 500;
+}

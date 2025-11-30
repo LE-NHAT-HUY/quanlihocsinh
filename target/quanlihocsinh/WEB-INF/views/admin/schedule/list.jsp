@@ -19,15 +19,16 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">STT</th>
-                                    <th class="text-center">ID</th>
-                                    <th class="text-center">SemesterID</th>
-                                    <th class="text-center">ClassID</th>
-                                    <th class="text-center">SubjectID</th>
-                                    <th class="text-center">TeacherID</th>
+                                    <th class="text-center">Mã lịch</th>
+                                    <th class="text-center">Học kỳ</th>
+                                    <th class="text-center">Lớp</th>
+                                    <th class="text-center">Môn học</th>
+                                    <th class="text-center">Giáo viên</th>
                                     <th class="text-center">Ngày bắt đầu</th>
                                     <th class="text-center">Ngày kết thúc</th>
-                                    <th class="text-center">Hoạt động</th>
+                                    <th class="text-center">Trạng thái</th>
                                     <th class="text-center">Chức năng</th>
+
                                 </tr>
                             </thead>
                             <tbody>

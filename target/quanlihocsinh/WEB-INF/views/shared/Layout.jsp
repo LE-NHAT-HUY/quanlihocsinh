@@ -1,482 +1,68 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Dashboard - NiceAdmin Bootstrap Template</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-  <link href="${pageContext.request.contextPath}/assets/img/favicon.png" rel="icon">
-  <link href="${pageContext.request.contextPath}/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="${pageContext.request.contextPath}/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="${pageContext.request.contextPath}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="${pageContext.request.contextPath}/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="${pageContext.request.contextPath}/assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="${pageContext.request.contextPath}/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="${pageContext.request.contextPath}/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="${pageContext.request.contextPath}/assets/vendor/simple-datatables/style.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="${pageContext.request.contextPath}/assets/css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: NiceAdmin - v2.4.1
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+    <meta charset="UTF-8">
+    <title><c:out value="${pageTitle}" default="Quản lý học sinh"/></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin.css" />
 </head>
-
 <body>
 
-  <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center">
+<div class="layout">
 
-    <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
-        <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="">
-        <span class="d-none d-lg-block">NiceAdmin</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-title">
+                <span>Trường THPT Anh Sơn I</span>
+            </div>
+        </div>
 
-    <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div><!-- End Search Bar -->
+        <!-- Sidebar động từ menuList -->
+        <ul class="sidebar-nav">
+            <c:forEach var="menu" items="${menuList}">
+                <li>
+                    <a href="${pageContext.request.contextPath}${menu.controllerName}/${menu.actionName}" class="sidebar-link">
+                        <i class="${menu.icon}"></i> ${menu.menuName}
+                    </a>
+                </li>
+            </c:forEach>
+        </ul>
 
-    <nav class="header-nav ms-auto">
-      <ul class="d-flex align-items-center">
+    </aside>
 
-        <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle " href="#">
-            <i class="bi bi-search"></i>
-          </a>
-        </li><!-- End Search Icon-->
+    <!-- MAIN -->
+    <div class="main">
 
-        <li class="nav-item dropdown">
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+            </div>
 
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-bell"></i>
-            <span class="badge bg-primary badge-number">4</span>
-          </a><!-- End Notification Icon -->
+            <div class="search-box" style="position: relative; width: 260px;">
+                <input type="text" class="form-control form-control-sm" placeholder="Tìm kiếm nhanh..." style="padding-left: 30px;">
+                <i class="bi bi-search" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+            </div>
 
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <li class="dropdown-header">
-              You have 4 new notifications
-              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
+            <div class="topbar-right">
+                <i class="bi bi-bell"></i>
+                <div class="user-avatar"><i class="bi bi-person-fill"></i></div>
+                <span class="user-name">
+                    <c:out value="${sessionScope.adminName}" default="Admin" />
+                </span>
+            </div>
+        </header>
 
-            <li class="notification-item">
-              <i class="bi bi-exclamation-circle text-warning"></i>
-              <div>
-                <h4>Lorem Ipsum</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>30 min. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-x-circle text-danger"></i>
-              <div>
-                <h4>Atque rerum nesciunt</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>1 hr. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-check-circle text-success"></i>
-              <div>
-                <h4>Sit rerum fuga</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>2 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-info-circle text-primary"></i>
-              <div>
-                <h4>Dicta reprehenderit</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>4 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="dropdown-footer">
-              <a href="#">Show all notifications</a>
-            </li>
-
-          </ul><!-- End Notification Dropdown Items -->
-
-        </li><!-- End Notification Nav -->
-
-        <li class="nav-item dropdown">
-
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-chat-left-text"></i>
-            <span class="badge bg-success badge-number">3</span>
-          </a><!-- End Messages Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-            <li class="dropdown-header">
-              You have 3 new messages
-              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="message-item">
-              <a href="#">
-                <img src="${pageContext.request.contextPath}/assets/img/messages-1.jpg" alt="" class="rounded-circle">
-                <div>
-                  <h4>Maria Hudson</h4>
-                  <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                  <p>4 hrs. ago</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="message-item">
-              <a href="#">
-                <img src="${pageContext.request.contextPath}/assets/img/messages-2.jpg" alt="" class="rounded-circle">
-                <div>
-                  <h4>Anna Nelson</h4>
-                  <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                  <p>6 hrs. ago</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="message-item">
-              <a href="#">
-                <img src="${pageContext.request.contextPath}/assets/img/messages-3.jpg" alt="" class="rounded-circle">
-                <div>
-                  <h4>David Muldon</h4>
-                  <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                  <p>8 hrs. ago</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="dropdown-footer">
-              <a href="#">Show all messages</a>
-            </li>
-
-          </ul><!-- End Messages Dropdown Items -->
-
-        </li><!-- End Messages Nav -->
-
-        <li class="nav-item dropdown pe-3">
-
-          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="${pageContext.request.contextPath}/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-          </a><!-- End Profile Iamge Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
-              <span>Web Designer</span>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-person"></i>
-                <span>My Profile</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
-                <span>Need Help?</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-              </a>
-            </li>
-
-          </ul><!-- End Profile Dropdown Items -->
-        </li><!-- End Profile Nav -->
-
-      </ul>
-    </nav><!-- End Icons Navigation -->
-
-  </header><!-- End Header -->
-
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
-
-    <ul class="sidebar-nav" id="sidebar-nav">
-      
-     <!-- Quản lý Menu -->
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-grid"></i>
-        <span>Quản Lí Menu</span>
-        <i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/menu?action=add">
-                <i class="bi bi-circle"></i><span>Thêm mới Menu</span>
-            </a>
-        </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/menu?action=list">
-                <i class="bi bi-circle"></i><span>Danh sách Menu</span>
-            </a>
-        </li>
-    </ul>
-</li>
-
-<!-- Quản lý Khối -->
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#grade-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-journal-text"></i>
-        <span>Quản Lí Khối</span>
-        <i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="grade-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/grade?action=add">
-                <i class="bi bi-circle"></i><span>Thêm mới Khối</span>
-            </a>
-        </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/grade?action=list">
-                <i class="bi bi-circle"></i><span>Danh sách Khối</span>
-            </a>
-        </li>
-    </ul>
-</li>
-
-<!-- Quản lý Khóa Học -->
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#cohort-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layers"></i>
-        <span>Quản Lí Khóa Học</span>
-        <i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="cohort-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/cohort?action=add">
-                <i class="bi bi-circle"></i><span>Thêm mới Khóa Học</span>
-            </a>
-        </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/cohort?action=list">
-                <i class="bi bi-circle"></i><span>Danh sách Khóa Học</span>
-            </a>
-        </li>
-    </ul>
-</li>
-
-<!-- Quản lý Môn học -->
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#subject-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-grid"></i>
-        <span>Quản lý môn học</span>
-        <i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="subject-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/subject?action=add">
-                <i class="bi bi-circle"></i><span>Thêm mới môn học</span>
-            </a>
-        </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/subject?action=list">
-                <i class="bi bi-circle"></i><span>Danh sách môn học</span>
-            </a>
-        </li>
-    </ul>
-</li>
-
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#class-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-building"></i>
-        <span>Quản lý Lớp</span>
-        <i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="class-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/class?action=add">
-                <i class="bi bi-circle"></i><span>Thêm mới lớp</span>
-            </a>
-        </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/class?action=list">
-                <i class="bi bi-circle"></i><span>Danh sách lớp</span>
-            </a>
-        </li>
-    </ul>
-</li>
-
-  <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#student-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-person-vcard"></i>
-          <span>Quản lý Học sinh</span>
-          <i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-
-      <ul id="student-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-              <a href="${pageContext.request.contextPath}/admin/student?action=add">
-                  <i class="bi bi-circle"></i>
-                  <span>Thêm mới học sinh</span>
-              </a>
-          </li>
-
-          <li>
-              <a href="${pageContext.request.contextPath}/admin/student?action=list">
-                  <i class="bi bi-circle"></i>
-                  <span>Danh sách học sinh</span>
-              </a>
-          </li>
-      </ul>
-  </li>
-
-
-<!-- Quản lý Giáo viên -->
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#teacher-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-people"></i>
-        <span>Quản lý giáo viên</span>
-        <i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="teacher-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/teacher?action=add">
-                <i class="bi bi-circle"></i><span>Thêm mới giáo viên</span>
-            </a>
-        </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/teacher?action=list">
-                <i class="bi bi-circle"></i><span>Danh sách giáo viên</span>
-            </a>
-        </li>
-    </ul>
-</li>
-
-<!-- Quản lý Năm học – Học kỳ -->
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#yearsemester-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-calendar"></i>
-        <span>Quản lý Năm học – Học kỳ</span>
-        <i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="yearsemester-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/yearsemester?action=add">
-                <i class="bi bi-circle"></i><span>Thêm mới năm học – học kỳ</span>
-            </a>
-        </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/yearsemester?action=list">
-                <i class="bi bi-circle"></i><span>Danh sách năm học – học kỳ</span>
-            </a>
-        </li>
-    </ul>
-</li>
-
-    </ul>
-  </aside><!-- End Sidebar-->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
-    <div class="copyright">
-      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+        <!-- CONTENT -->
+        <main class="content">
+            <jsp:include page="${contentPage}" />
+        </main>
     </div>
-    <div class="credits">
-      <!-- All the links in the footer should remain intact. -->
-      <!-- You can delete the links only if you purchased the pro version. -->
-      <!-- Licensing information: https://bootstrapmade.com/license/ -->
-      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-  </footer><!-- End Footer -->
+</div>
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Vendor JS Files -->
-  <script src="${pageContext.request.contextPath}/assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/vendor/chart.js/chart.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/vendor/echarts/echarts.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/vendor/quill/quill.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/vendor/php-email-form/validate.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="${pageContext.request.contextPath}/assets/js/main.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

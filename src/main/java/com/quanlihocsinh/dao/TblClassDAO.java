@@ -15,10 +15,8 @@ public class TblClassDAO {
         c.setClassID(rs.getInt("ClassID"));
         c.setClassName(rs.getString("ClassName"));
         c.setGradeID(rs.getInt("GradeID"));
-
         Integer cohort = (Integer) rs.getObject("CohortID");
         c.setCohortID(cohort);
-
         c.setMaxStudents(rs.getInt("MaxStudents"));
         c.setCurrentStudents(rs.getInt("CurrentStudents"));
         c.setSchoolYear(rs.getString("SchoolYear"));
@@ -26,23 +24,18 @@ public class TblClassDAO {
         return c;
     }
 
-    // Get all
     public List<tblClass> getAll() {
         List<tblClass> list = new ArrayList<>();
         String sql = "SELECT * FROM tblClass ORDER BY ClassName";
-
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
-
             while (rs.next()) {
                 list.add(map(rs));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return list;
     }
 
@@ -72,8 +65,7 @@ public class TblClassDAO {
     // Add
     public void add(tblClass c) {
         String sql = "INSERT INTO tblClass(ClassName, GradeID, CohortID, MaxStudents, CurrentStudents, SchoolYear, IsActive) "
-                +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -96,8 +88,7 @@ public class TblClassDAO {
     // Update
     public void update(tblClass c) {
         String sql = "UPDATE tblClass SET ClassName=?, GradeID=?, CohortID=?, MaxStudents=?, CurrentStudents=?, SchoolYear=?, IsActive=? "
-                +
-                "WHERE ClassID=?";
+                + "WHERE ClassID=?";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
