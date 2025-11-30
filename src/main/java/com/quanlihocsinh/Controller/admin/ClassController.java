@@ -107,7 +107,7 @@ public class ClassController extends HttpServlet {
         c.setCurrentStudents(currs != null && !currs.isEmpty() ? Integer.parseInt(currs) : 0);
 
         c.setSchoolYear(request.getParameter("schoolYear"));
-        c.setActive("on".equals(request.getParameter("isActive")) || "true".equals(request.getParameter("isActive")));
+        c.setActive(request.getParameter("isActive") != null);
 
         return c;
     }

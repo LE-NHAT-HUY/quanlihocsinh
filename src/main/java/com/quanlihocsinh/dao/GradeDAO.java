@@ -1,49 +1,34 @@
 package com.quanlihocsinh.dao;
 
 import com.quanlihocsinh.model.Grade;
+import com.quanlihocsinh.util.DBUtil;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GradeDAO {
 
-    private final String URL = "jdbc:sqlserver://LENOVO\\HUY123:1433;"
-            + "databaseName=StudentManagementDB;"
-            + "integratedSecurity=true;"
-            + "encrypt=true;"
-            + "trustServerCertificate=true";
-
-    private final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-
-    public GradeDAO() {
-        try {
-            Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    private Grade map(ResultSet rs) throws SQLException {
+        Grade g = new Grade();
+        g.setGradeID(rs.getInt("GradeID"));
+        g.setGradeName(rs.getString("GradeName"));
+        g.setDescription(rs.getString("Description"));
+        g.setIsActive(rs.getBoolean("IsActive"));
+        return g;
     }
 
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL);
-    }
-
-    // Lấy tất cả bản ghi
+    // Lấy tất cả
     public List<Grade> getAll() {
         List<Grade> list = new ArrayList<>();
         String sql = "SELECT GradeID, GradeName, Description, IsActive FROM dbo.tblGrade ORDER BY GradeID";
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                Grade g = new Grade();
-                g.setGradeID(rs.getInt("GradeID"));
-                g.setGradeName(rs.getString("GradeName"));
-                g.setDescription(rs.getString("Description"));
-                g.setIsActive(rs.getBoolean("IsActive"));
-                list.add(g);
-            }
+            while (rs.next())
+                list.add(map(rs));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,35 +39,30 @@ public class GradeDAO {
 
     // Lấy theo ID
     public Grade getById(int id) {
-        Grade g = null;
         String sql = "SELECT GradeID, GradeName, Description, IsActive FROM dbo.tblGrade WHERE GradeID = ?";
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
+
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    g = new Grade();
-                    g.setGradeID(rs.getInt("GradeID"));
-                    g.setGradeName(rs.getString("GradeName"));
-                    g.setDescription(rs.getString("Description"));
-                    g.setIsActive(rs.getBoolean("IsActive"));
-                }
+                if (rs.next())
+                    return map(rs);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return g;
+        return null;
     }
 
-    // Thêm mới bản ghi
+    // Thêm mới
     public void add(Grade g) {
         String sql = "INSERT INTO dbo.tblGrade (GradeName, Description, IsActive) VALUES (?, ?, ?)";
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, g.getGradeName());
@@ -95,11 +75,11 @@ public class GradeDAO {
         }
     }
 
-    // Cập nhật bản ghi
+    // Cập nhật
     public void update(Grade g) {
         String sql = "UPDATE dbo.tblGrade SET GradeName=?, Description=?, IsActive=? WHERE GradeID=?";
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, g.getGradeName());
@@ -113,11 +93,11 @@ public class GradeDAO {
         }
     }
 
-    // Xóa bản ghi
+    // Xóa
     public void delete(int id) {
         String sql = "DELETE FROM dbo.tblGrade WHERE GradeID=?";
 
-        try (Connection conn = getConnection();
+        try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);

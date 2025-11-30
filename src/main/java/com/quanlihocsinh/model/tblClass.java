@@ -10,7 +10,21 @@ public class tblClass {
     private String schoolYear;
     private boolean isActive;
 
-    // GETTERS & SETTERS
+    public tblClass() {
+    }
+
+    public tblClass(int classID, String className, int gradeID, Integer cohortID, int maxStudents, int currentStudents,
+            String schoolYear, boolean isActive) {
+        this.classID = classID;
+        this.className = className;
+        this.gradeID = gradeID;
+        this.cohortID = cohortID;
+        this.maxStudents = maxStudents;
+        this.currentStudents = currentStudents;
+        this.schoolYear = schoolYear;
+        this.isActive = isActive;
+    }
+
     public int getClassID() {
         return classID;
     }
@@ -71,7 +85,7 @@ public class tblClass {
         return isActive;
     }
 
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

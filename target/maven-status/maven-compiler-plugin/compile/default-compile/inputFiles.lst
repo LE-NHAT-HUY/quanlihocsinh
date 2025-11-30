@@ -9,10 +9,12 @@ C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controlle
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\admin\TeacherController.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\admin\YearSemesterController.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\advice\AdminMenuAvice.java
+C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\Controller\user\UserHomeController.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\AdminMenuDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\CohortDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\GradeDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\MenuDAO.java
+C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\PostDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\StudentDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\SubjectDAO.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\dao\TblClassDAO.java
@@ -22,9 +24,12 @@ C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Adm
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Cohort.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Grade.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\menu.java
+C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Post.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Student.java
+C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\StudentClass.java
+C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\StudentClassView.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Subject.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\tblClass.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\Teacher.java
 C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\model\YearSemester.java
-C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\util\DBConnection.java
+C:\Users\LENOVO\Projects\quanlihocsinh\src\main\java\com\quanlihocsinh\util\DBUtil.java

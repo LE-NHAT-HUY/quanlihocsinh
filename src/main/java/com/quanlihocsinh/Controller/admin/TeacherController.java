@@ -7,50 +7,55 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
-@WebServlet("/admin/teacher")
+@WebServlet("/admin/teacher/*")
 public class TeacherController extends HttpServlet {
-    private TeacherDAO dao = new TeacherDAO();
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    private TeacherDAO teacherDAO = new TeacherDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String action = request.getParameter("action");
         if (action == null)
             action = "list";
 
         switch (action) {
             case "add":
-                request.getRequestDispatcher("/WEB-INF/views/admin/teacher/add.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/admin/teacher/add.jsp")
+                        .forward(request, response);
                 break;
+
             case "edit":
-                int idEdit = Integer.parseInt(request.getParameter("id"));
-                Teacher tEdit = dao.getById(idEdit);
-                request.setAttribute("teacher", tEdit);
-                request.getRequestDispatcher("/WEB-INF/views/admin/teacher/edit.jsp").forward(request, response);
+                int id = Integer.parseInt(request.getParameter("id"));
+                Teacher teacher = teacherDAO.getById(id);
+                request.setAttribute("teacher", teacher);
+                request.getRequestDispatcher("/WEB-INF/views/admin/teacher/edit.jsp")
+                        .forward(request, response);
                 break;
+
             case "delete":
-                int idDelete = Integer.parseInt(request.getParameter("id"));
-                dao.delete(idDelete);
-                response.sendRedirect(request.getContextPath() + "/admin/teacher?action=list");
+                int idDel = Integer.parseInt(request.getParameter("id"));
+                teacherDAO.delete(idDel);
+                response.sendRedirect(request.getContextPath() + "/admin/teacher");
                 break;
+
             case "toggleStatus":
                 int idToggle = Integer.parseInt(request.getParameter("id"));
-                boolean status = "on".equals(request.getParameter("isActive"))
-                        || "true".equals(request.getParameter("isActive"));
-                dao.toggleStatus(idToggle, status);
-                response.sendRedirect(request.getContextPath() + "/admin/teacher?action=list");
+                String isActiveParam = request.getParameter("isActive");
+                boolean newStatus = "on".equals(isActiveParam) || "true".equals(isActiveParam);
+                teacherDAO.updateStatus(idToggle, newStatus);
+                response.sendRedirect(request.getContextPath() + "/admin/teacher");
                 break;
-            case "list":
-            default:
-                List<Teacher> list = dao.getAll();
-                request.setAttribute("teachers", list);
-                request.getRequestDispatcher("/WEB-INF/views/admin/teacher/list.jsp").forward(request, response);
+
+            default: // LIST
+                List<Teacher> teachers = teacherDAO.getAll();
+                request.setAttribute("teachers", teachers);
+                request.getRequestDispatcher("/WEB-INF/views/admin/teacher/list.jsp")
+                        .forward(request, response);
                 break;
         }
     }
@@ -58,43 +63,32 @@ public class TeacherController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        if (action == null)
-            action = "list";
 
-        switch (action) {
-            case "add":
-                Teacher tAdd = extractTeacherFromRequest(request);
-                dao.add(tAdd);
-                response.sendRedirect(request.getContextPath() + "/admin/teacher?action=list");
-                break;
-            case "edit":
-                Teacher tEdit = extractTeacherFromRequest(request);
-                tEdit.setId(Integer.parseInt(request.getParameter("id")));
-                dao.update(tEdit);
-                response.sendRedirect(request.getContextPath() + "/admin/teacher?action=list");
-                break;
-            default:
-                response.sendRedirect(request.getContextPath() + "/admin/teacher?action=list");
-                break;
+        if ("add".equals(action)) {
+            Teacher t = getTeacherFromRequest(request);
+            teacherDAO.add(t);
+            response.sendRedirect(request.getContextPath() + "/admin/teacher");
+        } else if ("edit".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            Teacher t = getTeacherFromRequest(request);
+            t.setId(id);
+            teacherDAO.update(t);
+            response.sendRedirect(request.getContextPath() + "/admin/teacher");
         }
     }
 
-    // Hàm hỗ trợ lấy dữ liệu từ form
-    private Teacher extractTeacherFromRequest(HttpServletRequest request) {
+    private Teacher getTeacherFromRequest(HttpServletRequest request) {
         Teacher t = new Teacher();
+
         t.setTeacherID(request.getParameter("teacherID"));
         t.setFullName(request.getParameter("fullName"));
 
         String birthStr = request.getParameter("birth");
         if (birthStr != null && !birthStr.isEmpty()) {
-            try {
-                Date birth = sdf.parse(birthStr);
-                t.setBirth(birth);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            t.setBirth(Date.valueOf(birthStr));
         }
 
         t.setGender(request.getParameter("gender"));
@@ -106,19 +100,22 @@ public class TeacherController extends HttpServlet {
         t.setGroupDV(request.getParameter("groupDV"));
         t.setNumberPhone(request.getParameter("numberPhone"));
         t.setNumberBHXH(request.getParameter("numberBHXH"));
-        t.setIsActive("on".equals(request.getParameter("isActive")) || "true".equals(request.getParameter("isActive")));
-
-        String depID = request.getParameter("departmentID");
-        t.setDepartmentID(depID != null && !depID.isEmpty() ? Integer.parseInt(depID) : null);
-
-        String hamlet = request.getParameter("hamlet");
-        t.setHamlet(hamlet != null && !hamlet.isEmpty() ? Integer.parseInt(hamlet) : null);
-
+        t.setIsActive(request.getParameter("isActive") != null);
+        t.setDepartmentID(parseIntOrZero(request.getParameter("departmentID")));
+        t.setHamlet(parseIntOrZero(request.getParameter("hamlet")));
         t.setCommune(request.getParameter("commune"));
         t.setProvince(request.getParameter("province"));
         t.setNationality(request.getParameter("nationality"));
         t.setImages(request.getParameter("images"));
 
         return t;
+    }
+
+    private int parseIntOrZero(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

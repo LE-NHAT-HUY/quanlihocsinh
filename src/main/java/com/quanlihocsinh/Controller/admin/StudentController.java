@@ -114,7 +114,7 @@ public class StudentController extends HttpServlet {
         s.setReligion(request.getParameter("religion"));
         s.setStatusStudent(request.getParameter("statusStudent"));
         s.setNumberPhone(request.getParameter("numberPhone"));
-        s.setIsActive("on".equals(request.getParameter("isActive")) || "true".equals(request.getParameter("isActive")));
+        s.setIsActive(request.getParameter("isActive") != null);
         s.setImages(request.getParameter("images"));
         s.setHamlet(request.getParameter("hamlet"));
         s.setCommune(request.getParameter("commune"));
