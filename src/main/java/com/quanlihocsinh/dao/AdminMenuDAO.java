@@ -40,7 +40,7 @@ public class AdminMenuDAO {
                 m.setIcon(rs.getString("Icon"));
                 m.setIdName(rs.getString("IdName"));
 
-                list.add(m); // ✅ Thêm menu vào danh sách
+                list.add(m);
             }
 
         } catch (Exception e) {

@@ -51,7 +51,7 @@ public class TeacherController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/admin/teacher");
                 break;
 
-            default: // LIST
+            default:
                 List<Teacher> teachers = teacherDAO.getAll();
                 request.setAttribute("teachers", teachers);
                 request.getRequestDispatcher("/WEB-INF/views/admin/teacher/list.jsp")

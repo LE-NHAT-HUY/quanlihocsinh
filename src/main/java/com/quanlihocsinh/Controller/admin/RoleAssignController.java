@@ -25,11 +25,9 @@ public class RoleAssignController extends HttpServlet {
 
         String id = req.getParameter("id");
 
-        // Nếu chưa chọn user → hiện danh sách user
         if (id == null) {
             List<User> users = userDAO.getAllUsers();
 
-            // Tạo map userId → list role của user
             Map<Integer, List<Role>> userRolesMap = new HashMap<>();
             for (User u : users) {
                 List<Role> roles = roleDAO.getRolesOfUser(u.getUserID());
@@ -45,13 +43,10 @@ public class RoleAssignController extends HttpServlet {
 
         int userId = Integer.parseInt(id);
 
-        // Lấy thông tin user
         User user = userDAO.getUserById(userId);
 
-        // Lấy tất cả roles trong hệ thống
         List<Role> allRoles = roleDAO.getAllRoles();
 
-        // Lấy role mà user đã có
         List<Integer> assignedRoles = roleDAO.getRoleIdsOfUser(userId);
 
         req.setAttribute("user", user);
@@ -69,7 +64,6 @@ public class RoleAssignController extends HttpServlet {
 
         int userId = Integer.parseInt(req.getParameter("userId"));
 
-        // Các role được tick
         String[] selectedRoleIds = req.getParameterValues("role");
 
         List<Integer> newRoles = new ArrayList<>();
@@ -80,7 +74,6 @@ public class RoleAssignController extends HttpServlet {
             }
         }
 
-        // Cập nhật quyền
         roleDAO.updateUserRoles(userId, newRoles);
 
         resp.sendRedirect(req.getContextPath() + "/admin/assign-role");

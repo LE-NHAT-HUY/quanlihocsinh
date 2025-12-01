@@ -14,7 +14,6 @@ public class AdminMenu {
     private String Icon;
     private String IdName;
 
-    // Getter / Setter
     public long getAdminMenulD() {
         return AdminMenulD;
     }

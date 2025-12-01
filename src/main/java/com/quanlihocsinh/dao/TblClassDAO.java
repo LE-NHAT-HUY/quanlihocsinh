@@ -9,7 +9,6 @@ import java.util.List;
 
 public class TblClassDAO {
 
-    // Map ResultSet → tblClass object
     private tblClass map(ResultSet rs) throws SQLException {
         tblClass c = new tblClass();
         c.setClassID(rs.getInt("ClassID"));
@@ -39,7 +38,6 @@ public class TblClassDAO {
         return list;
     }
 
-    // Get by ID
     public tblClass getById(int id) {
         tblClass c = null;
         String sql = "SELECT * FROM tblClass WHERE ClassID=?";
@@ -62,7 +60,6 @@ public class TblClassDAO {
         return c;
     }
 
-    // Add
     public void add(tblClass c) {
         String sql = "INSERT INTO tblClass(ClassName, GradeID, CohortID, MaxStudents, CurrentStudents, SchoolYear, IsActive) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -85,7 +82,6 @@ public class TblClassDAO {
         }
     }
 
-    // Update
     public void update(tblClass c) {
         String sql = "UPDATE tblClass SET ClassName=?, GradeID=?, CohortID=?, MaxStudents=?, CurrentStudents=?, SchoolYear=?, IsActive=? "
                 + "WHERE ClassID=?";
@@ -109,7 +105,6 @@ public class TblClassDAO {
         }
     }
 
-    // Delete
     public void delete(int id) {
         String sql = "DELETE FROM tblClass WHERE ClassID=?";
 
@@ -124,7 +119,6 @@ public class TblClassDAO {
         }
     }
 
-    // Toggle status
     public void toggleStatus(int id, boolean status) {
         String sql = "UPDATE tblClass SET IsActive=? WHERE ClassID=?";
 

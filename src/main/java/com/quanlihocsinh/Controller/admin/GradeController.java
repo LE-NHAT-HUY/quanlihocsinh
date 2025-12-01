@@ -17,7 +17,7 @@ public class GradeController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        gradeDAO = new GradeDAO(); // DAO tự tạo Connection bên trong
+        gradeDAO = new GradeDAO();
     }
 
     @Override
@@ -78,8 +78,6 @@ public class GradeController extends HttpServlet {
         }
     }
 
-    // ---------------------- METHODS ----------------------
-
     private void listGrades(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
         List<Grade> list = gradeDAO.getAll();
@@ -110,7 +108,7 @@ public class GradeController extends HttpServlet {
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        Grade g = gradeDAO.getById(id); // gọi đúng tên phương thức
+        Grade g = gradeDAO.getById(id);
         request.setAttribute("grade", g);
         request.getRequestDispatcher("/WEB-INF/views/admin/grade/edit.jsp").forward(request, response);
     }
@@ -143,7 +141,7 @@ public class GradeController extends HttpServlet {
             throws SQLException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Grade g = gradeDAO.getById(id);
-        g.setIsActive(!g.isIsActive()); // đổi trạng thái
+        g.setIsActive(!g.isIsActive());
         gradeDAO.update(g);
         response.sendRedirect(request.getContextPath() + "/admin/grade/list");
     }

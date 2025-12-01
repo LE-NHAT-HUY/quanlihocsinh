@@ -25,7 +25,6 @@ public class Teacher {
     private String nationality;
     private String images;
 
-    // Getter & Setter
     public int getId() {
         return id;
     }

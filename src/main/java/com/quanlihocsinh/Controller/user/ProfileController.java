@@ -17,12 +17,10 @@ public class ProfileController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Lấy menu
         MenuDAO menuDAO = new MenuDAO();
         List<menu> menuList = menuDAO.getAllMenus();
         request.setAttribute("menuList", menuList);
 
-        // Lấy id học sinh từ param
         String idParam = request.getParameter("id");
         if (idParam == null) {
             response.sendRedirect(request.getContextPath() + "/user/home");
@@ -37,7 +35,6 @@ public class ProfileController extends HttpServlet {
             return;
         }
 
-        // Lấy thông tin học sinh
         StudentDAO dao = new StudentDAO();
         Student student = dao.getById(studentId);
 
@@ -46,12 +43,10 @@ public class ProfileController extends HttpServlet {
             return;
         }
 
-        // Đưa dữ liệu vào request
         request.setAttribute("student", student);
         request.setAttribute("contentPage", "/WEB-INF/views/user/profile/list.jsp");
         request.setAttribute("pageTitle", "Hồ sơ học sinh: " + student.getFullName());
 
-        // Chỉ forward một lần duy nhất tới layout
         request.getRequestDispatcher("/WEB-INF/views/shared/Layout.jsp")
                 .forward(request, response);
     }

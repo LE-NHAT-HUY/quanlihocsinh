@@ -9,7 +9,6 @@ import java.util.List;
 
 public class CohortDAO {
 
-    // Lấy tất cả bản ghi
     public List<Cohort> getAll() {
         List<Cohort> list = new ArrayList<>();
         String sql = "SELECT CohortID, CohortName, StartYear, EndYear, IsActive FROM dbo.tblCohort ORDER BY CohortID";
@@ -21,7 +20,7 @@ public class CohortDAO {
             while (rs.next()) {
                 Cohort c = new Cohort();
                 c.setCohortID(rs.getInt("CohortID"));
-                c.setCohortName(rs.getInt("CohortName")); // giữ nguyên
+                c.setCohortName(rs.getInt("CohortName"));
                 c.setStartYear(rs.getInt("StartYear"));
                 c.setEndYear(rs.getInt("EndYear"));
                 c.setIsActive(rs.getBoolean("IsActive"));
@@ -35,7 +34,6 @@ public class CohortDAO {
         return list;
     }
 
-    // Lấy theo ID
     public Cohort getById(int id) {
         Cohort c = null;
         String sql = "SELECT CohortID, CohortName, StartYear, EndYear, IsActive FROM dbo.tblCohort WHERE CohortID = ?";
@@ -62,7 +60,6 @@ public class CohortDAO {
         return c;
     }
 
-    // Thêm mới bản ghi
     public void add(Cohort c) {
         String sql = "INSERT INTO dbo.tblCohort (CohortName, StartYear, EndYear, IsActive) VALUES (?, ?, ?, ?)";
 
@@ -80,7 +77,6 @@ public class CohortDAO {
         }
     }
 
-    // Cập nhật bản ghi
     public void update(Cohort c) {
         String sql = "UPDATE dbo.tblCohort SET CohortName=?, StartYear=?, EndYear=?, IsActive=? WHERE CohortID=?";
 
@@ -99,7 +95,6 @@ public class CohortDAO {
         }
     }
 
-    // Xóa bản ghi
     public void delete(int id) {
         String sql = "DELETE FROM dbo.tblCohort WHERE CohortID=?";
 
@@ -114,7 +109,6 @@ public class CohortDAO {
         }
     }
 
-    // Test kết nối DB
     public void testConnection() {
         String sql = "SELECT TOP 5 CohortID, CohortName, StartYear, EndYear, IsActive FROM dbo.tblCohort";
 

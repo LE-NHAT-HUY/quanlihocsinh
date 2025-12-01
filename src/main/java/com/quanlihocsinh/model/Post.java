@@ -14,7 +14,6 @@ public class Post {
     private String createdBy;
     private int postOrder;
 
-    // GETTER - SETTER
     public int getPostID() {
         return postID;
     }

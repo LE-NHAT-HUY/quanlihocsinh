@@ -17,7 +17,6 @@ public class Schedule {
     private char homeroomTeacher;
     private int weekNumber;
 
-    // Getter & Setter
     public int getScheduleID() {
         return scheduleID;
     }

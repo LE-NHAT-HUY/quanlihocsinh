@@ -36,13 +36,12 @@ public class StudentClassController extends HttpServlet {
             if (request.getParameter("yearSemesterID") != null && !request.getParameter("yearSemesterID").isEmpty())
                 yearSemesterID = Integer.parseInt(request.getParameter("yearSemesterID"));
         } catch (NumberFormatException e) {
-            // nếu parse lỗi, giữ default 1
+
         }
 
         try {
             switch (action) {
                 case "/add":
-                    // Lấy danh sách học sinh chưa có trong lớp
                     List<Student> students = scDAO.getStudentsNotInClass(classID, yearSemesterID);
                     List<tblClass> classes = classDAO.getAll();
                     request.setAttribute("students", students);
@@ -54,7 +53,6 @@ public class StudentClassController extends HttpServlet {
                     break;
 
                 case "/list":
-                    // Lấy danh sách học sinh trong lớp
                     List<StudentClass> studentsInClass = scDAO.getByClassAndYear(classID, yearSemesterID);
                     request.setAttribute("studentsInClass", studentsInClass);
                     request.setAttribute("classID", classID);
@@ -110,7 +108,7 @@ public class StudentClassController extends HttpServlet {
             sc.setActive(isActive);
             sc.setYearSemesterID(yearSemesterID);
 
-            scDAO.add(sc); // gọi phương thức add(StudentClass) trong DAO
+            scDAO.add(sc);
 
             response.sendRedirect(request.getContextPath() + "/admin/student-class/list?classID=" + classID
                     + "&yearSemesterID=" + yearSemesterID);

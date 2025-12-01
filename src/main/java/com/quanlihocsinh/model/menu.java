@@ -17,7 +17,6 @@ public class menu {
     public menu() {
     }
 
-    // Getters & Setters
     public int getMenuID() {
         return menuID;
     }

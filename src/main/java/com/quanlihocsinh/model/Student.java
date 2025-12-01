@@ -20,7 +20,6 @@ public class Student {
     private String province;
     private String nationality;
 
-    // Getters & Setters
     public int getId() {
         return id;
     }

@@ -5,9 +5,8 @@ public class Cohort {
     private int CohortName;
     private int StartYear;
     private int EndYear;
-    private boolean IsActive; // giữ nguyên tên biến để map DB
+    private boolean IsActive;
 
-    // getter / setter
     public int getCohortID() {
         return CohortID;
     }

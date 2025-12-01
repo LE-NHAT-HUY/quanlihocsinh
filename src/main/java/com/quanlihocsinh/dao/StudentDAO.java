@@ -36,10 +36,6 @@ public class StudentDAO {
         return s;
     }
 
-    // ============================
-    // CRUD
-    // ============================
-
     public List<Student> getAll() {
         List<Student> list = new ArrayList<>();
         String sql = "SELECT * FROM dbo.tblStudent ORDER BY FullName";
@@ -58,11 +54,6 @@ public class StudentDAO {
         return list;
     }
 
-    /**
-     * Lấy danh sách học sinh chưa được thêm vào lớp (dựa trên StudentID string).
-     * Trả về các Student (sử dụng mapResultSetToStudent() hiện tại).
-     * Lọc chỉ lấy IsActive = 1 (nếu muốn khác thì sửa SQL).
-     */
     public List<Student> getStudentsNotInClass(int classId) {
         List<Student> list = new ArrayList<>();
         String sql = "SELECT s.* FROM dbo.tblStudent s " +

@@ -39,9 +39,9 @@ public class CohortController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/admin/cohort/list");
                 break;
 
-            default: // /list
+            default:
                 List<Cohort> list = dao.getAll();
-                request.setAttribute("cohorts", list); // trùng với JSP
+                request.setAttribute("cohorts", list);
                 request.getRequestDispatcher("/WEB-INF/views/admin/cohort/index.jsp").forward(request, response);
                 break;
         }
@@ -60,11 +60,10 @@ public class CohortController extends HttpServlet {
                 addCohort(request, response);
                 break;
             case "/edit":
-                updateCohort(request, response); // ⚠ lỗi nếu phương thức chưa tồn tại
+                updateCohort(request, response);
                 break;
             case "/toggleStatus":
-                toggleStatus(request, response); // ⚠ lỗi nếu phương thức chưa tồn tại
-                break;
+                toggleStatus(request, response);
             default:
                 response.sendRedirect(request.getContextPath() + "/admin/cohort/list");
                 break;

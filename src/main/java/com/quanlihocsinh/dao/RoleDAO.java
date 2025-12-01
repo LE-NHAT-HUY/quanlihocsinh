@@ -87,13 +87,11 @@ public class RoleDAO {
 
             conn.setAutoCommit(false);
 
-            // Xóa quyền cũ
             try (PreparedStatement ps = conn.prepareStatement(deleteSql)) {
                 ps.setInt(1, userId);
                 ps.executeUpdate();
             }
 
-            // Thêm quyền mới
             if (roles != null) {
                 try (PreparedStatement ps = conn.prepareStatement(insertSql)) {
                     for (int roleId : roles) {

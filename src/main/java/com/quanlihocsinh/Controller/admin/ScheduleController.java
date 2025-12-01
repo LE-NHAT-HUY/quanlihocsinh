@@ -9,7 +9,6 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @WebServlet("/admin/schedule/*")
@@ -81,7 +80,6 @@ public class ScheduleController extends HttpServlet {
         }
     }
 
-    // Hàm hỗ trợ lấy dữ liệu từ form
     private Schedule extractScheduleFromRequest(HttpServletRequest request) {
         Schedule s = new Schedule();
 

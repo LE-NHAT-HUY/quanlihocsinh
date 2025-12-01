@@ -8,7 +8,6 @@ public class Subject {
     private boolean isActive;
     private Integer departmentID;
 
-    // Getter & Setter
     public int getSubjectID() {
         return subjectID;
     }

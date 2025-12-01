@@ -18,7 +18,6 @@ public class GradeDAO {
         return g;
     }
 
-    // Lấy tất cả
     public List<Grade> getAll() {
         List<Grade> list = new ArrayList<>();
         String sql = "SELECT GradeID, GradeName, Description, IsActive FROM dbo.tblGrade ORDER BY GradeID";
@@ -37,7 +36,6 @@ public class GradeDAO {
         return list;
     }
 
-    // Lấy theo ID
     public Grade getById(int id) {
         String sql = "SELECT GradeID, GradeName, Description, IsActive FROM dbo.tblGrade WHERE GradeID = ?";
 
@@ -58,7 +56,6 @@ public class GradeDAO {
         return null;
     }
 
-    // Thêm mới
     public void add(Grade g) {
         String sql = "INSERT INTO dbo.tblGrade (GradeName, Description, IsActive) VALUES (?, ?, ?)";
 
@@ -75,7 +72,6 @@ public class GradeDAO {
         }
     }
 
-    // Cập nhật
     public void update(Grade g) {
         String sql = "UPDATE dbo.tblGrade SET GradeName=?, Description=?, IsActive=? WHERE GradeID=?";
 

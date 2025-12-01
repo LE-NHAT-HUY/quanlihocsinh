@@ -9,7 +9,6 @@ import java.util.List;
 
 public class SubjectDAO {
 
-    // Map ResultSet → Subject object
     private Subject map(ResultSet rs) throws SQLException {
         Subject s = new Subject();
         s.setSubjectID(rs.getInt("SubjectID"));
@@ -21,7 +20,6 @@ public class SubjectDAO {
         return s;
     }
 
-    // Get all subjects
     public List<Subject> getAllSubjects() {
         List<Subject> list = new ArrayList<>();
         String sql = "SELECT * FROM tblSubject ORDER BY SubjectName";
@@ -41,7 +39,6 @@ public class SubjectDAO {
         return list;
     }
 
-    // Get by ID
     public Subject getSubjectById(int id) {
         Subject s = null;
         String sql = "SELECT * FROM tblSubject WHERE SubjectID=?";
@@ -64,7 +61,6 @@ public class SubjectDAO {
         return s;
     }
 
-    // Add
     public void addSubject(Subject s) {
         String sql = "INSERT INTO tblSubject(SubjectName, NumberOfLesson, Semester, IsActive, DepartmentID) " +
                 "VALUES (?, ?, ?, ?, ?)";
@@ -85,7 +81,6 @@ public class SubjectDAO {
         }
     }
 
-    // Update
     public void updateSubject(Subject s) {
         String sql = "UPDATE tblSubject SET SubjectName=?, NumberOfLesson=?, Semester=?, IsActive=?, DepartmentID=? " +
                 "WHERE SubjectID=?";
@@ -107,7 +102,6 @@ public class SubjectDAO {
         }
     }
 
-    // Delete
     public void deleteSubject(int id) {
         String sql = "DELETE FROM tblSubject WHERE SubjectID=?";
 
@@ -122,7 +116,6 @@ public class SubjectDAO {
         }
     }
 
-    // Toggle status
     public void toggleStatus(int id, boolean status) {
         String sql = "UPDATE tblSubject SET IsActive=? WHERE SubjectID=?";
 

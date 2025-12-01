@@ -6,7 +6,6 @@ public class Grade {
     private String description;
     private boolean isActive;
 
-    // Constructors
     public Grade() {
     }
 
@@ -17,7 +16,6 @@ public class Grade {
         this.isActive = isActive;
     }
 
-    // Getters & Setters
     public int getGradeID() {
         return gradeID;
     }

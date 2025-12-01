@@ -73,8 +73,6 @@ public class YearSemesterController extends HttpServlet {
         }
     }
 
-    // ---------------------- METHODS ----------------------
-
     private void listYearSemester(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
         List<YearSemester> list = ysdao.getAll();

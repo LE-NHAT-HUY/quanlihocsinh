@@ -10,7 +10,6 @@ import java.util.List;
 
 public class StudentClassDAO {
 
-    // Thêm học sinh vào lớp
     public boolean add(StudentClass sc) throws SQLException {
         String sql = "INSERT INTO tblStudentClass(studentID, classID, cohortID, isActive, yearSemesterID) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
@@ -24,7 +23,6 @@ public class StudentClassDAO {
         }
     }
 
-    // Lấy danh sách học sinh trong lớp (có tên lớp)
     public List<StudentClass> getByClassAndYear(int classID, int yearSemesterID) throws SQLException {
         List<StudentClass> list = new ArrayList<>();
         String sql = "SELECT sc.*, c.ClassName " +
@@ -50,7 +48,6 @@ public class StudentClassDAO {
         return list;
     }
 
-    // Lấy danh sách học sinh chưa thuộc lớp
     public List<Student> getStudentsNotInClass(int classID, int yearSemesterID) throws SQLException {
         List<Student> list = new ArrayList<>();
         String sql = "SELECT * FROM tblStudent WHERE studentID NOT IN " +
@@ -71,7 +68,6 @@ public class StudentClassDAO {
         return list;
     }
 
-    // Xóa học sinh khỏi lớp
     public boolean delete(int studentClassID) throws SQLException {
         String sql = "DELETE FROM tblStudentClass WHERE studentClassID=?";
         try (Connection conn = DBUtil.getConnection();
@@ -81,7 +77,6 @@ public class StudentClassDAO {
         }
     }
 
-    // Lấy classID và yearSemesterID mặc định
     public int[] getDefaultClassAndYear() throws SQLException {
         String sql = "SELECT TOP 1 classID, yearSemesterID FROM tblStudentClass ORDER BY studentClassID";
         try (Connection conn = DBUtil.getConnection();

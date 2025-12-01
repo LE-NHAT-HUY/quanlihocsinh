@@ -34,7 +34,7 @@ public class PostDAO {
         try (Connection conn = getConnection()) {
             if (conn == null) {
                 System.out.println("DB connection null!");
-                return posts; // trả về rỗng để tránh NPE
+                return posts;
             }
 
             try (PreparedStatement ps = conn.prepareStatement(sql);

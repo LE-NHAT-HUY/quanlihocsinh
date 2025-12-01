@@ -14,7 +14,6 @@ public class AdminMenuAvice {
     @Autowired
     private AdminMenuDAO adminMenuDAO;
 
-    // Tự động load menu cho tất cả JSP
     @ModelAttribute("AdminMenu")
     public List<AdminMenu> populateMenu() {
         return adminMenuDAO.getMenus();

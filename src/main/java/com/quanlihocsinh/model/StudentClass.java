@@ -1,18 +1,16 @@
 package com.quanlihocsinh.model;
 
 public class StudentClass {
-    private int studentClassID; // Khóa chính
-    private String studentID; // ID học sinh
-    private int classID; // ID lớp
-    private int cohortID; // Khóa học
-    private boolean isActive; // Trạng thái
-    private int yearSemesterID; // ID năm học/học kỳ
+    private int studentClassID;
+    private String studentID;
+    private int classID;
+    private int cohortID;
+    private boolean isActive;
+    private int yearSemesterID;
 
-    // Constructor không tham số
     public StudentClass() {
     }
 
-    // Constructor đầy đủ
     public StudentClass(int studentClassID, String studentID, int classID, int cohortID, boolean isActive,
             int yearSemesterID) {
         this.studentClassID = studentClassID;
@@ -23,7 +21,6 @@ public class StudentClass {
         this.yearSemesterID = yearSemesterID;
     }
 
-    // Getter và Setter
     public int getStudentClassID() {
         return studentClassID;
     }
