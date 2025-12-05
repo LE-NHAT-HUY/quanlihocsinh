@@ -1,31 +1,40 @@
 package com.quanlihocsinh.model;
 
-import java.util.List;
+import java.util.Date;
 
 public class User {
-    private int userID;
+    private int userId;
     private String username;
     private String passwordHash;
-    private String fullName;
-    private boolean active;
+    private int roleId;
+    private int personId;
+    private boolean isActive;
+    private Date createdAt;
+
+    // optionally include Person object for convenience
+    private Person profile;
 
     public User() {
     }
 
-    public User(int userID, String username, String passwordHash, String fullName, boolean active) {
-        this.userID = userID;
+    public User(int userId, String username, String passwordHash, int roleId,
+            int personId, boolean isActive, Date createdAt, Person profile) {
+        this.userId = userId;
         this.username = username;
         this.passwordHash = passwordHash;
-        this.fullName = fullName;
-        this.active = active;
+        this.roleId = roleId;
+        this.personId = personId;
+        this.isActive = isActive;
+        this.createdAt = createdAt;
+        this.profile = profile;
     }
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -44,39 +53,66 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public String getFullName() {
-        return fullName;
+    public int getRoleId() {
+        return roleId;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
+
+    public int getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 
     public boolean isActive() {
-        return active;
+        return isActive;
     }
 
     public void setActive(boolean active) {
-        this.active = active;
+        isActive = active;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Person getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Person profile) {
+        this.profile = profile;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "userID=" + userID +
+                "userId=" + userId +
                 ", username='" + username + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", active=" + active +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", roleId=" + roleId +
+                ", personId=" + personId +
+                ", isActive=" + isActive +
+                ", createdAt=" + createdAt +
+                ", profile=" + (profile != null ? profile.getFullname() : "null") +
                 '}';
     }
 
-    private List<Role> roles;
-
-    public List<Role> getRoles() {
-        return roles;
+    public boolean getIsActive() {
+        return isActive;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
+
 }

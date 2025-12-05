@@ -8,21 +8,55 @@
             <div class="card">
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                     <c:choose>
-                        <c:when test="${not empty student.images}">
+                        <c:when test="${not empty student and not empty student.images}">
                             <img src="${pageContext.request.contextPath}/assets/img/${student.images}" 
-                                 alt="Profile" class="rounded-circle" onerror="this.src='${pageContext.request.contextPath}/assets/images/default-avatar.png'" />
+                                 alt="Profile" class="rounded-circle" 
+                                 onerror="this.src='${pageContext.request.contextPath}/assets/images/default-avatar.png'" />
+                        </c:when>
+                        <c:when test="${not empty person and not empty person.images}">
+                            <img src="${pageContext.request.contextPath}/assets/img/${person.images}" 
+                                 alt="Profile" class="rounded-circle" 
+                                 onerror="this.src='${pageContext.request.contextPath}/assets/images/default-avatar.png'" />
                         </c:when>
                         <c:otherwise>
                             <img src="${pageContext.request.contextPath}/assets/images/default-avatar.png" 
                                  alt="Profile" class="rounded-circle"/>
                         </c:otherwise>
                     </c:choose>
-                    <h2>${student.fullName}</h2>
-                    <h3 class="text-muted">${student.studentID}</h3>
+
+                    <h2>
+                        <c:choose>
+                            <c:when test="${not empty student}">
+                                ${student.fullName}
+                            </c:when>
+                            <c:when test="${not empty person}">
+                                ${person.fullname}
+                            </c:when>
+                            <c:otherwise>
+                                Chưa có tên
+                            </c:otherwise>
+                        </c:choose>
+                    </h2>
+
+                    <h3 class="text-muted">
+                        <c:choose>
+                            <c:when test="${not empty student}">
+                                ${student.studentID}
+                            </c:when>
+                            <c:otherwise>
+                                &nbsp;
+                            </c:otherwise>
+                        </c:choose>
+                    </h3>
+
                     <div class="mt-2">
-                        <span class="badge ${student.statusStudent == 'Đang học' ? 'bg-success' : 'bg-secondary'}">
-                            ${student.statusStudent}
-                        </span>
+                        <c:choose>
+                            <c:when test="${not empty student}">
+                                <span class="badge ${student.statusStudent == 'Đang học' ? 'bg-success' : 'bg-secondary'}">
+                                    ${student.statusStudent}
+                                </span>
+                            </c:when>
+                        </c:choose>
                     </div>
                 </div>
             </div>
@@ -49,67 +83,99 @@
                             <div class="row">
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Mã học sinh</label>
-                                    <div class="field-value">${student.studentID}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.studentID : ''}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Họ và tên</label>
-                                    <div class="field-value">${student.fullName}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.fullName : (person != null ? person.fullname : '')}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Ngày sinh</label>
-                                    <div class="field-value"><c:out value="${student.birth}"/></div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.birth : (person != null ? person.birth : '')}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Giới tính</label>
-                                    <div class="field-value">${student.gender}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.gender : (person != null ? person.gender : '')}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Số điện thoại</label>
-                                    <div class="field-value"><c:out value="${student.numberPhone != null ? student.numberPhone : 'Chưa cập nhật'}"/></div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.numberPhone : (person != null ? person.phone : 'Chưa cập nhật')}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Dân tộc</label>
-                                    <div class="field-value">${student.nation}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.nation : ''}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Tôn giáo</label>
-                                    <div class="field-value">${student.religion}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.religion : ''}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Xóm/Thôn</label>
-                                    <div class="field-value">${student.hamlet}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.hamlet : ''}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Xã/Phường</label>
-                                    <div class="field-value">${student.commune}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.commune : ''}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Tỉnh/Thành phố</label>
-                                    <div class="field-value">${student.province}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.province : ''}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Quốc tịch</label>
-                                    <div class="field-value">${student.nationality}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.nationality : ''}" />
+                                    </div>
                                 </div>
                                 <div class="col-12 info-field">
                                     <label class="field-label">Địa chỉ đầy đủ</label>
-                                    <div class="field-value">${student.address}</div>
+                                    <div class="field-value">
+                                        <c:out value="${student != null ? student.address : (person != null ? person.address : '')}" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Trạng thái học</label>
                                     <div class="field-value">
-                                        <span class="badge ${student.statusStudent == 'Đang học' ? 'bg-success' : 'bg-secondary'}">${student.statusStudent}</span>
+                                        <c:if test="${student != null}">
+                                            <span class="badge ${student.statusStudent == 'Đang học' ? 'bg-success' : 'bg-secondary'}">
+                                                ${student.statusStudent}
+                                            </span>
+                                        </c:if>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 info-field">
                                     <label class="field-label">Hiển thị</label>
                                     <div class="field-value">
-                                        <span class="badge ${student.isActive ? 'bg-success' : 'bg-secondary'}">${student.isActive ? 'Có' : 'Không'}</span>
+                                        <c:if test="${student != null}">
+                                            <span class="badge ${student.isActive ? 'bg-success' : 'bg-secondary'}">
+                                                ${student.isActive ? 'Có' : 'Không'}
+                                            </span>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Additional Sections (giữ nguyên theo mẫu C#) -->
+                            <!-- Additional Sections -->
                             <div class="additional-sections mt-3">
                                 <div class="section-card p-3 mb-2 rounded" style="background-color:#e3f2fd;">
                                     <h6 style="margin:0;">
@@ -169,18 +235,11 @@
 </div>
 
 <style>
-.info-field {
-    padding: 10px 0;
-    border-bottom: 1px solid #ebeef4;
-}
+.info-field { padding: 10px 0; border-bottom: 1px solid #ebeef4; }
 .info-field:last-child { border-bottom: none; }
 .field-label { font-weight:600; color:#012970; margin-bottom:5px; }
-.field-value {
-    padding: 8px 12px; border-radius:6px; background:#f8f9fa; border:1px solid #ddd; display:flex; align-items:center;
-}
-.profile-card img {
-    width:150px; height:150px; object-fit:cover; border:5px solid #fff; box-shadow:0 0 20px rgba(1,41,112,0.1);
-}
+.field-value { padding: 8px 12px; border-radius:6px; background:#f8f9fa; border:1px solid #ddd; display:flex; align-items:center; }
+.profile-card img { width:150px; height:150px; object-fit:cover; border:5px solid #fff; box-shadow:0 0 20px rgba(1,41,112,0.1); }
 .additional-sections .section-card:hover { background-color:#bbdefb; cursor:pointer; transform:translateY(-2px); box-shadow:0 4px 8px rgba(0,0,0,0.1); }
 .nav-tabs-bordered .nav-link.active { background-color:#fff; color:#4154f1; border-bottom:2px solid #4154f1; }
 </style>
@@ -188,7 +247,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.additional-sections .section-card').forEach(card=>{
-        card.addEventListener('click',function(){ alert('Tính năng đang được phát triển...'); });
+        card.addEventListener('click',function(){ 
+            alert('Tính năng đang được phát triển...'); 
+        });
     });
 });
 </script>

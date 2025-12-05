@@ -1,109 +1,103 @@
 package com.quanlihocsinh.dao;
 
+import com.quanlihocsinh.model.Person;
 import com.quanlihocsinh.model.User;
 import com.quanlihocsinh.util.DBUtil;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserDAO {
 
-    public User login(String username, String password) {
-        String sql = "SELECT UserID, Username, FullName, IsActive FROM Users " +
-                "WHERE Username=? AND PasswordHash=? AND IsActive=1";
+    private PersonDAO personDAO = new PersonDAO();
 
-        try (Connection con = DBUtil.getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
-
+    public User checkLogin(String username, String plainPassword) throws SQLException {
+        String sql = "SELECT user_id, username, password_hash, role_id, person_id, is_active, created_at FROM Users WHERE username = ?";
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
-            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String hash = rs.getString("password_hash");
+                    boolean isActive = rs.getBoolean("is_active");
+                    if (!isActive)
+                        return null;
 
-            ResultSet rs = ps.executeQuery();
+                    if (BCrypt.checkpw(plainPassword, hash)) {
+                        User u = new User();
+                        u.setUserId(rs.getInt("user_id"));
+                        u.setUsername(rs.getString("username"));
+                        u.setPasswordHash(hash);
+                        u.setRoleId(rs.getInt("role_id"));
+                        u.setPersonId(rs.getInt("person_id"));
+                        u.setIsActive(isActive);
+                        u.setCreatedAt(rs.getTimestamp("created_at"));
 
-            if (rs.next()) {
-                User u = new User();
-                u.setUserID(rs.getInt("UserID"));
-                u.setUsername(rs.getString("Username"));
-                u.setFullName(rs.getString("FullName"));
-                u.setActive(rs.getBoolean("IsActive"));
-
-                // Lấy rồle
-                UserRoleDAO urDao = new UserRoleDAO();
-                u.setRoles(urDao.getRolesByUserId(u.getUserID()));
-
-                return u;
+                        if (u.getPersonId() > 0) {
+                            Person p = personDAO.getById(u.getPersonId());
+                            u.setProfile(p);
+                        }
+                        return u;
+                    } else {
+                        return null;
+                    }
+                }
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
 
-    public boolean register(User u) {
-        String sql = "INSERT INTO Users (Username, PasswordHash, FullName) VALUES (?, ?, ?)";
-        try (Connection con = DBUtil.getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+    public void createUserLinkedToPerson(String username, String plainPassword, int roleId, Integer personId)
+            throws SQLException {
 
-            ps.setString(1, u.getUsername());
-            ps.setString(2, u.getPasswordHash());
-            ps.setString(3, u.getFullName());
-            return ps.executeUpdate() > 0;
+        String checkUserSql = "SELECT COUNT(1) FROM Users WHERE username = ?";
+        String checkLinkedSql = "SELECT COUNT(1) FROM Users WHERE person_id = ?";
+        String insertSql = "INSERT INTO Users(username, password_hash, role_id, person_id, is_active, created_at) VALUES (?, ?, ?, ?, 1, GETDATE())";
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+        try (Connection conn = DBUtil.getConnection()) {
+            conn.setAutoCommit(false);
 
-    public List<User> getAllUsers() {
-        List<User> list = new ArrayList<>();
-        String sql = "SELECT UserID, Username, FullName, IsActive FROM Users";
-
-        try (Connection conn = DBUtil.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                User u = new User();
-                u.setUserID(rs.getInt("UserID"));
-                u.setUsername(rs.getString("Username"));
-                u.setFullName(rs.getString("FullName"));
-                u.setActive(rs.getBoolean("IsActive"));
-                list.add(u);
+            // Check username trùng
+            try (PreparedStatement ps = conn.prepareStatement(checkUserSql)) {
+                ps.setString(1, username);
+                ResultSet rs = ps.executeQuery();
+                rs.next();
+                if (rs.getInt(1) > 0) {
+                    throw new SQLException("Username already exists");
+                }
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return list;
-    }
-
-    public User getUserById(int id) {
-        String sql = "SELECT UserID, Username, FullName, IsActive FROM Users WHERE UserID = ?";
-        User u = null;
-
-        try (Connection conn = DBUtil.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                u = new User();
-                u.setUserID(rs.getInt("UserID"));
-                u.setUsername(rs.getString("Username"));
-                u.setFullName(rs.getString("FullName"));
-                u.setActive(rs.getBoolean("IsActive"));
+            // Nếu có personId → kiểm tra liên kết
+            if (personId != null) {
+                try (PreparedStatement ps = conn.prepareStatement(checkLinkedSql)) {
+                    ps.setInt(1, personId);
+                    ResultSet rs = ps.executeQuery();
+                    rs.next();
+                    if (rs.getInt(1) > 0) {
+                        throw new SQLException("Profile already linked to another account");
+                    }
+                }
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            String hashed = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
 
-        return u;
+            // INSERT — cho phép personId NULL
+            try (PreparedStatement ps = conn.prepareStatement(insertSql)) {
+                ps.setString(1, username);
+                ps.setString(2, hashed);
+                ps.setInt(3, roleId);
+
+                if (personId == null) {
+                    ps.setNull(4, Types.INTEGER);
+                } else {
+                    ps.setInt(4, personId);
+                }
+
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+        }
     }
 
 }
