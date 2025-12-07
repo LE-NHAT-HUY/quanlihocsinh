@@ -31,7 +31,10 @@
                 </li>
             </c:forEach>
         </ul>
-
+        
+        <!-- Logout button -->
+        <div class="sidebar-footer mt-auto p-3">
+        </div>
     </aside>
 
     <!-- MAIN -->
@@ -40,6 +43,7 @@
         <!-- TOPBAR -->
         <header class="topbar">
             <div class="topbar-left">
+                <h5 class="mb-0"><c:out value="${pageTitle}" default="Trang chủ"/></h5>
             </div>
 
             <div class="search-box" style="position: relative; width: 260px;">
@@ -49,10 +53,49 @@
 
             <div class="topbar-right">
                 <i class="bi bi-bell"></i>
-                <div class="user-avatar"><i class="bi bi-person-fill"></i></div>
+                
+                <!-- Avatar với hình ảnh nếu có -->
+                <c:choose>
+                    <c:when test="${not empty sessionScope.user.profile.images}">
+                        <img src="${pageContext.request.contextPath}/${sessionScope.user.profile.images}" 
+                             alt="Avatar" class="user-avatar-img rounded-circle" 
+                             style="width: 32px; height: 32px; object-fit: cover;">
+                    </c:when>
+                    <c:otherwise>
+                        <div class="user-avatar"><i class="bi bi-person-fill"></i></div>
+                    </c:otherwise>
+                </c:choose>
+                
+                <!-- Hiển thị tên người dùng -->
                 <span class="user-name">
-                    <c:out value="${sessionScope.adminName}" default="Admin" />
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.user.profile.fullname}">
+                            <c:out value="${sessionScope.user.profile.fullname}" />
+                        </c:when>
+                        <c:otherwise>
+                            <c:out value="${sessionScope.user.username}" default="Người dùng" />
+                        </c:otherwise>
+                    </c:choose>
                 </span>
+                
+                <!-- Dropdown menu -->
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle p-0 ms-2" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">
+                            <i class="bi bi-person"></i> Hồ sơ cá nhân
+                        </a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/settings">
+                            <i class="bi bi-gear"></i> Cài đặt
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/logout">
+                            <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                        </a></li>
+                    </ul>
+                </div>
             </div>
         </header>
 

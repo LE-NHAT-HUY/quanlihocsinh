@@ -1,6 +1,7 @@
 package com.quanlihocsinh.dao;
 
 import com.quanlihocsinh.model.Student;
+import com.quanlihocsinh.model.tblClass;
 import com.quanlihocsinh.util.DBUtil;
 
 import java.sql.*;
@@ -203,4 +204,58 @@ public class StudentDAO {
             e.printStackTrace();
         }
     }
+    // Thêm method này vào StudentDAO.java
+
+    public Student getByStudentId(String studentId) {
+        String sql = "SELECT * FROM dbo.tblStudent WHERE StudentID=?";
+        Student s = null;
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, studentId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    s = mapResultSetToStudent(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return s;
+    }
+
+    public tblClass getCurrentClassByStudentId(String studentId) {
+        tblClass cls = null;
+
+        String sql = "SELECT c.* " +
+                "FROM dbo.tblClass c " +
+                "INNER JOIN dbo.tblStudentClass sc ON c.ClassID = sc.ClassID " +
+                "WHERE sc.StudentID = ? AND c.IsActive = 1";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, studentId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    cls = new tblClass();
+                    cls.setClassID(rs.getInt("ClassID"));
+                    cls.setClassName(rs.getString("ClassName"));
+                    cls.setGradeID(rs.getInt("GradeID"));
+                    cls.setCohortID(rs.getInt("CohortID"));
+                    cls.setSchoolYear(rs.getString("SchoolYear"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cls;
+    }
+
 }

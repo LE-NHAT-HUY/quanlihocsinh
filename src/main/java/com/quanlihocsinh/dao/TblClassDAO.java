@@ -60,6 +60,8 @@ public class TblClassDAO {
         return c;
     }
 
+    // Kiểm tra lại method add trong TblClassDAO.java
+
     public void add(tblClass c) {
         String sql = "INSERT INTO tblClass(ClassName, GradeID, CohortID, MaxStudents, CurrentStudents, SchoolYear, IsActive) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -69,15 +71,24 @@ public class TblClassDAO {
 
             ps.setString(1, c.getClassName());
             ps.setInt(2, c.getGradeID());
-            ps.setObject(3, c.getCohortID(), Types.INTEGER);
+
+            // Xử lý CohortID có thể null
+            if (c.getCohortID() != null) {
+                ps.setInt(3, c.getCohortID());
+            } else {
+                ps.setNull(3, Types.INTEGER);
+            }
+
             ps.setInt(4, c.getMaxStudents());
             ps.setInt(5, c.getCurrentStudents());
             ps.setString(6, c.getSchoolYear());
             ps.setBoolean(7, c.isActive());
 
-            ps.executeUpdate();
+            int result = ps.executeUpdate();
+            System.out.println("Insert class result: " + result + " - ClassName: " + c.getClassName());
 
         } catch (SQLException e) {
+            System.out.println("Error inserting class: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -129,6 +140,30 @@ public class TblClassDAO {
             ps.setInt(2, id);
             ps.executeUpdate();
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // <CHANGE> Thêm method tăng số lượng học sinh hiện tại
+    public void incrementCurrentStudents(int classId) {
+        String sql = "UPDATE tblClass SET CurrentStudents = CurrentStudents + 1 WHERE ClassID = ?";
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, classId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // <CHANGE> Thêm method giảm số lượng học sinh hiện tại
+    public void decrementCurrentStudents(int classId) {
+        String sql = "UPDATE tblClass SET CurrentStudents = CurrentStudents - 1 WHERE ClassID = ? AND CurrentStudents > 0";
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, classId);
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,7 +1,9 @@
 package com.quanlihocsinh.Controller.admin;
 
 import com.quanlihocsinh.dao.TblClassDAO;
+import com.quanlihocsinh.dao.CohortDAO;
 import com.quanlihocsinh.model.tblClass;
+import com.quanlihocsinh.model.Cohort;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +14,7 @@ import java.util.List;
 @WebServlet("/admin/class/*")
 public class ClassController extends HttpServlet {
     private TblClassDAO dao = new TblClassDAO();
+    private CohortDAO cohortDAO = new CohortDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -23,6 +26,8 @@ public class ClassController extends HttpServlet {
 
         switch (action) {
             case "add":
+                List<Cohort> cohorts = cohortDAO.getAll();
+                request.setAttribute("cohorts", cohorts);
                 request.getRequestDispatcher("/WEB-INF/views/admin/class/add.jsp").forward(request, response);
                 break;
             case "edit":
@@ -55,9 +60,14 @@ public class ClassController extends HttpServlet {
             case "list":
             default:
                 List<tblClass> list = dao.getAll();
+                List<Cohort> cohortList = cohortDAO.getAll();
+
                 request.setAttribute("classes", list);
+                request.setAttribute("cohortList", cohortList);
+
                 request.getRequestDispatcher("/WEB-INF/views/admin/class/list.jsp").forward(request, response);
                 break;
+
         }
     }
 
@@ -72,9 +82,7 @@ public class ClassController extends HttpServlet {
 
         switch (action) {
             case "add":
-                tblClass newC = extractClassFromRequest(request);
-                dao.add(newC);
-                response.sendRedirect(request.getContextPath() + "/admin/class?action=list");
+                addMultipleClasses(request, response);
                 break;
             case "edit":
                 tblClass editC = extractClassFromRequest(request);
@@ -88,6 +96,56 @@ public class ClassController extends HttpServlet {
             default:
                 response.sendRedirect(request.getContextPath() + "/admin/class?action=list");
         }
+    }
+
+    private void addMultipleClasses(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        String className = request.getParameter("className");
+        String cohortIdStr = request.getParameter("cohortID");
+        String maxStudentsStr = request.getParameter("maxStudents");
+
+        if (cohortIdStr == null || cohortIdStr.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/class?action=list");
+            return;
+        }
+
+        int cohortId = Integer.parseInt(cohortIdStr);
+        int maxStudents = (maxStudentsStr != null && !maxStudentsStr.isEmpty()) ? Integer.parseInt(maxStudentsStr) : 40;
+
+        // Lấy thông tin Cohort để xác định năm bắt đầu
+        Cohort cohort = cohortDAO.getById(cohortId);
+        if (cohort == null) {
+            response.sendRedirect(request.getContextPath() + "/admin/class?action=list");
+            return;
+        }
+
+        int startYear = cohort.getStartYear();
+
+        // Mảng GradeID: 6, 7, 8, 9
+        int[] gradeIds = { 6, 7, 8, 9 };
+
+        // Tạo 4 lớp học
+        for (int i = 0; i < 4; i++) {
+            tblClass newClass = new tblClass();
+            newClass.setClassName(className);
+            newClass.setGradeID(gradeIds[i]);
+            newClass.setCohortID(cohortId);
+            newClass.setMaxStudents(maxStudents);
+            newClass.setCurrentStudents(0);
+
+            // Năm học tăng tuần tự: 2023-2024, 2024-2025, 2025-2026, 2026-2027
+            int yearStart = startYear + i;
+            int yearEnd = yearStart + 1;
+            String schoolYear = yearStart + "-" + yearEnd;
+            newClass.setSchoolYear(schoolYear);
+
+            newClass.setActive(true);
+
+            dao.add(newClass);
+        }
+
+        response.sendRedirect(request.getContextPath() + "/admin/class?action=list");
     }
 
     private tblClass extractClassFromRequest(HttpServletRequest request) {

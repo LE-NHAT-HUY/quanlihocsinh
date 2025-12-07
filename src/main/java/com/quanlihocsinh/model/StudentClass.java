@@ -8,6 +8,9 @@ public class StudentClass {
     private boolean isActive;
     private int yearSemesterID;
 
+    // Thêm trường Student
+    private Student student;
+
     public StudentClass() {
     }
 
@@ -21,6 +24,7 @@ public class StudentClass {
         this.yearSemesterID = yearSemesterID;
     }
 
+    // Getter/Setter các trường cũ
     public int getStudentClassID() {
         return studentClassID;
     }
@@ -67,5 +71,14 @@ public class StudentClass {
 
     public void setYearSemesterID(int yearSemesterID) {
         this.yearSemesterID = yearSemesterID;
+    }
+
+    // Getter/Setter cho trường Student
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }
