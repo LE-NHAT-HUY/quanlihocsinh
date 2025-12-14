@@ -29,11 +29,15 @@
                         </select>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4 d-flex gap-2">
+
+                        <!-- NÚT LỌC (thuộc form lọc bên ngoài) -->
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search me-1"></i>Lọc
+                            <i class="bi bi-search me-1"></i> Lọc
                         </button>
                     </div>
+
+
 
                 </form>
             </div>

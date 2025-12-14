@@ -130,4 +130,28 @@ public class SubjectDAO {
             e.printStackTrace();
         }
     }
+
+    public List<Subject> findAllActive() {
+        List<Subject> list = new ArrayList<>();
+        String sql = "SELECT * FROM tblSubject WHERE IsActive = 1 ORDER BY SubjectName";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public Subject findById(int id) {
+        return getSubjectById(id);
+    }
+
 }

@@ -1,5 +1,6 @@
 com\quanlihocsinh\Controller\admin\CreateUserContrller.class
 com\quanlihocsinh\Controller\admin\DbTestController.class
+com\quanlihocsinh\dao\ScoreDAO.class
 com\quanlihocsinh\dao\TblClassDAO.class
 com\quanlihocsinh\Controller\admin\TeacherController.class
 com\quanlihocsinh\Controller\admin\GradeController.class
@@ -15,6 +16,7 @@ com\quanlihocsinh\dao\YearSemesterDAO.class
 com\quanlihocsinh\Controller\admin\HomeController.class
 com\quanlihocsinh\Controller\admin\ScheduleController.class
 com\quanlihocsinh\dao\TeacherDAO.class
+com\quanlihocsinh\model\Score.class
 com\quanlihocsinh\model\Role.class
 com\quanlihocsinh\model\Cohort.class
 com\quanlihocsinh\model\tblClass.class
@@ -29,10 +31,12 @@ com\quanlihocsinh\model\Subject.class
 com\quanlihocsinh\model\Person.class
 com\quanlihocsinh\model\menu.class
 com\quanlihocsinh\Controller\admin\CohortController.class
+com\quanlihocsinh\Controller\admin\ScoreController.class
 com\quanlihocsinh\dao\PersonDAO.class
 com\quanlihocsinh\Controller\LogoutContrller.class
 com\quanlihocsinh\model\Student.class
 com\quanlihocsinh\model\Teacher.class
+com\quanlihocsinh\service\ScoreService.class
 com\quanlihocsinh\model\Grade.class
 com\quanlihocsinh\dao\StudentClassDAO.class
 com\quanlihocsinh\Controller\admin\StudentClassController.class

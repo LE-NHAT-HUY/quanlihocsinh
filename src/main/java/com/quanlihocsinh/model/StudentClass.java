@@ -8,23 +8,10 @@ public class StudentClass {
     private boolean isActive;
     private int yearSemesterID;
 
-    // Thêm trường Student
+    // THÊM THUỘC TÍNH NÀY
     private Student student;
 
-    public StudentClass() {
-    }
-
-    public StudentClass(int studentClassID, String studentID, int classID, int cohortID, boolean isActive,
-            int yearSemesterID) {
-        this.studentClassID = studentClassID;
-        this.studentID = studentID;
-        this.classID = classID;
-        this.cohortID = cohortID;
-        this.isActive = isActive;
-        this.yearSemesterID = yearSemesterID;
-    }
-
-    // Getter/Setter các trường cũ
+    // Getters and Setters
     public int getStudentClassID() {
         return studentClassID;
     }
@@ -61,8 +48,8 @@ public class StudentClass {
         return isActive;
     }
 
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     public int getYearSemesterID() {
@@ -73,12 +60,25 @@ public class StudentClass {
         this.yearSemesterID = yearSemesterID;
     }
 
-    // Getter/Setter cho trường Student
+    // THÊM GETTER/SETTER CHO STUDENT
     public Student getStudent() {
         return student;
     }
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    @Override
+    public String toString() {
+        return "StudentClass{" +
+                "studentClassID=" + studentClassID +
+                ", studentID='" + studentID + '\'' +
+                ", classID=" + classID +
+                ", cohortID=" + cohortID +
+                ", isActive=" + isActive +
+                ", yearSemesterID=" + yearSemesterID +
+                ", student=" + (student != null ? student.getFullName() : "null") +
+                '}';
     }
 }

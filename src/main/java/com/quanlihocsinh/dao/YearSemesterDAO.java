@@ -90,4 +90,25 @@ public class YearSemesterDAO {
             ps.executeUpdate();
         }
     }
+
+    public List<YearSemester> getAllActive() throws SQLException {
+        List<YearSemester> list = new ArrayList<>();
+        String sql = "SELECT * FROM tblYearSemester WHERE IsActive = 1";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                YearSemester ys = new YearSemester();
+                ys.setYearSemesterID(rs.getInt("YearSemesterID"));
+                ys.setSemesterName(rs.getString("SemesterName"));
+                ys.setSchoolYear(rs.getString("SchoolYear"));
+                ys.setIsActive(true);
+                list.add(ys);
+            }
+        }
+        return list;
+    }
+
 }

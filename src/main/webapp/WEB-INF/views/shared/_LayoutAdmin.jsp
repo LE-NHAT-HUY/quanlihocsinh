@@ -377,31 +377,43 @@
         </li>
     </ul>
 </li>
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#student-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-building"></i>
+        <span>Quản lý Học sinh</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="student-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/student?action=add">
+                <i class="bi bi-circle"></i>
+                <span>Thêm mới học sinh</span>
+            </a>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/student?action=list">
+                <i class="bi bi-circle"></i>
+                <span>Danh sách học sinh</span>
+            </a>
+        </li>
+    </ul>
+</li>
 
-  <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#student-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-person-vcard"></i>
-          <span>Quản lý Học sinh</span>
-          <i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-
-      <ul id="student-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-              <a href="${pageContext.request.contextPath}/admin/student?action=add">
-                  <i class="bi bi-circle"></i>
-                  <span>Thêm mới học sinh</span>
-              </a>
-          </li>
-
-          <li>
-              <a href="${pageContext.request.contextPath}/admin/student?action=list">
-                  <i class="bi bi-circle"></i>
-                  <span>Danh sách học sinh</span>
-              </a>
-          </li>
-      </ul>
-  </li>
-
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#studentclass-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-people"></i>
+        <span>Học sinh theo lớp</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="studentclass-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/studentclass?action=list">
+                <i class="bi bi-circle"></i>
+                <span>Danh sách học sinh theo lớp</span>
+            </a>
+        </li>
+    </ul>
+</li>
 
 <!-- Quản lý Giáo viên -->
 <li class="nav-item">
@@ -444,6 +456,24 @@
         </li>
     </ul>
 </li>
+
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#score-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-check"></i>
+        <span>Quản lý Điểm</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="score-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/scores">
+                <i class="bi bi-circle"></i>
+                <span>Danh sách điểm</span>
+            </a>
+        </li>
+    </ul>
+</li>
+
+
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#schedule-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-calendar2-week"></i>

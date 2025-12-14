@@ -3,51 +3,57 @@
 <%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
 
 <main id="main" class="main">
-  <div class="pagetitle">
-    <h2>Thêm lớp mới</h2>
-    <a href="${pageContext.request.contextPath}/admin/class?action=list" class="btn btn-secondary">Quay lại</a>
-  </div>
+    <div class="pagetitle">
+        <h2>Thêm mới lớp học</h2>
+    </div>
 
-  <section class="section mt-3">
-    <form action="${pageContext.request.contextPath}/admin/class" method="post">
-      <input type="hidden" name="action" value="add" />
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body mt-4">
 
-      <div class="mb-3">
-        <label class="form-label">Tên lớp</label>
-        <input type="text" name="className" class="form-control" required />
-      </div>
+                        <form action="${pageContext.request.contextPath}/admin/class?action=add" method="post">
 
-      <div class="mb-3">
-        <label class="form-label">Khối (GradeID)</label>
-        <input type="number" name="gradeID" class="form-control" required />
-      </div>
+                            <div class="mb-3">
+                                <label for="className" class="form-label">Tên lớp</label>
+                                <input type="text" class="form-control" id="className" name="className" required>
+                            </div>
 
-      <div class="mb-3">
-        <label class="form-label">Khóa (CohortID)</label>
-        <input type="number" name="cohortID" class="form-control" />
-      </div>
+                            <div class="mb-3">
+                                <label for="cohortID" class="form-label">Khóa học</label>
+                                <select class="form-select" id="cohortID" name="cohortID" required>
+                                    <option value="">-- Chọn khóa --</option>
+                                    <c:forEach var="cohort" items="${cohorts}">
+                                        <option value="${cohort.cohortID}">
+                                            ${cohort.cohortName} (${cohort.startYear} - ${cohort.endYear})
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </div>
 
-      <div class="mb-3">
-        <label class="form-label">Số tối đa</label>
-        <input type="number" name="maxStudents" class="form-control" value="30" />
-      </div>
+                            <div class="mb-3">
+                                <label for="maxStudents" class="form-label">Sĩ số tối đa</label>
+                                <input type="number" class="form-control" id="maxStudents" name="maxStudents" required>
+                            </div>
 
-      <div class="mb-3">
-        <label class="form-label">Số hiện tại</label>
-        <input type="number" name="currentStudents" class="form-control" value="0" />
-      </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="isActive" name="isActive" checked>
+                                <label class="form-check-label" for="isActive">Hiển thị</label>
+                            </div>
 
-      <div class="mb-3">
-        <label class="form-label">Niên khóa (ví dụ: 2024-2025)</label>
-        <input type="text" name="schoolYear" class="form-control" />
-      </div>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Thêm mới
+                            </button>
+                            <a href="${pageContext.request.contextPath}/admin/class?action=list" class="btn btn-secondary">
+                                Hủy
+                            </a>
 
-      <div class="mb-3 form-check">
-        <input type="checkbox" name="isActive" class="form-check-input" id="isActive" checked />
-        <label class="form-check-label" for="isActive">Hoạt động</label>
-      </div>
+                        </form>
 
-      <button type="submit" class="btn btn-primary">Thêm</button>
-    </form>
-  </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
