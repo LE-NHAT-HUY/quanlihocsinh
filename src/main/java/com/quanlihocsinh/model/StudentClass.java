@@ -8,10 +8,8 @@ public class StudentClass {
     private boolean isActive;
     private int yearSemesterID;
 
-    // THÊM THUỘC TÍNH NÀY
     private Student student;
 
-    // Getters and Setters
     public int getStudentClassID() {
         return studentClassID;
     }

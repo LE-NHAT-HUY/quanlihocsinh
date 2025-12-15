@@ -34,7 +34,6 @@ public class CreateUserContrller extends HttpServlet {
         String password = req.getParameter("password");
         int roleId = Integer.parseInt(req.getParameter("roleId"));
 
-        // Cho phép personId NULL nếu là admin
         String personRaw = req.getParameter("personId");
         Integer personId = null;
 

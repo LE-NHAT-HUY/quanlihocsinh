@@ -58,10 +58,9 @@ public class ScoreController extends HttpServlet {
         String path = req.getPathInfo();
 
         try {
-            // ===== LIST =====
-            // ===== LIST =====
+
             if (path == null || "/".equals(path) || "/list".equals(path)) {
-                // Luôn lấy danh sách lớp, môn học và học kỳ
+
                 List<tblClass> classes = tblClassDAO.getAll();
                 req.setAttribute("classes", classes);
 
@@ -71,7 +70,6 @@ public class ScoreController extends HttpServlet {
                 List<YearSemester> yearSemesters = yearSemesterDAO.getAllActive();
                 req.setAttribute("yearSemesters", yearSemesters);
 
-                // Lấy parameter, parse an toàn
                 int classID = 0;
                 int subjectID = 0;
                 int yearSemesterID = 0;
@@ -95,22 +93,17 @@ public class ScoreController extends HttpServlet {
                 req.setAttribute("subjectID", subjectID);
                 req.setAttribute("yearSemesterID", yearSemesterID);
 
-                // Lấy danh sách học sinh và điểm nếu classID > 0 và subjectID > 0 và
-                // yearSemesterID > 0
                 if (classID > 0 && subjectID > 0 && yearSemesterID > 0) {
-                    // Lấy danh sách học sinh trong lớp
+
                     List<StudentClass> studentsInClass = studentClassDAO.getStudentsByClass(classID);
 
-                    // Lấy điểm đã có cho lớp + môn + học kỳ
                     List<Score> scores = scoreDAO.getByClassSubjectYear(classID, subjectID, yearSemesterID);
 
-                    // Tạo map để JSP tra cứu điểm theo studentID
                     Map<String, Score> scoreMap = new HashMap<>();
                     for (Score s : scores) {
                         scoreMap.put(s.getStudentID(), s);
                     }
 
-                    // Debug
                     System.out.println("===== DEBUG: LIST SCORES =====");
                     System.out.println(
                             "Class: " + classID + ", Subject: " + subjectID + ", YearSemester: " + yearSemesterID);
@@ -120,7 +113,6 @@ public class ScoreController extends HttpServlet {
                     req.setAttribute("studentsInClass", studentsInClass);
                     req.setAttribute("scoreMap", scoreMap);
 
-                    // Lấy thông tin lớp, môn, học kỳ để hiển thị
                     tblClass cls = tblClassDAO.getById(classID);
                     Subject sub = subjectDAO.getSubjectById(subjectID);
                     YearSemester ys = yearSemesterDAO.getById(yearSemesterID);
@@ -136,7 +128,7 @@ public class ScoreController extends HttpServlet {
                 req.getRequestDispatcher("/WEB-INF/views/admin/score/list.jsp").forward(req, resp);
                 return;
             }
-            // ===== ADD =====
+
             if ("/add".equals(path)) {
                 int classID = parseInt(req.getParameter("classID"));
                 int subjectID = parseInt(req.getParameter("subjectID"));
@@ -147,30 +139,24 @@ public class ScoreController extends HttpServlet {
                     return;
                 }
 
-                // Lấy lớp và môn
                 tblClass cls = tblClassDAO.getById(classID);
                 Subject sub = subjectDAO.getSubjectById(subjectID);
 
-                // THAY ĐỔI QUAN TRỌNG: Lấy học sinh trong lớp (không phân biệt học kỳ)
                 List<StudentClass> studentsInClass = studentClassDAO.getStudentsByClass(classID);
 
-                // Debug
                 System.out.println("===== DEBUG: ADD SCORE =====");
                 System.out.println("Lớp: " + classID + ", Môn: " + subjectID + ", Học kỳ: " + yearSemesterID);
                 System.out.println("Số học sinh trong lớp: " + studentsInClass.size());
 
-                // Lấy điểm đã có cho lớp + môn + học kỳ CỤ THỂ
                 List<Score> scores = scoreDAO.getByClassSubjectYear(classID, subjectID, yearSemesterID);
                 System.out.println("Số bản ghi điểm đã có: " + scores.size());
 
-                // Tạo map để JSP tra cứu điểm theo studentID
                 Map<String, Score> scoreMap = new HashMap<>();
                 for (Score s : scores) {
                     scoreMap.put(s.getStudentID(), s);
                     System.out.println("Điểm của học sinh " + s.getStudentID() + ": " + s.getAverageScore());
                 }
 
-                // Set attribute cho JSP
                 req.setAttribute("classObj", cls);
                 req.setAttribute("subject", sub);
                 req.setAttribute("studentsInClass", studentsInClass);
@@ -190,7 +176,6 @@ public class ScoreController extends HttpServlet {
         }
     }
 
-    // POST: saveBulk (insert/update nhiều), delete, ajaxCalc
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getPathInfo();
@@ -206,7 +191,6 @@ public class ScoreController extends HttpServlet {
                     return;
                 }
 
-                // Lấy danh sách học sinh trong lớp (không phân biệt học kỳ)
                 List<StudentClass> students = studentClassDAO.getStudentsByClass(classID);
 
                 Connection conn = DBUtil.getConnection();
@@ -224,12 +208,10 @@ public class ScoreController extends HttpServlet {
                         Double fin = parseDouble(req.getParameter("fin_" + key));
                         String notes = req.getParameter("notes_" + key);
 
-                        // Nếu tất cả rỗng và không có notes thì bỏ qua
                         if (oral1 == null && oral2 == null && s15_1 == null && s15_2 == null &&
                                 mid == null && fin == null && (notes == null || notes.trim().isEmpty()))
                             continue;
 
-                        // Kiểm tra tồn tại điểm cho student+subject+year
                         Score existing = scoreDAO.findByStudentSubjectYear(studentID, subjectID, yearSemesterID);
                         Score s = new Score();
 
@@ -298,7 +280,6 @@ public class ScoreController extends HttpServlet {
         }
     }
 
-    // helper
     private int parseInt(String v) {
         try {
             return Integer.parseInt(v);

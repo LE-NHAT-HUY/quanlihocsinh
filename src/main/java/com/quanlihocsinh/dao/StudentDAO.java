@@ -204,7 +204,6 @@ public class StudentDAO {
             e.printStackTrace();
         }
     }
-    // Thêm method này vào StudentDAO.java
 
     public Student getByStudentId(String studentId) {
         String sql = "SELECT * FROM dbo.tblStudent WHERE StudentID=?";

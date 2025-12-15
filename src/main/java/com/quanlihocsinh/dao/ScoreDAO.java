@@ -11,14 +11,9 @@ import java.util.List;
 
 public class ScoreDAO {
 
-    /**
-     * Lấy tất cả điểm theo classID, subjectID, yearSemesterID.
-     * Nếu học sinh chưa có điểm, vẫn trả về StudentClass với score = null
-     */
     public List<Score> getByClassSubjectYear(int classID, int subjectID, int yearSemesterID) throws SQLException {
         List<Score> list = new ArrayList<>();
 
-        // Tìm điểm của học sinh TRONG LỚP đó, cho môn và học kỳ cụ thể
         String sql = "SELECT s.* FROM tblScore s " +
                 "WHERE s.SubjectID = ? AND s.YearSemesterID = ? " +
                 "AND s.StudentID IN ( " +
@@ -41,8 +36,6 @@ public class ScoreDAO {
         }
         return list;
     }
-
-    /* ==================== Các phương thức khác giữ nguyên ==================== */
 
     public Score findByStudentSubjectYear(String studentID, int subjectID, int yearSemesterID) throws SQLException {
         String sql = "SELECT * FROM tblScore WHERE StudentID = ? AND SubjectID = ? AND YearSemesterID = ?";

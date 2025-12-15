@@ -41,18 +41,17 @@ public class StudentClassController extends HttpServlet {
             if (request.getParameter("yearSemesterID") != null && !request.getParameter("yearSemesterID").isEmpty())
                 yearSemesterID = Integer.parseInt(request.getParameter("yearSemesterID"));
         } catch (NumberFormatException e) {
-            // ignore
+
         }
 
         try {
             switch (action) {
                 case "/add":
-                    // <CHANGE> Lấy danh sách học sinh chưa có trong lớp
+
                     List<Student> students = scDAO.getStudentsNotInClass(classID, yearSemesterID);
                     List<tblClass> classes = classDAO.getAll();
                     List<Cohort> cohorts = cohortDAO.getAll();
 
-                    // Lấy thông tin lớp hiện tại
                     tblClass currentClass = classDAO.getById(classID);
 
                     request.setAttribute("students", students);
@@ -69,7 +68,6 @@ public class StudentClassController extends HttpServlet {
                     List<StudentClass> studentsInClass = scDAO.getByClassAndYear(classID, yearSemesterID);
                     List<tblClass> allClasses = classDAO.getAll();
 
-                    // Lấy thông tin chi tiết học sinh
                     for (StudentClass sc : studentsInClass) {
                         Student s = studentDAO.getByStudentId(sc.getStudentID());
                         sc.setStudent(s);
@@ -89,7 +87,6 @@ public class StudentClassController extends HttpServlet {
                         int studentClassID = Integer.parseInt(request.getParameter("studentClassID"));
                         scDAO.delete(studentClassID);
 
-                        // <CHANGE> Giảm số lượng học sinh hiện tại của lớp
                         if (classID > 0) {
                             classDAO.decrementCurrentStudents(classID);
                         }
@@ -136,7 +133,6 @@ public class StudentClassController extends HttpServlet {
 
             scDAO.add(sc);
 
-            // <CHANGE> Tăng số lượng học sinh hiện tại của lớp
             classDAO.incrementCurrentStudents(classID);
 
             response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID=" + classID

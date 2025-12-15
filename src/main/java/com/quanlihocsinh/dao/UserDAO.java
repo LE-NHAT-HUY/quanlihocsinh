@@ -57,7 +57,6 @@ public class UserDAO {
         try (Connection conn = DBUtil.getConnection()) {
             conn.setAutoCommit(false);
 
-            // Check username trùng
             try (PreparedStatement ps = conn.prepareStatement(checkUserSql)) {
                 ps.setString(1, username);
                 ResultSet rs = ps.executeQuery();
@@ -67,7 +66,6 @@ public class UserDAO {
                 }
             }
 
-            // Nếu có personId → kiểm tra liên kết
             if (personId != null) {
                 try (PreparedStatement ps = conn.prepareStatement(checkLinkedSql)) {
                     ps.setInt(1, personId);
@@ -81,7 +79,6 @@ public class UserDAO {
 
             String hashed = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
 
-            // INSERT — cho phép personId NULL
             try (PreparedStatement ps = conn.prepareStatement(insertSql)) {
                 ps.setString(1, username);
                 ps.setString(2, hashed);

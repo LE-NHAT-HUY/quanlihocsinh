@@ -27,7 +27,6 @@ public class DbTestController extends HttpServlet {
         try (Connection conn = DriverManager.getConnection(JDBC_URL)) {
             message = "DB Connection Successful!";
 
-            // Truy vấn dữ liệu từ tblCohort
             String sql = "SELECT TOP 5 CohortID, CohortName, StartYear, EndYear, IsActive FROM tblCohort";
             try (Statement stmt = conn.createStatement();
                     ResultSet rs = stmt.executeQuery(sql)) {

@@ -10,7 +10,6 @@ import java.util.List;
 
 public class TeacherSubjectDAO {
 
-    // Kiểm tra giáo viên có được gán môn này không
     public boolean isAssigned(int teacherID, int subjectID) {
         String sql = "SELECT 1 FROM Teacher_Subject WHERE TeacherID=? AND SubjectID=?";
 
@@ -28,7 +27,6 @@ public class TeacherSubjectDAO {
         return false;
     }
 
-    // Gán giáo viên - môn học
     public boolean assign(int teacherID, int subjectID, String assignedBy) {
         if (isAssigned(teacherID, subjectID))
             return false;
@@ -49,7 +47,6 @@ public class TeacherSubjectDAO {
         return false;
     }
 
-    // Hủy gán
     public boolean unassign(int teacherID, int subjectID) {
         String sql = "DELETE FROM Teacher_Subject WHERE TeacherID=? AND SubjectID=?";
 
@@ -66,7 +63,6 @@ public class TeacherSubjectDAO {
         return false;
     }
 
-    // Danh sách môn học của giáo viên
     public List<Subject> findSubjectsByTeacher(int teacherID) throws SQLException {
         List<Subject> list = new ArrayList<>();
 
@@ -95,7 +91,6 @@ public class TeacherSubjectDAO {
         return list;
     }
 
-    // Tất cả mapping (admin)
     public List<TeacherSubject> findAll() {
         List<TeacherSubject> list = new ArrayList<>();
 

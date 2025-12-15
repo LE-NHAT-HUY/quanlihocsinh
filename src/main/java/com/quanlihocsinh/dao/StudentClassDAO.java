@@ -46,7 +46,6 @@ public class StudentClassDAO {
                 sc.setActive(rs.getBoolean("isActive"));
                 sc.setYearSemesterID(rs.getInt("yearSemesterID"));
 
-                // Tạo đối tượng Student và gán thông tin
                 Student student = new Student();
                 student.setStudentID(rs.getString("studentID"));
                 student.setFullName(rs.getString("fullName"));
@@ -55,7 +54,6 @@ public class StudentClassDAO {
                 student.setNumberPhone(rs.getString("numberPhone"));
                 student.setAddress(rs.getString("address"));
 
-                // Gán Student vào StudentClass
                 sc.setStudent(student);
                 list.add(sc);
             }
@@ -120,7 +118,6 @@ public class StudentClassDAO {
                     sc.setStudentID(rs.getString("StudentID"));
                     sc.setYearSemesterID(rs.getInt("YearSemesterID"));
 
-                    // Gán đối tượng Student
                     Student s = new Student();
                     s.setStudentID(rs.getString("StudentID"));
                     s.setFullName(rs.getString("FullName"));
@@ -138,7 +135,7 @@ public class StudentClassDAO {
         String sql = "SELECT sc.*, s.fullName, s.gender, s.birth, s.numberPhone, s.address " +
                 "FROM tblStudentClass sc " +
                 "INNER JOIN tblStudent s ON sc.studentID = s.studentID " +
-                "WHERE sc.classID=? AND sc.isActive=1 " + // BỎ điều kiện yearSemesterID
+                "WHERE sc.classID=? AND sc.isActive=1 " +
                 "ORDER BY s.fullName";
 
         try (Connection conn = DBUtil.getConnection();
@@ -153,7 +150,7 @@ public class StudentClassDAO {
                 sc.setClassID(rs.getInt("classID"));
                 sc.setCohortID(rs.getInt("cohortID"));
                 sc.setActive(rs.getBoolean("isActive"));
-                sc.setYearSemesterID(rs.getInt("yearSemesterID")); // Vẫn lấy nhưng không dùng để filter
+                sc.setYearSemesterID(rs.getInt("yearSemesterID"));
 
                 Student student = new Student();
                 student.setStudentID(rs.getString("studentID"));

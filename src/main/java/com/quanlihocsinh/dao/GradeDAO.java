@@ -89,7 +89,6 @@ public class GradeDAO {
         }
     }
 
-    // Xóa
     public void delete(int id) {
         String sql = "DELETE FROM dbo.tblGrade WHERE GradeID=?";
 

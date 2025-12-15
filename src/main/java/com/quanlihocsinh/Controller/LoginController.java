@@ -32,7 +32,6 @@ public class LoginController extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute("user", user);
 
-            // Điều hướng theo role_id
             switch (user.getRoleId()) {
                 case 1:
                     resp.sendRedirect(req.getContextPath() + "/admin/home");

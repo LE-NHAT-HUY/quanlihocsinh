@@ -12,7 +12,6 @@ public class AuthFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Không cần xử lý
     }
 
     @Override
@@ -24,7 +23,6 @@ public class AuthFilter implements Filter {
 
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
-        // Các đường dẫn công khai
         if (path.startsWith("/login")
                 || path.startsWith("/logout")
                 || path.startsWith("/assets/")
@@ -35,18 +33,15 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        // Cho phép tạo admin đầu tiên (chưa login)
         if (path.startsWith("/admin/createUser")) {
 
             HttpSession session = req.getSession(false);
 
-            // Nếu chưa login -> cho phép để tạo admin đầu tiên
             if (session == null || session.getAttribute("user") == null) {
                 chain.doFilter(request, response);
                 return;
             }
 
-            // Nếu đã login -> chỉ admin mới được dùng createUser
             User u = (User) session.getAttribute("user");
             if (u.getRoleId() != 1) {
                 resp.sendRedirect(req.getContextPath() + "/access-denied");
@@ -57,7 +52,6 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        // Kiểm tra session cho tất cả đường dẫn khác
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
@@ -66,7 +60,6 @@ public class AuthFilter implements Filter {
 
         User user = (User) session.getAttribute("user");
 
-        // Phân quyền
         if (path.startsWith("/admin/") && user.getRoleId() != 1) {
             resp.sendRedirect(req.getContextPath() + "/access-denied");
             return;
@@ -87,6 +80,6 @@ public class AuthFilter implements Filter {
 
     @Override
     public void destroy() {
-        // Không cần xử lý
+
     }
 }

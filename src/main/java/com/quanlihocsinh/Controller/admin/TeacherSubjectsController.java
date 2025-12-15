@@ -25,13 +25,12 @@ public class TeacherSubjectsController extends HttpServlet {
 
         User user = (User) session.getAttribute("user");
 
-        // chỉ cho giáo viên
         if (user.getRoleId() != 2) {
             resp.sendRedirect(req.getContextPath() + "/access-denied");
             return;
         }
 
-        int teacherID = user.getPersonId(); // ✅ ĐÚNG
+        int teacherID = user.getPersonId();
 
         try {
             TeacherSubjectDAO tsDao = new TeacherSubjectDAO();

@@ -70,7 +70,6 @@ public class CohortController extends HttpServlet {
         }
     }
 
-    // --- Hàm xử lý thêm mới ---
     private void addCohort(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         Cohort c = new Cohort();
@@ -83,7 +82,6 @@ public class CohortController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/admin/cohort/list");
     }
 
-    // --- Hàm xử lý cập nhật ---
     private void updateCohort(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         Cohort c = new Cohort();
@@ -97,7 +95,6 @@ public class CohortController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/admin/cohort/list");
     }
 
-    // --- Hàm xử lý toggle isActive ---
     private void toggleStatus(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         int id = Integer.parseInt(request.getParameter("id"));

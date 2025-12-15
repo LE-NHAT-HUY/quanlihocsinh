@@ -6,11 +6,7 @@ import java.math.RoundingMode;
 
 public class ScoreService {
 
-    /**
-     * Tính điểm trung bình và xếp loại học tập
-     */
     public void calculateAveragesAndRating(Score s) {
-        // Tính averageCA: trung bình các điểm miệng và 15 phút (bỏ null)
         BigDecimal sumCA = BigDecimal.ZERO;
         int countCA = 0;
 
@@ -38,7 +34,6 @@ public class ScoreService {
             s.setAverageCA(null);
         }
 
-        // Lấy các điểm khác
         BigDecimal avgCA = s.getAverageCA() != null ? BigDecimal.valueOf(s.getAverageCA()) : null;
         BigDecimal mid = s.getMidtermScore() != null ? BigDecimal.valueOf(s.getMidtermScore()) : null;
         BigDecimal fin = s.getFinalScore() != null ? BigDecimal.valueOf(s.getFinalScore()) : null;
@@ -75,7 +70,6 @@ public class ScoreService {
             s.setAverageScore(null);
         }
 
-        // Xếp loại đơn giản theo averageScore
         Double avg = s.getAverageScore();
         if (avg == null) {
             s.setAcademicRating(null);

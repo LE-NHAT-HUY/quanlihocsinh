@@ -60,8 +60,6 @@ public class TblClassDAO {
         return c;
     }
 
-    // Kiểm tra lại method add trong TblClassDAO.java
-
     public void add(tblClass c) {
         String sql = "INSERT INTO tblClass(ClassName, GradeID, CohortID, MaxStudents, CurrentStudents, SchoolYear, IsActive) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -72,7 +70,6 @@ public class TblClassDAO {
             ps.setString(1, c.getClassName());
             ps.setInt(2, c.getGradeID());
 
-            // Xử lý CohortID có thể null
             if (c.getCohortID() != null) {
                 ps.setInt(3, c.getCohortID());
             } else {
@@ -145,7 +142,6 @@ public class TblClassDAO {
         }
     }
 
-    // <CHANGE> Thêm method tăng số lượng học sinh hiện tại
     public void incrementCurrentStudents(int classId) {
         String sql = "UPDATE tblClass SET CurrentStudents = CurrentStudents + 1 WHERE ClassID = ?";
         try (Connection conn = DBUtil.getConnection();
@@ -157,7 +153,6 @@ public class TblClassDAO {
         }
     }
 
-    // <CHANGE> Thêm method giảm số lượng học sinh hiện tại
     public void decrementCurrentStudents(int classId) {
         String sql = "UPDATE tblClass SET CurrentStudents = CurrentStudents - 1 WHERE ClassID = ? AND CurrentStudents > 0";
         try (Connection conn = DBUtil.getConnection();
