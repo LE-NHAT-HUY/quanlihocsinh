@@ -278,7 +278,7 @@
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-grid"></i>
-        <span>Quản Lí Menu</span>
+        <span>Quản Lý Menu</span>
         <i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
@@ -299,7 +299,7 @@
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#grade-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-journal-text"></i>
-        <span>Quản Lí Khối</span>
+        <span>Quản Lý Khối</span>
         <i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="grade-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
@@ -320,7 +320,7 @@
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#cohort-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-layers"></i>
-        <span>Quản Lí Khóa Học</span>
+        <span>Quản Lý Khóa Học</span>
         <i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="cohort-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
@@ -435,6 +435,28 @@
         </li>
     </ul>
 </li>
+
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#teacher-subject-nav"
+       data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-bookmark"></i>
+        <span>Giáo viên - Môn học</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+
+    <ul id="teacher-subject-nav" class="nav-content collapse"
+        data-bs-parent="#sidebar-nav">
+
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/teachersubject">
+                <i class="bi bi-circle"></i>
+                <span>Gán giáo viên - môn học</span>
+            </a>
+        </li>
+
+    </ul>
+</li>
+
 
 <!-- Quản lý Năm học – Học kỳ -->
 <li class="nav-item">

@@ -154,4 +154,24 @@ public class SubjectDAO {
         return getSubjectById(id);
     }
 
+    public List<Subject> findAll() {
+        List<Subject> list = new ArrayList<>();
+        String sql = "SELECT * FROM tblSubject";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Subject s = new Subject();
+                s.setSubjectID(rs.getInt("SubjectID"));
+                s.setSubjectName(rs.getString("SubjectName"));
+                list.add(s);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

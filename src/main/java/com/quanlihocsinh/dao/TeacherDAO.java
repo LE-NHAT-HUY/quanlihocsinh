@@ -233,4 +233,26 @@ public class TeacherDAO {
         return false;
     }
 
+    public List<Teacher> findAll() {
+        List<Teacher> list = new ArrayList<>();
+        String sql = "SELECT * FROM tblTeacher";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Teacher t = new Teacher();
+                t.setId(rs.getInt("ID"));
+                t.setTeacherID(rs.getString("TeacherID"));
+                t.setFullName(rs.getString("FullName"));
+                list.add(t);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

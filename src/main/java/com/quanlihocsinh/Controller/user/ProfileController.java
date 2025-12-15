@@ -100,7 +100,7 @@ public class ProfileController extends HttpServlet {
         request.setAttribute("person", person);
         request.setAttribute("student", student);
         request.setAttribute("contentPage", "/WEB-INF/views/user/profile/list.jsp");
-        request.setAttribute("pageTitle", "Hồ sơ học sinh: " + person.getFullname());
+        request.setAttribute("pageTitle", "Hồ sơ: " + person.getFullname());
 
         request.getRequestDispatcher("/WEB-INF/views/shared/Layout.jsp")
                 .forward(request, response);

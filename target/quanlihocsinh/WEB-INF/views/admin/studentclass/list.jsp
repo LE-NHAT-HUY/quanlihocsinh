@@ -30,20 +30,13 @@
                     </div>
 
                     <div class="col-md-4 d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search me-1"></i>Lọc
-                        </button>
 
-                        <c:if test="${classID > 0}">
-                            <form method="get" action="${pageContext.request.contextPath}/scores/add" style="margin:0;">
-                                <input type="hidden" name="classID" value="${classID}" />
-                                <input type="hidden" name="yearSemesterID" value="${yearSemesterID}" />
-                                <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-journal-plus me-1"></i> Thêm điểm
-                                </button>
-                            </form>
-                        </c:if>
+                        <!-- NÚT LỌC (thuộc form lọc bên ngoài) -->
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search me-1"></i> Lọc
+                        </button>
                     </div>
+
 
 
                 </form>
