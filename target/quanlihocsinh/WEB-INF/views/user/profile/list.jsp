@@ -161,18 +161,8 @@
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link px-4 py-3" id="academic-tab" data-bs-toggle="tab" data-bs-target="#academic" type="button">
-                                <i class="bi bi-book me-2"></i>Học tập
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
                             <button class="nav-link px-4 py-3" id="update-tab" data-bs-toggle="tab" data-bs-target="#update" type="button">
                                 <i class="bi bi-person-gear me-2"></i>Cập nhật hồ sơ
-                            </button>
-                        </li>
-                         <li class="nav-item" role="presentation">
-                            <button class="nav-link px-4 py-3" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button">
-                                <i class="bi bi-shield-lock me-2"></i>Bảo mật
                             </button>
                         </li>
                     </ul>
@@ -202,7 +192,20 @@
                                     <div class="col-md-6">
                                         <div class="info-field">
                                             <label>Ngày sinh</label>
-                                            <p><c:out value="${student != null ? student.birth : (person != null ? person.birth : 'N/A')}" /></p>
+                                            <p>
+                                                <%-- Bước 1: Xác định lấy ngày sinh từ student hay person --%>
+                                                <c:set var="birthDate" value="${student != null ? student.birth : person.birth}" />
+
+                                                <%-- Bước 2: Kiểm tra nếu có dữ liệu thì format, không thì hiện N/A --%>
+                                                <c:choose>
+                                                    <c:when test="${not empty birthDate}">
+                                                        <fmt:formatDate value="${birthDate}" pattern="dd/MM/yyyy" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        N/A
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

@@ -1,18 +1,8 @@
 package com.quanlihocsinh.Controller.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.quanlihocsinh.dao.ScoreDAO;
-import com.quanlihocsinh.dao.StudentClassDAO;
-import com.quanlihocsinh.dao.StudentDAO;
-import com.quanlihocsinh.dao.SubjectDAO;
-import com.quanlihocsinh.dao.TblClassDAO;
-import com.quanlihocsinh.dao.YearSemesterDAO;
-import com.quanlihocsinh.model.Score;
-import com.quanlihocsinh.model.Student;
-import com.quanlihocsinh.model.StudentClass;
-import com.quanlihocsinh.model.Subject;
-import com.quanlihocsinh.model.YearSemester;
-import com.quanlihocsinh.model.tblClass;
+import com.quanlihocsinh.dao.*; // Import rút gọn
+import com.quanlihocsinh.model.*; // Import rút gọn
 import com.quanlihocsinh.service.ScoreService;
 import com.quanlihocsinh.util.DBUtil;
 
@@ -21,17 +11,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Objects; // Cần thêm cái này để so sánh
 
 @WebServlet("/admin/scores/*")
 public class ScoreController extends HttpServlet {
 
+    private ScoreLogDAO scoreLogDAO;
     private StudentClassDAO studentClassDAO;
     private TblClassDAO tblClassDAO;
     private SubjectDAO subjectDAO;
@@ -49,6 +39,7 @@ public class ScoreController extends HttpServlet {
         scoreDAO = new ScoreDAO();
         scoreService = new ScoreService();
         mapper = new ObjectMapper();
+        scoreLogDAO = new ScoreLogDAO();
     }
 
     @Override
@@ -58,9 +49,8 @@ public class ScoreController extends HttpServlet {
         String path = req.getPathInfo();
 
         try {
-
+            // === LIST VIEW ===
             if (path == null || "/".equals(path) || "/list".equals(path)) {
-
                 List<tblClass> classes = tblClassDAO.getAll();
                 req.setAttribute("classes", classes);
 
@@ -70,45 +60,22 @@ public class ScoreController extends HttpServlet {
                 List<YearSemester> yearSemesters = yearSemesterDAO.getAllActive();
                 req.setAttribute("yearSemesters", yearSemesters);
 
-                int classID = 0;
-                int subjectID = 0;
-                int yearSemesterID = 0;
-
-                try {
-                    String classParam = req.getParameter("classID");
-                    if (classParam != null && !classParam.isEmpty())
-                        classID = Integer.parseInt(classParam);
-
-                    String subjectParam = req.getParameter("subjectID");
-                    if (subjectParam != null && !subjectParam.isEmpty())
-                        subjectID = Integer.parseInt(subjectParam);
-
-                    String yearParam = req.getParameter("yearSemesterID");
-                    if (yearParam != null && !yearParam.isEmpty())
-                        yearSemesterID = Integer.parseInt(yearParam);
-                } catch (NumberFormatException ignored) {
-                }
+                int classID = parseInt(req.getParameter("classID"));
+                int subjectID = parseInt(req.getParameter("subjectID"));
+                int yearSemesterID = parseInt(req.getParameter("yearSemesterID"));
 
                 req.setAttribute("classID", classID);
                 req.setAttribute("subjectID", subjectID);
                 req.setAttribute("yearSemesterID", yearSemesterID);
 
                 if (classID > 0 && subjectID > 0 && yearSemesterID > 0) {
-
                     List<StudentClass> studentsInClass = studentClassDAO.getStudentsByClass(classID);
-
                     List<Score> scores = scoreDAO.getByClassSubjectYear(classID, subjectID, yearSemesterID);
 
                     Map<String, Score> scoreMap = new HashMap<>();
                     for (Score s : scores) {
                         scoreMap.put(s.getStudentID(), s);
                     }
-
-                    System.out.println("===== DEBUG: LIST SCORES =====");
-                    System.out.println(
-                            "Class: " + classID + ", Subject: " + subjectID + ", YearSemester: " + yearSemesterID);
-                    System.out.println("Number of students: " + studentsInClass.size());
-                    System.out.println("Number of scores: " + scores.size());
 
                     req.setAttribute("studentsInClass", studentsInClass);
                     req.setAttribute("scoreMap", scoreMap);
@@ -129,6 +96,7 @@ public class ScoreController extends HttpServlet {
                 return;
             }
 
+            // === ADD VIEW ===
             if ("/add".equals(path)) {
                 int classID = parseInt(req.getParameter("classID"));
                 int subjectID = parseInt(req.getParameter("subjectID"));
@@ -141,20 +109,12 @@ public class ScoreController extends HttpServlet {
 
                 tblClass cls = tblClassDAO.getById(classID);
                 Subject sub = subjectDAO.getSubjectById(subjectID);
-
                 List<StudentClass> studentsInClass = studentClassDAO.getStudentsByClass(classID);
-
-                System.out.println("===== DEBUG: ADD SCORE =====");
-                System.out.println("Lớp: " + classID + ", Môn: " + subjectID + ", Học kỳ: " + yearSemesterID);
-                System.out.println("Số học sinh trong lớp: " + studentsInClass.size());
-
                 List<Score> scores = scoreDAO.getByClassSubjectYear(classID, subjectID, yearSemesterID);
-                System.out.println("Số bản ghi điểm đã có: " + scores.size());
 
                 Map<String, Score> scoreMap = new HashMap<>();
                 for (Score s : scores) {
                     scoreMap.put(s.getStudentID(), s);
-                    System.out.println("Điểm của học sinh " + s.getStudentID() + ": " + s.getAverageScore());
                 }
 
                 req.setAttribute("classObj", cls);
@@ -169,6 +129,14 @@ public class ScoreController extends HttpServlet {
                 return;
             }
 
+            // === HISTORY VIEW ===
+            if ("/history".equals(path)) {
+                List<ScoreLogDTO> logs = scoreLogDAO.getAllLogs();
+                req.setAttribute("logs", logs);
+                req.getRequestDispatcher("/WEB-INF/views/admin/score/history.jsp").forward(req, resp);
+                return;
+            }
+
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 
         } catch (Exception e) {
@@ -179,8 +147,20 @@ public class ScoreController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getPathInfo();
+
+        // 1. Lấy thông tin người đang đăng nhập để ghi log
+        HttpSession session = req.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("user") : null;
+
+        // Nếu admin chưa đăng nhập, redirect về login (tuỳ logic của bạn)
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+        int adminID = user.getEntityId(); // Lấy ID của Admin thực hiện hành động
+
         try {
-            // Trong doPost, phần saveBulk
+            // === SAVE BULK (LƯU ĐIỂM) ===
             if ("/saveBulk".equals(path)) {
                 int classID = parseInt(req.getParameter("classID"));
                 int subjectID = parseInt(req.getParameter("subjectID"));
@@ -194,7 +174,7 @@ public class ScoreController extends HttpServlet {
                 List<StudentClass> students = studentClassDAO.getStudentsByClass(classID);
 
                 Connection conn = DBUtil.getConnection();
-                conn.setAutoCommit(false);
+                conn.setAutoCommit(false); // Bắt đầu Transaction
                 try {
                     for (StudentClass sc : students) {
                         int key = sc.getStudentClassID();
@@ -213,31 +193,70 @@ public class ScoreController extends HttpServlet {
                             continue;
 
                         Score existing = scoreDAO.findByStudentSubjectYear(studentID, subjectID, yearSemesterID);
-                        Score s = new Score();
+
+                        // Object tạm để so sánh
+                        Score newScoreState = new Score();
+                        newScoreState.setOralScore1(oral1);
+                        newScoreState.setOralScore2(oral2);
+                        newScoreState.setScore15Minute1(s15_1);
+                        newScoreState.setScore15Minute2(s15_2);
+                        newScoreState.setMidtermScore(mid);
+                        newScoreState.setFinalScore(fin);
+                        newScoreState.setNotes(notes);
+
+                        String changeLog = "";
+                        String action = "";
 
                         if (existing != null) {
-                            s = existing;
+                            // Cập nhật điểm cũ
+                            // [MỚI]: Tính toán sự thay đổi
+                            changeLog = getChangeDetails(existing, newScoreState);
+                            action = "UPDATE";
+
+                            // Gán giá trị mới vào object existing
+                            existing.setOralScore1(oral1);
+                            existing.setOralScore2(oral2);
+                            existing.setScore15Minute1(s15_1);
+                            existing.setScore15Minute2(s15_2);
+                            existing.setMidtermScore(mid);
+                            existing.setFinalScore(fin);
+                            existing.setNotes(notes);
+                            existing.setActive(true);
+
+                            scoreService.calculateAveragesAndRating(existing);
+                            scoreDAO.update(existing);
                         } else {
+                            // Thêm mới
+                            action = "INSERT";
+                            changeLog = "Nhập mới điểm lần đầu (Admin).";
+
+                            Score s = new Score();
                             s.setStudentID(studentID);
                             s.setSubjectID(subjectID);
                             s.setYearSemesterID(yearSemesterID);
+                            s.setOralScore1(oral1);
+                            s.setOralScore2(oral2);
+                            s.setScore15Minute1(s15_1);
+                            s.setScore15Minute2(s15_2);
+                            s.setMidtermScore(mid);
+                            s.setFinalScore(fin);
+                            s.setNotes(notes);
+                            s.setActive(true);
+
+                            scoreService.calculateAveragesAndRating(s);
+                            scoreDAO.insert(s);
                         }
 
-                        s.setOralScore1(oral1);
-                        s.setOralScore2(oral2);
-                        s.setScore15Minute1(s15_1);
-                        s.setScore15Minute2(s15_2);
-                        s.setMidtermScore(mid);
-                        s.setFinalScore(fin);
-                        s.setNotes(notes);
-                        s.setActive(true);
-
-                        scoreService.calculateAveragesAndRating(s);
-
-                        if (existing != null) {
-                            scoreDAO.update(s);
-                        } else {
-                            scoreDAO.insert(s);
+                        // [MỚI]: GHI LOG VÀO DB
+                        if (changeLog != null && !changeLog.isEmpty()) {
+                            ScoreLog log = new ScoreLog(
+                                    adminID, // ID người sửa (Admin)
+                                    studentID,
+                                    subjectID,
+                                    yearSemesterID,
+                                    action,
+                                    changeLog);
+                            scoreLogDAO.insert(conn, log); // Dùng chung connection để cùng commit
                         }
                     }
                     conn.commit();
@@ -249,7 +268,7 @@ public class ScoreController extends HttpServlet {
                 }
 
                 resp.sendRedirect(req.getContextPath() + "/admin/scores?classID=" + classID +
-                        "&subjectID=" + subjectID + "&yearSemesterID=" + yearSemesterID);
+                        "&subjectID=" + subjectID + "&yearSemesterID=" + yearSemesterID + "&msg=saved");
                 return;
             }
 
@@ -260,6 +279,7 @@ public class ScoreController extends HttpServlet {
                 int yearSemesterID = parseInt(req.getParameter("yearSemesterID"));
                 if (scoreID > 0) {
                     scoreDAO.delete(scoreID);
+                    // Có thể thêm log xóa ở đây nếu muốn
                 }
                 resp.sendRedirect(req.getContextPath() + "/admin/scores?classID=" + classID + "&subjectID=" + subjectID
                         + "&yearSemesterID=" + yearSemesterID);
@@ -280,6 +300,8 @@ public class ScoreController extends HttpServlet {
         }
     }
 
+    // === CÁC HÀM PHỤ TRỢ (HELPER) ===
+
     private int parseInt(String v) {
         try {
             return Integer.parseInt(v);
@@ -298,10 +320,32 @@ public class ScoreController extends HttpServlet {
         }
     }
 
-    private void setDouble(PreparedStatement ps, int idx, Double v) throws SQLException {
-        if (v == null)
-            ps.setNull(idx, java.sql.Types.DOUBLE);
-        else
-            ps.setDouble(idx, v);
+    // [MỚI]: Hàm so sánh thay đổi để ghi log
+    private String getChangeDetails(Score oldS, Score newS) {
+        StringBuilder sb = new StringBuilder();
+
+        compareAndAppend(sb, "Miệng 1", oldS.getOralScore1(), newS.getOralScore1());
+        compareAndAppend(sb, "Miệng 2", oldS.getOralScore2(), newS.getOralScore2());
+        compareAndAppend(sb, "15p Lần 1", oldS.getScore15Minute1(), newS.getScore15Minute1());
+        compareAndAppend(sb, "15p Lần 2", oldS.getScore15Minute2(), newS.getScore15Minute2());
+        compareAndAppend(sb, "Giữa kì", oldS.getMidtermScore(), newS.getMidtermScore());
+        compareAndAppend(sb, "Cuối kì", oldS.getFinalScore(), newS.getFinalScore());
+
+        if (!Objects.equals(oldS.getNotes(), newS.getNotes())) {
+            String oldNote = oldS.getNotes() == null ? "" : oldS.getNotes();
+            String newNote = newS.getNotes() == null ? "" : newS.getNotes();
+            if (!oldNote.equals(newNote)) {
+                sb.append("Ghi chú: [").append(oldNote).append(" -> ").append(newNote).append("]; ");
+            }
+        }
+        return sb.toString();
+    }
+
+    private void compareAndAppend(StringBuilder sb, String label, Double oldVal, Double newVal) {
+        if (!Objects.equals(oldVal, newVal)) {
+            String o = oldVal == null ? "_" : String.valueOf(oldVal);
+            String n = newVal == null ? "_" : String.valueOf(newVal);
+            sb.append(label).append(": ").append(o).append(" -> ").append(n).append("; ");
+        }
     }
 }

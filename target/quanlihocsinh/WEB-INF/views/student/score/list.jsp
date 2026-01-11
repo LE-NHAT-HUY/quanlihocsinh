@@ -4,11 +4,11 @@
 
 <div class="container-fluid p-0">
 
-    <div class="welcome-banner mb-4 p-4 rounded-3" style="background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%); color: white;">
+    <div class="welcome-banner mb-4 p-4 rounded-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
         <div class="row align-items-center">
             <div class="col-md-8">
                 <h2 class="mb-1">
-                    <i class="bi bi-trophy me-2"></i>Thành tích học tập
+                    <i class="bi bi-trophy me-2"></i>Bảng điểm học tập
                 </h2>
                 <p class="mb-0 opacity-75">Bảng điểm cá nhân của học sinh <strong>${student.fullName}</strong>.</p>
             </div>
@@ -29,7 +29,8 @@
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-primary"><i class="bi bi-door-open-fill"></i></span>
                                 <input type="text" class="form-control fw-bold text-primary bg-white" 
-                                       value="${currentClass != null ? currentClass.className : 'Chưa xếp lớp'}" readonly>
+                                    value="${currentClass != null ? currentClass.gradeID : ''}${currentClass != null ? currentClass.className : 'Chưa xếp lớp'}" 
+                                    readonly>
                             </div>
                         </div>
 
@@ -44,13 +45,6 @@
                                         </option>
                                     </c:forEach>
                                 </select>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4">
-                            <div class="alert alert-light border mb-0 py-2 small">
-                                <i class="bi bi-info-circle me-1"></i>
-                                MSSV: <strong>${student.studentID}</strong>
                             </div>
                         </div>
                     </div>
@@ -85,7 +79,7 @@
                                         <th>15p (2)</th>
                                         <th>Giữa kỳ</th>
                                         <th>Cuối kỳ</th>
-                                        <th class="table-primary">Trung bình</th>
+                                        <th>Trung bình</th>
                                         <th>Xếp loại</th>
                                         <th>Ghi chú</th>
                                     </tr>
@@ -103,7 +97,7 @@
                                             <td class="text-center fw-semibold">${s.midtermScore != null ? s.midtermScore : '-'}</td>
                                             <td class="text-center fw-bold text-success">${s.finalScore != null ? s.finalScore : '-'}</td>
                                             
-                                            <td class="text-center table-primary fw-bold">
+                                            <td class="text-center fw-bold">
                                                 <c:if test="${s.averageScore != null}">
                                                     <span class="${s.averageScore >= 5.0 ? 'text-success' : 'text-danger'}">
                                                         ${s.averageScore}

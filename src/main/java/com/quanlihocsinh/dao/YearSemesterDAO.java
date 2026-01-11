@@ -120,4 +120,41 @@ public class YearSemesterDAO {
         return list;
     }
 
+    // Thêm vào com.quanlihocsinh.dao.YearSemesterDAO
+
+    public List<String> getDistinctSchoolYears() {
+        List<String> years = new ArrayList<>();
+        String sql = "SELECT DISTINCT SchoolYear FROM tblYearSemester ORDER BY SchoolYear DESC";
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                years.add(rs.getString("SchoolYear"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return years;
+    }
+
+    public int getSemesterIDByYearAndName(String schoolYear, String semesterKeyword) {
+        // Tìm kiếm tương đối: Ví dụ keyword là "1" sẽ tìm các kỳ có tên chứa số "1"
+        String sql = "SELECT YearSemesterID FROM tblYearSemester WHERE SchoolYear = ? AND SemesterName LIKE ?";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, schoolYear);
+            ps.setString(2, "%" + semesterKeyword + "%"); // Tìm chuỗi chứa từ khóa
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("YearSemesterID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }

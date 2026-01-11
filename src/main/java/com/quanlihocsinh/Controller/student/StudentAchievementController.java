@@ -3,6 +3,7 @@ package com.quanlihocsinh.Controller.student;
 import com.quanlihocsinh.dao.*;
 import com.quanlihocsinh.model.*;
 import com.quanlihocsinh.service.AchievementService;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @WebServlet("/student/achievements")
 public class StudentAchievementController extends HttpServlet {
 
+    private YearSemesterDAO yearSemesterDAO;
     private ScoreDAO scoreDAO;
     private StudentDAO studentDAO;
     private MenuDAO menuDAO;
@@ -20,6 +22,7 @@ public class StudentAchievementController extends HttpServlet {
 
     @Override
     public void init() {
+        yearSemesterDAO = new YearSemesterDAO();
         scoreDAO = new ScoreDAO();
         studentDAO = new StudentDAO();
         menuDAO = new MenuDAO();
@@ -31,55 +34,90 @@ public class StudentAchievementController extends HttpServlet {
         HttpSession session = req.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
+        // 1. Kiểm tra quyền Học sinh (Role = 3)
         if (user == null || user.getRoleId() != 3) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
+        // 2. Load Menu & Thông tin học sinh
         req.setAttribute("menuList", menuDAO.getAllMenus());
-        int studentPK = user.getEntityId();
-        Student student = studentDAO.getById(studentPK);
+        Student student = studentDAO.getById(user.getEntityId());
         req.setAttribute("student", student);
 
-        // === TÍNH TOÁN THÀNH TÍCH ===
+        // 3. LOGIC CHÍNH: Lấy lịch sử thành tích
+        List<String> schoolYears = yearSemesterDAO.getDistinctSchoolYears();
+        List<YearAchievement> achievementList = new ArrayList<>();
 
-        // 1. Lấy bảng điểm HK1 (ID=1) và HK2 (ID=2)
-        // Lưu ý: Đảm bảo ID học kỳ trong DB khớp với logic này (hoặc query động)
-        List<Score> listHK1 = scoreDAO.getStudentTranscript(student.getStudentID(), 1);
-        List<Score> listHK2 = scoreDAO.getStudentTranscript(student.getStudentID(), 2);
+        // --- BẮT ĐẦU DEBUG LOG (Xem kết quả ở tab Output của NetBeans) ---
+        System.out.println("=============================================");
+        System.out.println("DEBUG: Tính thành tích cho HS: " + student.getFullName());
+        System.out.println("Tổng số năm học tìm thấy: " + schoolYears.size());
 
-        // 2. Tính ĐTB từng kỳ
-        double avgHK1 = achievementService.calculateAverage(listHK1);
-        double avgHK2 = achievementService.calculateAverage(listHK2);
+        for (String year : schoolYears) {
+            YearAchievement ya = new YearAchievement();
+            ya.setSchoolYear(year);
 
-        // 3. Xếp loại từng kỳ
-        String rankHK1 = achievementService.classifyAcademic(avgHK1, listHK1);
-        String rankHK2 = achievementService.classifyAcademic(avgHK2, listHK2);
+            // Tìm ID học kỳ bằng từ khóa ngắn gọn "1" và "2"
+            // (Yêu cầu DAO dùng LIKE '%1%' và LIKE '%2%')
+            int idHK1 = yearSemesterDAO.getSemesterIDByYearAndName(year, "1");
+            int idHK2 = yearSemesterDAO.getSemesterIDByYearAndName(year, "2");
 
-        // 4. Tính Cả năm
-        double avgYear = achievementService.calculateYearAverage(avgHK1, avgHK2);
+            System.out.println("---------------------------------------------");
+            System.out.println("Năm học: " + year);
+            System.out.println("  -> ID HK1 tìm được: " + idHK1);
+            System.out.println("  -> ID HK2 tìm được: " + idHK2);
 
-        // Gộp danh sách điểm cả năm để xét điểm liệt (Logic đơn giản: lấy tất cả điểm
-        // đã có)
-        List<Score> allScores = new ArrayList<>();
-        allScores.addAll(listHK1);
-        allScores.addAll(listHK2);
+            // Lấy danh sách điểm
+            List<Score> listHK1 = (idHK1 > 0) ? scoreDAO.getStudentTranscript(student.getStudentID(), idHK1)
+                    : new ArrayList<>();
+            List<Score> listHK2 = (idHK2 > 0) ? scoreDAO.getStudentTranscript(student.getStudentID(), idHK2)
+                    : new ArrayList<>();
 
-        String rankYear = achievementService.classifyAcademic(avgYear, allScores);
-        String titleYear = achievementService.getTitle(rankYear);
+            System.out.println("  -> Số lượng điểm HK1: " + listHK1.size());
+            System.out.println("  -> Số lượng điểm HK2: " + listHK2.size());
 
-        // 5. Gửi dữ liệu sang View
-        req.setAttribute("avgHK1", avgHK1);
-        req.setAttribute("rankHK1", rankHK1);
+            // --- TÍNH TOÁN HỌC KỲ 1 ---
+            double avgHK1 = achievementService.calculateAverage(listHK1);
+            String rankHK1 = achievementService.classifyAcademic(avgHK1, listHK1);
+            ya.setAvgHK1(avgHK1);
+            ya.setRankHK1(rankHK1);
 
-        req.setAttribute("avgHK2", avgHK2);
-        req.setAttribute("rankHK2", rankHK2);
+            // --- TÍNH TOÁN HỌC KỲ 2 ---
+            double avgHK2 = achievementService.calculateAverage(listHK2);
+            String rankHK2 = achievementService.classifyAcademic(avgHK2, listHK2);
+            ya.setAvgHK2(avgHK2);
+            ya.setRankHK2(rankHK2);
 
-        req.setAttribute("avgYear", avgYear);
-        req.setAttribute("rankYear", rankYear);
-        req.setAttribute("titleYear", titleYear);
+            // --- TÍNH TOÁN CẢ NĂM ---
+            // Logic: Chỉ tính cả năm nếu ít nhất HK1 đã có điểm
+            if (!listHK1.isEmpty()) {
+                double avgYear = achievementService.calculateYearAverage(avgHK1, avgHK2);
+                ya.setAvgYear(avgYear);
 
-        req.setAttribute("pageTitle", "Thành tích học tập");
+                // Gộp điểm để xét môn khống chế
+                List<Score> allScores = new ArrayList<>(listHK1);
+                allScores.addAll(listHK2);
+
+                String rankYear = achievementService.classifyAcademic(avgYear, allScores);
+                ya.setRankYear(rankYear);
+
+                // Xét danh hiệu (chỉ có khi đã xếp loại)
+                String title = achievementService.getTitle(rankYear);
+                ya.setTitleYear(title);
+            } else {
+                ya.setAvgYear(0.0);
+                ya.setRankYear("Chưa xếp loại");
+                ya.setTitleYear("");
+            }
+
+            achievementList.add(ya);
+        }
+        System.out.println("=============================================");
+        // --- KẾT THÚC DEBUG LOG ---
+
+        req.setAttribute("achievementList", achievementList);
+        req.setAttribute("pageTitle", "Lịch sử thành tích");
         req.setAttribute("contentPage", "/WEB-INF/views/student/achievement/index.jsp");
         req.getRequestDispatcher("/WEB-INF/views/shared/Layout.jsp").forward(req, resp);
     }

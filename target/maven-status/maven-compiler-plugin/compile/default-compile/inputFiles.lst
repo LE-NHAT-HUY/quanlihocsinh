@@ -20,6 +20,7 @@ C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controlle
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\LogoutContrller.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\student\HomeController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\student\ProfileController.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\student\StudentAchievementController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\student\StudentScoreController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\student\UpdateProfileController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\teacher\HomeController.java
@@ -34,6 +35,8 @@ C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\PostD
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\RoleDAO.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\ScheduleDAO.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\ScoreDAO.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\ScoreLogDAO.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\StatisticsDAO.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\StudentClassDAO.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\StudentDAO.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\SubjectDAO.java
@@ -53,6 +56,8 @@ C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Pos
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Role.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Schedule.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Score.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\ScoreLog.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\ScoreLogDTO.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Student.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\StudentClass.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Subject.java
@@ -60,6 +65,8 @@ C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\tbl
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Teacher.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\TeacherSubject.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\User.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\YearAchievement.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\YearSemester.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\service\AchievementService.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\service\ScoreService.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\util\DBUtil.java

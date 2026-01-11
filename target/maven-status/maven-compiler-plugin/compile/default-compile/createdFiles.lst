@@ -2,20 +2,25 @@ com\quanlihocsinh\Controller\admin\CreateUserContrller.class
 com\quanlihocsinh\Controller\admin\DbTestController.class
 com\quanlihocsinh\dao\ScoreDAO.class
 com\quanlihocsinh\dao\TblClassDAO.class
+com\quanlihocsinh\model\ScoreLogDTO.class
 com\quanlihocsinh\Controller\admin\TeacherController.class
 com\quanlihocsinh\Controller\admin\GradeController.class
+com\quanlihocsinh\dao\ScoreLogDAO.class
 com\quanlihocsinh\model\AdminMenu.class
 com\quanlihocsinh\model\Post.class
 com\quanlihocsinh\dao\StudentDAO.class
+com\quanlihocsinh\Controller\student\StudentAchievementController.class
 com\quanlihocsinh\Controller\student\StudentScoreController.class
 com\quanlihocsinh\dao\ScheduleDAO.class
 com\quanlihocsinh\Controller\LoginController.class
 com\quanlihocsinh\model\TeacherSubject.class
 com\quanlihocsinh\Controller\admin\ATSubjectController.class
 com\quanlihocsinh\dao\SubjectDAO.class
+com\quanlihocsinh\model\ScoreLog.class
 com\quanlihocsinh\Controller\teacher\TeacherScoreController.class
 com\quanlihocsinh\dao\AdminMenuDAO.class
 com\quanlihocsinh\Controller\admin\ClassController.class
+com\quanlihocsinh\dao\StatisticsDAO.class
 com\quanlihocsinh\dao\YearSemesterDAO.class
 com\quanlihocsinh\Controller\admin\HomeController.class
 com\quanlihocsinh\Controller\admin\ScheduleController.class
@@ -39,6 +44,7 @@ com\quanlihocsinh\Controller\admin\CohortController.class
 com\quanlihocsinh\Controller\admin\ScoreController.class
 com\quanlihocsinh\dao\PersonDAO.class
 com\quanlihocsinh\Controller\LogoutContrller.class
+com\quanlihocsinh\Controller\student\HomeController.class
 com\quanlihocsinh\Controller\admin\UserListController.class
 com\quanlihocsinh\model\Student.class
 com\quanlihocsinh\model\Teacher.class
@@ -51,6 +57,7 @@ com\quanlihocsinh\dao\PostDAO.class
 com\quanlihocsinh\Controller\teacher\HomeController.class
 com\quanlihocsinh\Controller\admin\SubjectController.class
 com\quanlihocsinh\dao\UserRoleDAO.class
+com\quanlihocsinh\service\AchievementService.class
 com\quanlihocsinh\Controller\admin\StudentController.class
 com\quanlihocsinh\Controller\advice\AdminMenuAvice.class
 com\quanlihocsinh\dao\MenuDAO.class
@@ -60,4 +67,5 @@ com\quanlihocsinh\Controller\teacher\ProfileController.class
 com\quanlihocsinh\dao\RoleDAO.class
 com\quanlihocsinh\Controller\admin\MenuController.class
 com\quanlihocsinh\dao\UserDAO.class
+com\quanlihocsinh\model\YearAchievement.class
 com\quanlihocsinh\dao\CohortDAO.class

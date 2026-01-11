@@ -4,11 +4,11 @@
 
 <div class="container-fluid p-0">
 
-    <div class="welcome-banner mb-4 p-4 rounded-3" style="background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%); color: white;">
+    <div class="welcome-banner mb-4 p-4 rounded-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
         <div class="row align-items-center">
             <div class="col-md-8">
                 <h2 class="mb-1">
-                    <i class="bi bi-trophy me-2"></i>Thành tích học tập
+                    <i class="bi bi-trophy me-2"></i>Bảng điểm học tập
                 </h2>
                 <p class="mb-0 opacity-75">Bảng điểm cá nhân của học sinh <strong>${student.fullName}</strong>.</p>
             </div>

@@ -63,18 +63,24 @@ public class StudentClassDAO {
 
     public List<Student> getStudentsNotInClass(int classID, int yearSemesterID) throws SQLException {
         List<Student> list = new ArrayList<>();
+        // Sửa SQL: Loại bỏ những học sinh đã có bản ghi trong bảng tblStudentClass ứng
+        // với yearSemesterID này
         String sql = "SELECT * FROM tblStudent WHERE studentID NOT IN " +
-                "(SELECT studentID FROM tblStudentClass WHERE classID=? AND yearSemesterID=? AND isActive=1)";
+                "(SELECT studentID FROM tblStudentClass WHERE yearSemesterID = ? AND isActive = 1)";
+
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, classID);
-            ps.setInt(2, yearSemesterID);
+            // Chỉ cần truyền yearSemesterID vì ta muốn tìm học sinh chưa có lớp nào trong
+            // năm này
+            ps.setInt(1, yearSemesterID);
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Student s = new Student();
                 s.setId(rs.getInt("id"));
                 s.setStudentID(rs.getString("studentID"));
                 s.setFullName(rs.getString("fullName"));
+                // Thêm các trường khác nếu cần thiết
                 list.add(s);
             }
         }
@@ -166,4 +172,5 @@ public class StudentClassDAO {
         }
         return list;
     }
+
 }

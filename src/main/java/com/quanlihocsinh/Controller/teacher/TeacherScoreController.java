@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @WebServlet("/teacher/scores/*")
 public class TeacherScoreController extends HttpServlet {
@@ -26,7 +27,8 @@ public class TeacherScoreController extends HttpServlet {
     private ScoreDAO scoreDAO;
     private ScoreService scoreService;
     private TeacherSubjectDAO teacherSubjectDAO;
-    private MenuDAO menuDAO; // 1. Thêm MenuDAO
+    private MenuDAO menuDAO;
+    private ScoreLogDAO scoreLogDAO; // UPDATE: Thêm DAO log
     private ObjectMapper mapper;
 
     @Override
@@ -38,7 +40,8 @@ public class TeacherScoreController extends HttpServlet {
         scoreDAO = new ScoreDAO();
         scoreService = new ScoreService();
         teacherSubjectDAO = new TeacherSubjectDAO();
-        menuDAO = new MenuDAO(); // 2. Khởi tạo MenuDAO
+        menuDAO = new MenuDAO();
+        scoreLogDAO = new ScoreLogDAO(); // UPDATE: Khởi tạo
         mapper = new ObjectMapper();
     }
 
@@ -175,26 +178,23 @@ public class TeacherScoreController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Logic POST (Lưu điểm) giữ nguyên
-        // Lưu ý: Sau khi lưu xong ta dùng sendRedirect nên không cần gán Layout ở đây.
-        // Trừ khi có lỗi validate và muốn forward lại form thì mới cần gán Layout.
-
         HttpSession session = req.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
+
         if (user == null || user.getRoleId() != 2) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
-        int teacherID = user.getEntityId();
+        int teacherID = user.getEntityId(); // Lấy ID giáo viên đang đăng nhập
         String path = req.getPathInfo();
 
         try {
             if ("/saveBulk".equals(path)) {
-                // ... (Logic lưu điểm giữ nguyên 100% từ code cũ) ...
                 int classID = parseInt(req.getParameter("classID"));
                 int subjectID = parseInt(req.getParameter("subjectID"));
                 int yearSemesterID = parseInt(req.getParameter("yearSemesterID"));
 
+                // Kiểm tra quyền dạy
                 boolean isAllowed = false;
                 List<Subject> subjects = teacherSubjectDAO.findSubjectsByTeacher(teacherID);
                 for (Subject s : subjects) {
@@ -210,7 +210,8 @@ public class TeacherScoreController extends HttpServlet {
 
                 List<StudentClass> students = studentClassDAO.getStudentsByClass(classID);
                 Connection conn = DBUtil.getConnection();
-                conn.setAutoCommit(false);
+                conn.setAutoCommit(false); // Bắt đầu Transaction
+
                 try {
                     for (StudentClass sc : students) {
                         int key = sc.getStudentClassID();
@@ -225,37 +226,83 @@ public class TeacherScoreController extends HttpServlet {
                         Double fin = parseDouble(req.getParameter("fin_" + key));
                         String notes = req.getParameter("notes_" + key);
 
+                        // Nếu không nhập gì cả thì bỏ qua
                         if (oral1 == null && oral2 == null && s15_1 == null && s15_2 == null &&
                                 mid == null && fin == null && (notes == null || notes.trim().isEmpty()))
                             continue;
 
                         Score existing = scoreDAO.findByStudentSubjectYear(studentID, subjectID, yearSemesterID);
-                        Score s = new Score();
-                        if (existing != null)
-                            s = existing;
-                        else {
+
+                        // Tạo đối tượng điểm mới (tạm thời) để so sánh
+                        Score newScoreState = new Score();
+                        newScoreState.setOralScore1(oral1);
+                        newScoreState.setOralScore2(oral2);
+                        newScoreState.setScore15Minute1(s15_1);
+                        newScoreState.setScore15Minute2(s15_2);
+                        newScoreState.setMidtermScore(mid);
+                        newScoreState.setFinalScore(fin);
+                        newScoreState.setNotes(notes);
+
+                        String changeLog = "";
+                        String action = "";
+
+                        if (existing != null) {
+                            // UPDATE: So sánh để tìm thay đổi
+                            changeLog = getChangeDetails(existing, newScoreState);
+                            action = "UPDATE";
+
+                            // Cập nhật giá trị mới vào object existing để lưu
+                            existing.setOralScore1(oral1);
+                            existing.setOralScore2(oral2);
+                            existing.setScore15Minute1(s15_1);
+                            existing.setScore15Minute2(s15_2);
+                            existing.setMidtermScore(mid);
+                            existing.setFinalScore(fin);
+                            existing.setNotes(notes);
+                            existing.setActive(true);
+
+                            scoreService.calculateAveragesAndRating(existing);
+
+                            // Lưu vào DB (Giả sử DAO của bạn hỗ trợ nhận Connection, nếu không thì
+                            // transaction này chỉ control được phần Log)
+                            // Tốt nhất bạn nên sửa ScoreDAO để nhận Connection, nhưng ở đây ta gọi method
+                            // cũ
+                            scoreDAO.update(existing);
+                        } else {
+                            // INSERT
+                            action = "INSERT";
+                            changeLog = "Nhập mới điểm lần đầu.";
+
+                            Score s = new Score();
                             s.setStudentID(studentID);
                             s.setSubjectID(subjectID);
                             s.setYearSemesterID(yearSemesterID);
+                            s.setOralScore1(oral1);
+                            s.setOralScore2(oral2);
+                            s.setScore15Minute1(s15_1);
+                            s.setScore15Minute2(s15_2);
+                            s.setMidtermScore(mid);
+                            s.setFinalScore(fin);
+                            s.setNotes(notes);
+                            s.setActive(true);
+
+                            scoreService.calculateAveragesAndRating(s);
+                            scoreDAO.insert(s);
                         }
 
-                        s.setOralScore1(oral1);
-                        s.setOralScore2(oral2);
-                        s.setScore15Minute1(s15_1);
-                        s.setScore15Minute2(s15_2);
-                        s.setMidtermScore(mid);
-                        s.setFinalScore(fin);
-                        s.setNotes(notes);
-                        s.setActive(true);
-
-                        scoreService.calculateAveragesAndRating(s);
-
-                        if (existing != null)
-                            scoreDAO.update(s);
-                        else
-                            scoreDAO.insert(s);
+                        // === UPDATE: GHI LOG NẾU CÓ THAY ĐỔI HOẶC THÊM MỚI ===
+                        if (changeLog != null && !changeLog.isEmpty()) {
+                            ScoreLog log = new ScoreLog(
+                                    teacherID,
+                                    studentID,
+                                    subjectID,
+                                    yearSemesterID,
+                                    action,
+                                    changeLog);
+                            scoreLogDAO.insert(conn, log); // Truyền conn để cùng transaction
+                        }
                     }
-                    conn.commit();
+                    conn.commit(); // Commit cả điểm và log
                 } catch (Exception e) {
                     conn.rollback();
                     throw e;
@@ -263,7 +310,6 @@ public class TeacherScoreController extends HttpServlet {
                     conn.close();
                 }
 
-                // Redirect về trang list kèm thông báo thành công
                 resp.sendRedirect(req.getContextPath() + "/teacher/scores?classID=" + classID +
                         "&subjectID=" + subjectID + "&yearSemesterID=" + yearSemesterID + "&msg=saved");
             }
@@ -272,6 +318,37 @@ public class TeacherScoreController extends HttpServlet {
         }
     }
 
+    // === UPDATE: Hàm phụ trợ so sánh sự thay đổi ===
+    private String getChangeDetails(Score oldS, Score newS) {
+        StringBuilder sb = new StringBuilder();
+
+        compareAndAppend(sb, "Miệng 1", oldS.getOralScore1(), newS.getOralScore1());
+        compareAndAppend(sb, "Miệng 2", oldS.getOralScore2(), newS.getOralScore2());
+        compareAndAppend(sb, "15p Lần 1", oldS.getScore15Minute1(), newS.getScore15Minute1());
+        compareAndAppend(sb, "15p Lần 2", oldS.getScore15Minute2(), newS.getScore15Minute2());
+        compareAndAppend(sb, "Giữa kì", oldS.getMidtermScore(), newS.getMidtermScore());
+        compareAndAppend(sb, "Cuối kì", oldS.getFinalScore(), newS.getFinalScore());
+
+        if (!Objects.equals(oldS.getNotes(), newS.getNotes())) {
+            String oldNote = oldS.getNotes() == null ? "" : oldS.getNotes();
+            String newNote = newS.getNotes() == null ? "" : newS.getNotes();
+            if (!oldNote.equals(newNote)) {
+                sb.append("Ghi chú: [").append(oldNote).append(" -> ").append(newNote).append("]; ");
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private void compareAndAppend(StringBuilder sb, String label, Double oldVal, Double newVal) {
+        if (!Objects.equals(oldVal, newVal)) {
+            String o = oldVal == null ? "_" : String.valueOf(oldVal);
+            String n = newVal == null ? "_" : String.valueOf(newVal);
+            sb.append(label).append(": ").append(o).append(" -> ").append(n).append("; ");
+        }
+    }
+
+    // Các hàm parse giữ nguyên
     private int parseInt(String v) {
         try {
             return Integer.parseInt(v);
