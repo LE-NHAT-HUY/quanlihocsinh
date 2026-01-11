@@ -12,8 +12,8 @@
                     <i class="bi bi-hand-wave me-2"></i>
                     Xin chào, 
                     <c:choose>
-                        <c:when test="${not empty sessionScope.user.profile.fullname}">
-                            <c:out value="${sessionScope.user.profile.fullname}" />
+                        <c:when test="${not empty sessionScope.user.profile.fullName}">
+                            <c:out value="${sessionScope.user.profile.fullName}" />
                         </c:when>
                         <c:otherwise>
                             <c:out value="${sessionScope.user.username}" />
@@ -91,7 +91,7 @@
                                 <div class="col-sm-6">
                                     <label class="text-muted small">Họ và tên</label>
                                     <p class="mb-0 fw-semibold">
-                                        <c:out value="${sessionScope.user.profile.fullname}" default="Chưa cập nhật" />
+                                        <c:out value="${sessionScope.user.profile.fullName}" default="Chưa cập nhật" />
                                     </p>
                                 </div>
                                 <div class="col-sm-6">

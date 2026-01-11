@@ -1,40 +1,28 @@
 package com.quanlihocsinh.model;
 
-import java.util.Date;
+import java.io.Serializable;
 
-public class User {
-    private int userId;
+public class User implements Serializable {
+    private int userID;
     private String username;
-    private String passwordHash;
-    private int roleId;
-    private int personId;
-    private boolean isActive;
-    private Date createdAt;
+    private String password;
+    private int roleId; // 1: Admin, 2: Teacher, 3: Student
+    private int personId; // Khóa ngoại sang bảng Person
 
-    // optionally include Person object for convenience
-    private Person profile;
+    // --- CÁC TRƯỜNG BỔ SUNG QUAN TRỌNG ---
+    private int entityId; // ID thực tế (TeacherID hoặc StudentID)
+    private Person profile; // Chứa thông tin chi tiết (Họ tên, ngày sinh...)
 
     public User() {
     }
 
-    public User(int userId, String username, String passwordHash, int roleId,
-            int personId, boolean isActive, Date createdAt, Person profile) {
-        this.userId = userId;
-        this.username = username;
-        this.passwordHash = passwordHash;
-        this.roleId = roleId;
-        this.personId = personId;
-        this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.profile = profile;
+    // Getters Setters chuẩn
+    public int getUserID() {
+        return userID;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getUsername() {
@@ -45,12 +33,12 @@ public class User {
         this.username = username;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getRoleId() {
@@ -69,20 +57,12 @@ public class User {
         this.personId = personId;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public int getEntityId() {
+        return entityId;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setEntityId(int entityId) {
+        this.entityId = entityId;
     }
 
     public Person getProfile() {
@@ -92,27 +72,4 @@ public class User {
     public void setProfile(Person profile) {
         this.profile = profile;
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
-                ", roleId=" + roleId +
-                ", personId=" + personId +
-                ", isActive=" + isActive +
-                ", createdAt=" + createdAt +
-                ", profile=" + (profile != null ? profile.getFullname() : "null") +
-                '}';
-    }
-
-    public boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
 }

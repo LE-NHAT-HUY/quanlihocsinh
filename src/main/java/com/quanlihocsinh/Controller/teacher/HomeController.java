@@ -28,7 +28,7 @@ public class HomeController extends HttpServlet {
         request.setAttribute("contentPage", "/WEB-INF/views/teacher/home.jsp");
         request.setAttribute("pageTitle", "Trang chủ giáo viên");
 
-        request.getRequestDispatcher("/WEB-INF/views/shared/Layout.jsp")
+        request.getRequestDispatcher("/WEB-INF/views/shared/Layoutteacher.jsp")
                 .forward(request, response);
     }
 }

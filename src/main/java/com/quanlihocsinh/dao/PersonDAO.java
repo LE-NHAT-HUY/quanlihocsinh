@@ -9,8 +9,12 @@ import java.util.List;
 
 public class PersonDAO {
 
+    // Lấy thông tin Person theo ID
     public Person getById(int personId) throws SQLException {
-        String sql = "SELECT person_id, original_table, original_id, fullname, birth, gender, address, phone, images, person_type, is_active FROM Person WHERE person_id = ?";
+        // SQL lấy các trường thông tin cá nhân cơ bản
+        // Lưu ý: Đã bỏ original_table, original_id, person_type để khớp với DB mới
+        String sql = "SELECT person_id, fullname, birth, gender, address, phone, images, is_active FROM Person WHERE person_id = ?";
+
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -25,26 +29,34 @@ public class PersonDAO {
         return null;
     }
 
+    // Hàm lấy danh sách Person chưa liên kết (Dùng cho dropdown khi tạo User)
     public List<Person> getUnlinkedPersons(String personType) throws SQLException {
-        String sql = "SELECT p.person_id, p.fullname, p.person_type, p.is_active " +
+        // Logic mới: Chỉ lấy những Person chưa có trong bảng Users
+        String sql = "SELECT p.person_id, p.fullname, p.is_active " +
                 "FROM Person p LEFT JOIN Users u ON p.person_id = u.person_id " +
-                "WHERE u.user_id IS NULL AND (p.person_type = ? OR ? IS NULL)";
+                "WHERE u.user_id IS NULL";
+
+        // Lưu ý: Tham số personType không còn được sử dụng trong SQL nữa
+        // do hệ thống mới phân quyền qua bảng Users
 
         List<Person> list = new ArrayList<>();
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, personType);
-            ps.setString(2, personType);
+            // Nếu bạn muốn lọc kỹ hơn, có thể thêm điều kiện vào SQL,
+            // hiện tại ta lấy tất cả person chưa có tài khoản.
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Person p = new Person();
                     p.setPersonId(rs.getInt("person_id"));
-                    p.setFullname(rs.getString("fullname"));
-                    p.setPersonType(rs.getString("person_type"));
+
+                    // SỬA QUAN TRỌNG: setFullName (viết hoa chữ N)
+                    p.setFullName(rs.getString("fullname"));
+
                     p.setActive(rs.getBoolean("is_active"));
+
                     list.add(p);
                 }
             }
@@ -52,21 +64,45 @@ public class PersonDAO {
         return list;
     }
 
+    // Hàm ánh xạ từ ResultSet sang Object Person
     private Person mapRow(ResultSet rs) throws SQLException {
         Person p = new Person();
 
         p.setPersonId(rs.getInt("person_id"));
-        p.setOriginalTable(rs.getString("original_table"));
-        p.setOriginalId(rs.getInt("original_id"));
-        p.setFullname(rs.getString("fullname"));
+
+        // SỬA QUAN TRỌNG: setFullName (viết hoa chữ N để khớp với Model Person)
+        p.setFullName(rs.getString("fullname"));
+
         p.setBirth(rs.getDate("birth"));
         p.setGender(rs.getString("gender"));
         p.setAddress(rs.getString("address"));
         p.setPhone(rs.getString("phone"));
         p.setImages(rs.getString("images"));
-        p.setPersonType(rs.getString("person_type"));
         p.setActive(rs.getBoolean("is_active"));
 
+        // Các trường cũ đã được loại bỏ để tránh lỗi:
+        // p.setOriginalTable(...);
+        // p.setPersonType(...);
+
         return p;
+    }
+
+    // Thêm vào file src/java/com/quanlihocsinh/dao/PersonDAO.java
+
+    public void update(Person p) throws SQLException {
+        String sql = "UPDATE Person SET fullname=?, birth=?, gender=?, address=?, phone=? WHERE person_id=?";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, p.getFullName());
+            ps.setDate(2, p.getBirth());
+            ps.setString(3, p.getGender());
+            ps.setString(4, p.getAddress());
+            ps.setString(5, p.getPhone());
+            ps.setInt(6, p.getPersonId());
+
+            ps.executeUpdate();
+        }
     }
 }

@@ -174,48 +174,38 @@
         <form method="post"
               action="${pageContext.request.contextPath}/admin/createUser">
 
-            <div class="mb-3">
-                <label class="form-label">Tên đăng nhập</label>
-                <input name="username" class="form-control"
-                       placeholder="Nhập username" required />
-            </div>
+            <form action="${pageContext.request.contextPath}/admin/createUser" method="post">
+    <div class="mb-3">
+        <label>Tên đăng nhập</label>
+        <input type="text" name="username" class="form-control" required>
+    </div>
+    
+    <div class="mb-3">
+        <label>Mật khẩu</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+    
+    <div class="mb-3">
+        <label>Họ và tên (Hiển thị)</label>
+        <input type="text" name="fullname" class="form-control" required placeholder="Nhập họ tên đầy đủ">
+    </div>
 
-            <div class="mb-3">
-                <label class="form-label">Mật khẩu</label>
-                <input type="password" name="password"
-                       class="form-control"
-                       placeholder="Nhập mật khẩu" required />
-            </div>
+    <div class="mb-3">
+        <label>Vai trò</label>
+        <select name="roleId" class="form-select">
+            <option value="1">Admin</option>
+            <option value="2">Giáo viên</option>
+            <option value="3">Học sinh</option>
+        </select>
+    </div>
 
-            <div class="mb-3">
-                <label class="form-label">Vai trò</label>
-                <select name="roleId" id="roleId"
-                        class="form-select"
-                        onchange="onRoleChange()">
-                    <option value="1">Admin</option>
-                    <option value="2">Teacher</option>
-                    <option value="3">Student</option>
-                </select>
-            </div>
-
-            <div class="mb-4" id="profileDiv" style="display:none;">
-                <label class="form-label">Liên kết profile</label>
-                <select name="personId" id="personId"
-                        class="form-select">
-                    <option value="">-- Chọn --</option>
-                    <c:forEach var="p" items="${persons}">
-                        <option value="${p.personId}">
-                            ${p.fullname} (${p.personType})
-                        </option>
-                    </c:forEach>
-                </select>
-            </div>
-
-            <button type="submit"
+      <button type="submit"
                     class="btn btn-submit w-100 text-white">
                 <i class="fas fa-user-plus"></i>
                 Tạo tài khoản
             </button>
+</form>
+          
         </form>
     </div>
 

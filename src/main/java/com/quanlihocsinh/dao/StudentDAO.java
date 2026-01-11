@@ -256,5 +256,41 @@ public class StudentDAO {
 
         return cls;
     }
+    // Thêm vào file src/java/com/quanlihocsinh/dao/StudentDAO.java
+
+    // File: src/java/com/quanlihocsinh/dao/StudentDAO.java
+
+    public void updateProfileInfo(int studentID, String fullName, Date birth, String gender, String address,
+            String phone,
+            String hamlet, String commune, String province, String nation, String religion, String nationality)
+            throws SQLException {
+
+        // Cập nhật đầy đủ các trường trong bảng tblStudent
+        String sql = "UPDATE tblStudent SET FullName=?, Birth=?, Gender=?, Address=?, NumberPhone=?, " +
+                "Hamlet=?, Commune=?, Province=?, Nation=?, Religion=?, Nationality=? " +
+                "WHERE ID=?";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, fullName);
+            ps.setDate(2, birth);
+            ps.setString(3, gender);
+            ps.setString(4, address);
+            ps.setString(5, phone);
+
+            // Các trường mới thêm
+            ps.setString(6, hamlet); // Thôn/Xóm
+            ps.setString(7, commune); // Xã/Phường
+            ps.setString(8, province); // Tỉnh/Thành
+            ps.setString(9, nation); // Dân tộc
+            ps.setString(10, religion); // Tôn giáo
+            ps.setString(11, nationality);// Quốc tịch
+
+            ps.setInt(12, studentID);
+
+            ps.executeUpdate();
+        }
+    }
 
 }

@@ -524,7 +524,7 @@
     </a>
     <ul id="role-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
-            <a href="${pageContext.request.contextPath}/admin/assign-role">
+            <a href="${pageContext.request.contextPath}/admin/users">
                 <i class="bi bi-circle"></i><span>Danh sách người dùng</span>
             </a>
         </li>

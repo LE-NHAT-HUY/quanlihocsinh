@@ -2,8 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<c:if test="${param.msg == 'success'}">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>Cập nhật hồ sơ thành công!
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</c:if>
+
 <div class="profile-page">
-    <!-- Profile Header Banner -->
     <div class="profile-header mb-4">
         <div class="profile-cover" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 180px; border-radius: 12px 12px 0 0;"></div>
         <div class="profile-header-content px-4 pb-4" style="background: #fff; border-radius: 0 0 12px 12px; margin-top: -60px; position: relative;">
@@ -37,7 +43,7 @@
                         <h3 class="mb-0 fw-bold">
                             <c:choose>
                                 <c:when test="${not empty student}">${student.fullName}</c:when>
-                                <c:when test="${not empty person}">${person.fullname}</c:when>
+                                <c:when test="${not empty person}">${person.fullName}</c:when>
                                 <c:otherwise>Chưa có tên</c:otherwise>
                             </c:choose>
                         </h3>
@@ -56,18 +62,13 @@
                     </p>
                 </div>
                 <div class="col-auto pt-4">
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                        <i class="bi bi-pencil-square me-1"></i>Chỉnh sửa
-                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row g-4">
-        <!-- Left Column -->
         <div class="col-lg-4">
-            <!-- Quick Info Card -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white border-bottom">
                     <h6 class="mb-0 fw-semibold">
@@ -122,7 +123,6 @@
                 </div>
             </div>
 
-            <!-- Additional Sections Card -->
             <div class="card shadow-sm">
                 <div class="card-header bg-white border-bottom">
                     <h6 class="mb-0 fw-semibold">
@@ -141,29 +141,9 @@
                             <span>Đối tượng đào tạo</span>
                             <i class="bi bi-chevron-right ms-auto"></i>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center section-link">
+                         <a href="#" class="list-group-item list-group-item-action d-flex align-items-center section-link">
                             <span class="section-number bg-info">3</span>
                             <span>Thông tin Đảng/Đoàn/Quân Ngũ</span>
-                            <i class="bi bi-chevron-right ms-auto"></i>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center section-link">
-                            <span class="section-number bg-warning">4</span>
-                            <span>Tài khoản NH/Bảo hiểm</span>
-                            <i class="bi bi-chevron-right ms-auto"></i>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center section-link">
-                            <span class="section-number bg-danger">5</span>
-                            <span>Quá trình học tập</span>
-                            <i class="bi bi-chevron-right ms-auto"></i>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center section-link">
-                            <span class="section-number bg-secondary">6</span>
-                            <span>Liên hệ</span>
-                            <i class="bi bi-chevron-right ms-auto"></i>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center section-link">
-                            <span class="section-number bg-dark">7</span>
-                            <span>Hồ sơ số hóa</span>
                             <i class="bi bi-chevron-right ms-auto"></i>
                         </a>
                     </div>
@@ -171,9 +151,7 @@
             </div>
         </div>
 
-        <!-- Right Column -->
         <div class="col-lg-8">
-            <!-- Tabs Navigation -->
             <div class="card shadow-sm">
                 <div class="card-header bg-white border-bottom p-0">
                     <ul class="nav nav-tabs card-header-tabs" id="profileTabs" role="tablist">
@@ -187,15 +165,24 @@
                                 <i class="bi bi-book me-2"></i>Học tập
                             </button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link px-4 py-3" id="update-tab" data-bs-toggle="tab" data-bs-target="#update" type="button">
+                                <i class="bi bi-person-gear me-2"></i>Cập nhật hồ sơ
+                            </button>
+                        </li>
+                         <li class="nav-item" role="presentation">
+                            <button class="nav-link px-4 py-3" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button">
+                                <i class="bi bi-shield-lock me-2"></i>Bảo mật
+                            </button>
+                        </li>
                     </ul>
                 </div>
 
                 <div class="card-body">
                     <div class="tab-content" id="profileTabsContent">
-                        <!-- Overview Tab -->
+                        
                         <div class="tab-pane fade show active" id="overview" role="tabpanel">
-                            <!-- Basic Info Section -->
-                            <div class="info-section mb-4">
+                             <div class="info-section mb-4">
                                 <h6 class="section-title">
                                     <i class="bi bi-person me-2"></i>Thông tin cơ bản
                                 </h6>
@@ -209,7 +196,7 @@
                                     <div class="col-md-6">
                                         <div class="info-field">
                                             <label>Họ và tên</label>
-                                            <p><c:out value="${student != null ? student.fullName : (person != null ? person.fullname : 'N/A')}" /></p>
+                                            <p><c:out value="${student != null ? student.fullName : (person != null ? person.fullName : 'N/A')}" /></p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -251,8 +238,7 @@
                                 </div>
                             </div>
 
-                            <!-- Address Section -->
-                            <div class="info-section mb-4">
+                             <div class="info-section mb-4">
                                 <h6 class="section-title">
                                     <i class="bi bi-house me-2"></i>Địa chỉ thường trú
                                 </h6>
@@ -283,84 +269,124 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Status Section -->
-                            <div class="info-section">
-                                <h6 class="section-title">
-                                    <i class="bi bi-activity me-2"></i>Trạng thái
-                                </h6>
+                        <div class="tab-pane fade" id="academic" role="tabpanel">
+                            <div class="py-4">
+                                <h5 class="fw-bold mb-3">
+                                    <i class="bi bi-book me-2 text-primary"></i>Thông tin học tập
+                                </h5>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <div class="info-field">
-                                            <label>Trạng thái học</label>
-                                            <p>
-                                                <c:if test="${student != null}">
-                                                    <span class="badge ${student.statusStudent == 'Đang học' ? 'bg-success' : 'bg-secondary'} rounded-pill">
-                                                        ${student.statusStudent}
-                                                    </span>
-                                                </c:if>
-                                                <c:if test="${student == null}">N/A</c:if>
-                                            </p>
+                                        <div class="border rounded p-3 bg-light">
+                                            <strong>Lớp hiện tại:</strong>
+                                            <c:choose>
+                                                <c:when test="${not empty currentClass}">
+                                                    ${currentClass.gradeID}${currentClass.className}
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="text-muted">Chưa có lớp</span>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info-field">
-                                            <label>Hiển thị hồ sơ</label>
-                                            <p>
-                                                <c:if test="${student != null}">
-                                                    <span class="badge ${student.isActive ? 'bg-success' : 'bg-secondary'} rounded-pill">
-                                                        ${student.isActive ? 'Đang hoạt động' : 'Không hoạt động'}
-                                                    </span>
-                                                </c:if>
-                                                <c:if test="${student == null}">N/A</c:if>
-                                            </p>
+                                        <div class="border rounded p-3 bg-light">
+                                            <strong>Khóa học:</strong>
+                                            <c:choose>
+                                                <c:when test="${not empty currentCohort}">
+                                                    ${currentCohort.cohortName} (${currentCohort.startYear} - ${currentCohort.endYear})
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="text-muted">Chưa có khóa</span>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Academic Tab -->
-                                    <div class="tab-pane fade" id="academic" role="tabpanel">
-                    <div class="py-4">
-                        <h5 class="fw-bold mb-3">
-                            <i class="bi bi-book me-2 text-primary"></i>Thông tin học tập
-                        </h5>
-
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 bg-light">
-                                    <strong>Lớp hiện tại:</strong>
-                                    <c:choose>
-                                        <c:when test="${not empty currentClass}">
-                                            ${currentClass.gradeID}${currentClass.className}
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="text-muted">Chưa có lớp</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 bg-light">
-                                    <strong>Khóa học:</strong>
-                                    <c:choose>
-                                        <c:when test="${not empty currentCohort}">
-                                            ${currentCohort.cohortName} (${currentCohort.startYear} - ${currentCohort.endYear})
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="text-muted">Chưa có khóa</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        <div class="tab-pane fade" id="update" role="tabpanel">
+    <div class="info-section mb-4">
+        <h6 class="section-title">
+            <i class="bi bi-pencil-square me-2"></i>Cập nhật thông tin cá nhân
+        </h6>
+        <form action="${pageContext.request.contextPath}/user/updateProfile" method="post">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Họ và tên</label>
+                    <input type="text" name="fullName" class="form-control" 
+                           value="${student != null ? student.fullName : person.fullName}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Số điện thoại</label>
+                    <input type="text" name="phone" class="form-control" 
+                           value="${student != null ? student.numberPhone : person.phone}">
                 </div>
 
+                <div class="col-md-6">
+                    <label class="form-label">Ngày sinh</label>
+                    <c:set var="birthDateVal" value="${student != null ? student.birth : person.birth}" />
+                    <fmt:formatDate value="${birthDateVal}" pattern="yyyy-MM-dd" var="formattedBirth"/>
+                    <input type="date" name="birth" class="form-control" value="${formattedBirth}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Giới tính</label>
+                    <select name="gender" class="form-select">
+                        <c:set var="currGender" value="${student != null ? student.gender : person.gender}" />
+                        <option value="Nam" ${currGender == 'Nam' ? 'selected' : ''}>Nam</option>
+                        <option value="Nữ" ${currGender == 'Nữ' ? 'selected' : ''}>Nữ</option>
+                    </select>
+                </div>
 
-                        <!-- Security Tab -->
+                <div class="col-md-4">
+                    <label class="form-label">Dân tộc</label>
+                    <input type="text" name="nation" class="form-control" placeholder="Kinh, Tày..."
+                           value="${student != null ? student.nation : ''}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tôn giáo</label>
+                    <input type="text" name="religion" class="form-control" placeholder="Không, Phật giáo..."
+                           value="${student != null ? student.religion : ''}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Quốc tịch</label>
+                    <input type="text" name="nationality" class="form-control" value="${student != null ? student.nationality : 'Việt Nam'}">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Thôn / Xóm / Số nhà</label>
+                    <input type="text" name="hamlet" class="form-control" 
+                           value="${student != null ? student.hamlet : ''}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Xã / Phường</label>
+                    <input type="text" name="commune" class="form-control" 
+                           value="${student != null ? student.commune : ''}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tỉnh / Thành phố</label>
+                    <input type="text" name="province" class="form-control" 
+                           value="${student != null ? student.province : ''}">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Địa chỉ đầy đủ (Hiển thị trên hồ sơ)</label>
+                    <textarea name="address" class="form-control" rows="2" placeholder="Ví dụ: Xóm 1, Xã A, Huyện B, Tỉnh C">${student != null ? student.address : person.address}</textarea>
+                    <div class="form-text">Nhập địa chỉ đầy đủ để dễ dàng liên lạc.</div>
+                </div>
+
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
                         <div class="tab-pane fade" id="security" role="tabpanel">
                             <div class="info-section mb-4">
                                 <h6 class="section-title">
@@ -394,183 +420,27 @@
     </div>
 </div>
 
-<!-- Edit Profile Modal -->
-<div class="modal fade" id="editProfileModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="bi bi-pencil-square me-2"></i>Chỉnh sửa thông tin
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Họ và tên</label>
-                            <input type="text" class="form-control" value="${student != null ? student.fullName : (person != null ? person.fullname : '')}">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" value="${student != null ? student.numberPhone : (person != null ? person.phone : '')}">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Ngày sinh</label>
-                            <input type="date" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Giới tính</label>
-                            <select class="form-select">
-                                <option>Nam</option>
-                                <option>Nữ</option>
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Địa chỉ</label>
-                            <textarea class="form-control" rows="2">${student != null ? student.address : (person != null ? person.address : '')}</textarea>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary">
-                    <i class="bi bi-check-lg me-1"></i>Lưu thay đổi
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <style>
-/* Profile Header */
-.profile-avatar {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid #fff;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-}
-
-.profile-avatar-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.avatar-edit-btn {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    width: 36px;
-    height: 36px;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-/* Quick Info */
-.quick-info-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-}
-
-/* Section Links */
-.section-number {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #fff;
-    margin-right: 12px;
-}
-
-.section-link {
-    padding: 14px 16px;
-    transition: all 0.2s ease;
-}
-
-.section-link:hover {
-    background-color: #f8f9fa;
-    padding-left: 20px;
-}
-
-/* Tabs */
-#profileTabs .nav-link {
-    border: none;
-    color: #6c757d;
-    border-bottom: 3px solid transparent;
-    border-radius: 0;
-    font-weight: 500;
-}
-
-#profileTabs .nav-link:hover {
-    color: #4154f1;
-    border-color: transparent;
-}
-
-#profileTabs .nav-link.active {
-    color: #4154f1;
-    background: transparent;
-    border-bottom-color: #4154f1;
-}
-
-/* Info Sections */
-.section-title {
-    font-weight: 600;
-    color: #012970;
-    padding-bottom: 12px;
-    margin-bottom: 16px;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.info-field {
-    background: #f8f9fa;
-    padding: 14px 16px;
-    border-radius: 10px;
-    border: 1px solid #e9ecef;
-    height: 100%;
-}
-
-.info-field label {
-    font-size: 0.8rem;
-    color: #6c757d;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-    display: block;
-}
-
-.info-field p {
-    margin: 0;
-    font-weight: 500;
-    color: #2c3e50;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .profile-header-content .row {
-        text-align: center;
-    }
-    .profile-header-content .col-auto {
-        width: 100%;
-        margin-bottom: 16px;
-    }
-}
+/* CSS giữ nguyên như cũ */
+.profile-avatar { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+.profile-avatar-wrapper { position: relative; display: inline-block; }
+.avatar-edit-btn { position: absolute; bottom: 8px; right: 8px; width: 36px; height: 36px; border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.quick-info-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.section-number { width: 28px; height: 28px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; color: #fff; margin-right: 12px; }
+.section-link { padding: 14px 16px; transition: all 0.2s ease; }
+.section-link:hover { background-color: #f8f9fa; padding-left: 20px; }
+#profileTabs .nav-link { border: none; color: #6c757d; border-bottom: 3px solid transparent; border-radius: 0; font-weight: 500; }
+#profileTabs .nav-link:hover { color: #4154f1; border-color: transparent; }
+#profileTabs .nav-link.active { color: #4154f1; background: transparent; border-bottom-color: #4154f1; }
+.section-title { font-weight: 600; color: #012970; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 2px solid #f0f0f0; }
+.info-field { background: #f8f9fa; padding: 14px 16px; border-radius: 10px; border: 1px solid #e9ecef; height: 100%; }
+.info-field label { font-size: 0.8rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block; }
+.info-field p { margin: 0; font-weight: 500; color: #2c3e50; }
+@media (max-width: 768px) { .profile-header-content .row { text-align: center; } .profile-header-content .col-auto { width: 100%; margin-bottom: 16px; } }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Section links click handler
     document.querySelectorAll('.section-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
@@ -579,4 +449,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-

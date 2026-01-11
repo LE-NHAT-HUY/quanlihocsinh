@@ -162,4 +162,52 @@ public class ScoreDAO {
         double v = rs.getDouble(col);
         return rs.wasNull() ? null : v;
     }
+
+    // Thêm vào com.quanlihocsinh.dao.ScoreDAO
+
+    public List<Score> getStudentTranscript(String studentID, int yearSemesterID) {
+        List<Score> list = new ArrayList<>();
+        // Join với bảng Subject để lấy tên môn
+        String sql = "SELECT sc.*, s.SubjectName " +
+                "FROM tblScore sc " +
+                "JOIN tblSubject s ON sc.SubjectID = s.SubjectID " +
+                "WHERE sc.StudentID = ? AND sc.YearSemesterID = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, studentID);
+            ps.setInt(2, yearSemesterID);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Score s = new Score();
+                s.setScoreID(rs.getInt("ScoreID"));
+                s.setStudentID(rs.getString("StudentID"));
+                s.setSubjectID(rs.getInt("SubjectID")); // Lưu ý kiểu int/string tùy DB
+                s.setYearSemesterID(rs.getInt("YearSemesterID"));
+
+                s.setOralScore1(rs.getObject("OralScore1") != null ? rs.getDouble("OralScore1") : null);
+                s.setOralScore2(rs.getObject("OralScore2") != null ? rs.getDouble("OralScore2") : null);
+                s.setScore15Minute1(rs.getObject("Score15Minute1") != null ? rs.getDouble("Score15Minute1") : null);
+                s.setScore15Minute2(rs.getObject("Score15Minute2") != null ? rs.getDouble("Score15Minute2") : null);
+                s.setMidtermScore(rs.getObject("MidtermScore") != null ? rs.getDouble("MidtermScore") : null);
+                s.setFinalScore(rs.getObject("FinalScore") != null ? rs.getDouble("FinalScore") : null);
+                s.setAverageScore(rs.getObject("AverageScore") != null ? rs.getDouble("AverageScore") : null);
+                s.setAcademicRating(rs.getString("AcademicRating"));
+                s.setNotes(rs.getString("Notes"));
+
+                // Gán tên môn học vào đối tượng Score (Hoặc tạo thuộc tính phụ trong Model
+                // Score)
+                // Tạm thời gán vào notes hoặc tạo field mới trong Model Score nếu cần
+                // Ở đây tôi giả sử bạn thêm field subjectName vào Model Score hoặc dùng DTO
+                s.setSubjectName(rs.getString("SubjectName"));
+
+                list.add(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

@@ -1,53 +1,41 @@
 package com.quanlihocsinh.Controller.admin;
 
-import com.quanlihocsinh.dao.PersonDAO;
 import com.quanlihocsinh.dao.UserDAO;
-import com.quanlihocsinh.model.Person;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/admin/createUser")
 public class CreateUserContrller extends HttpServlet {
 
-    private PersonDAO personDAO = new PersonDAO();
     private UserDAO userDAO = new UserDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String type = req.getParameter("type");
-        try {
-            List<Person> persons = personDAO.getUnlinkedPersons(type);
-            req.setAttribute("persons", persons);
-            req.getRequestDispatcher("/WEB-INF/views/admin/createUser.jsp").forward(req, resp);
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
+        // Chỉ cần forward sang trang nhập liệu, không cần load danh sách Person nữa
+        req.getRequestDispatcher("/WEB-INF/views/admin/createUser.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username").trim();
+        req.setCharacterEncoding("UTF-8"); // Đảm bảo tiếng Việt
+
+        String username = req.getParameter("username");
         String password = req.getParameter("password");
+        String fullName = req.getParameter("fullname");
         int roleId = Integer.parseInt(req.getParameter("roleId"));
 
-        String personRaw = req.getParameter("personId");
-        Integer personId = null;
-
-        if (personRaw != null && !personRaw.trim().isEmpty()) {
-            personId = Integer.parseInt(personRaw);
-        }
-
         try {
-            userDAO.createUserLinkedToPerson(username, password, roleId, personId);
-            resp.sendRedirect(req.getContextPath() + "/admin/users?msg=created");
+            // Gọi hàm tạo tài khoản chuẩn mới viết
+            userDAO.createAccount(username, password, roleId, fullName);
+
+            // Thành công -> chuyển về danh sách
+            resp.sendRedirect(req.getContextPath() + "/admin/users?msg=success");
         } catch (Exception e) {
-            req.setAttribute("error", e.getMessage());
+            e.printStackTrace();
+            req.setAttribute("error", "Lỗi tạo tài khoản: " + e.getMessage());
             req.getRequestDispatcher("/WEB-INF/views/admin/createUser.jsp").forward(req, resp);
         }
     }
-
 }

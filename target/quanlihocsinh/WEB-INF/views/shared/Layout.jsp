@@ -13,7 +13,6 @@
 
 <div class="layout">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="brand">
             <div class="brand-title">
@@ -21,7 +20,6 @@
             </div>
         </div>
 
-        <!-- Sidebar động từ menuList -->
         <ul class="sidebar-nav">
             <c:forEach var="menu" items="${menuList}">
                 <li>
@@ -32,15 +30,12 @@
             </c:forEach>
         </ul>
         
-        <!-- Logout button -->
         <div class="sidebar-footer mt-auto p-3">
         </div>
     </aside>
 
-    <!-- MAIN -->
     <div class="main">
 
-        <!-- TOPBAR -->
         <header class="topbar">
             <div class="topbar-left">
                 <h5 class="mb-0"><c:out value="${pageTitle}" default="Trang chủ"/></h5>
@@ -54,7 +49,6 @@
             <div class="topbar-right">
                 <i class="bi bi-bell"></i>
                 
-                <!-- Avatar với hình ảnh nếu có -->
                 <c:choose>
                     <c:when test="${not empty sessionScope.user.profile.images}">
                         <img src="${pageContext.request.contextPath}/${sessionScope.user.profile.images}" 
@@ -66,11 +60,11 @@
                     </c:otherwise>
                 </c:choose>
                 
-                <!-- Hiển thị tên người dùng -->
                 <span class="user-name">
                     <c:choose>
-                        <c:when test="${not empty sessionScope.user.profile.fullname}">
-                            <c:out value="${sessionScope.user.profile.fullname}" />
+                        <%-- SỬA LỖI: Dùng fullName (chữ N hoa) --%>
+                        <c:when test="${not empty sessionScope.user.profile.fullName}">
+                            <c:out value="${sessionScope.user.profile.fullName}" />
                         </c:when>
                         <c:otherwise>
                             <c:out value="${sessionScope.user.username}" default="Người dùng" />
@@ -78,13 +72,13 @@
                     </c:choose>
                 </span>
                 
-                <!-- Dropdown menu -->
                 <div class="dropdown">
                     <button class="btn btn-link dropdown-toggle p-0 ms-2" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-chevron-down"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">
+                        <%-- SỬA LINK: Thêm /user/ để khớp với Controller --%>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/user/profile">
                             <i class="bi bi-person"></i> Hồ sơ cá nhân
                         </a></li>
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/settings">
@@ -99,7 +93,6 @@
             </div>
         </header>
 
-        <!-- CONTENT -->
         <main class="content">
             <jsp:include page="${contentPage}" />
         </main>

@@ -91,9 +91,11 @@ public class YearSemesterDAO {
         }
     }
 
-    public List<YearSemester> getAllActive() throws SQLException {
+    // Bỏ "throws SQLException" ở dòng này để Controller không bị lỗi
+    public List<YearSemester> getAllActive() {
         List<YearSemester> list = new ArrayList<>();
-        String sql = "SELECT * FROM tblYearSemester WHERE IsActive = 1";
+        // Lấy các học kỳ đang kích hoạt (IsActive = 1)
+        String sql = "SELECT * FROM tblYearSemester WHERE IsActive = 1 ORDER BY YearSemesterID DESC";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -104,9 +106,16 @@ public class YearSemesterDAO {
                 ys.setYearSemesterID(rs.getInt("YearSemesterID"));
                 ys.setSemesterName(rs.getString("SemesterName"));
                 ys.setSchoolYear(rs.getString("SchoolYear"));
-                ys.setIsActive(true);
+
+                // --- SỬA LẠI DÒNG NÀY ---
+                // Dùng setIsActive thay vì setActive
+                ys.setIsActive(rs.getBoolean("IsActive"));
+
                 list.add(ys);
             }
+        } catch (Exception e) {
+            // Bắt lỗi tại đây để Controller sạch sẽ
+            e.printStackTrace();
         }
         return list;
     }

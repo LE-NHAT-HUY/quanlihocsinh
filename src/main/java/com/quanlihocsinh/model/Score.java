@@ -24,6 +24,17 @@ public class Score {
     private String notes;
     private boolean isActive;
 
+    private String subjectName; // Biến phụ để lưu tên môn học
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    // ====================================
     // Constructor không tham số
     public Score() {
     }
