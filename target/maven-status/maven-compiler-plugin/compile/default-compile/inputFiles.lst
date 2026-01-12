@@ -1,10 +1,12 @@
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\ATSubjectController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\ClassController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\CohortController.java
-C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\CreateUserContrller.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\CreateUserController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\DbTestController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\GradeController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\HomeController.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\LoginController.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\LogoutContrller.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\MenuController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\ScheduleController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\ScoreController.java
@@ -16,8 +18,6 @@ C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controlle
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\UserListController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\YearSemesterController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\advice\AdminMenuAvice.java
-C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\LoginController.java
-C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\LogoutContrller.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\student\HomeController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\student\ProfileController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\student\StudentAchievementController.java

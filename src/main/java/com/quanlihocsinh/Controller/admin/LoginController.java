@@ -1,4 +1,4 @@
-package com.quanlihocsinh.Controller;
+package com.quanlihocsinh.Controller.admin;
 
 import com.quanlihocsinh.dao.UserDAO;
 import com.quanlihocsinh.model.User;

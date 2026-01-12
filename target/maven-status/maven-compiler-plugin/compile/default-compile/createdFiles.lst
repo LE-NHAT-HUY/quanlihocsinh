@@ -1,4 +1,3 @@
-com\quanlihocsinh\Controller\admin\CreateUserContrller.class
 com\quanlihocsinh\Controller\admin\DbTestController.class
 com\quanlihocsinh\dao\ScoreDAO.class
 com\quanlihocsinh\dao\TblClassDAO.class
@@ -12,7 +11,6 @@ com\quanlihocsinh\dao\StudentDAO.class
 com\quanlihocsinh\Controller\student\StudentAchievementController.class
 com\quanlihocsinh\Controller\student\StudentScoreController.class
 com\quanlihocsinh\dao\ScheduleDAO.class
-com\quanlihocsinh\Controller\LoginController.class
 com\quanlihocsinh\model\TeacherSubject.class
 com\quanlihocsinh\Controller\admin\ATSubjectController.class
 com\quanlihocsinh\dao\SubjectDAO.class
@@ -43,7 +41,6 @@ com\quanlihocsinh\model\menu.class
 com\quanlihocsinh\Controller\admin\CohortController.class
 com\quanlihocsinh\Controller\admin\ScoreController.class
 com\quanlihocsinh\dao\PersonDAO.class
-com\quanlihocsinh\Controller\LogoutContrller.class
 com\quanlihocsinh\Controller\student\HomeController.class
 com\quanlihocsinh\Controller\admin\UserListController.class
 com\quanlihocsinh\model\Student.class
