@@ -5,7 +5,7 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h2>Thêm Năm học / Học kỳ</h2>
+        <h2>Thêm Năm học - Học kỳ</h2>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin">Trang chủ</a></li>

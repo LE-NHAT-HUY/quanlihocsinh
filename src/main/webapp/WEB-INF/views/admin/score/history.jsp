@@ -7,13 +7,6 @@
 
     <div class="pagetitle">
         <h1>Lịch sử thay đổi điểm số</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin/home">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin/scores">Quản lý điểm</a></li>
-                <li class="breadcrumb-item active">Lịch sử</li>
-            </ol>
-        </nav>
     </div>
 
     <section class="section dashboard">
@@ -47,7 +40,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">Thời gian</th>
-                            <th class="text-center">Giáo viên</th>
+                            <th class="text-center">Người thay đổi</th>
                             <th class="text-center">Học sinh</th>
                             <th class="text-center">Môn / Kỳ</th>
                             <th class="text-center">Hành động</th>

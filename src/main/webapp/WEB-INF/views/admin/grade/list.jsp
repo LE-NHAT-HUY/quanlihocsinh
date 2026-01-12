@@ -5,10 +5,7 @@
 
 <main id="main" class="main">
     <div class="pagetitle">
-        <h2>Danh sách Khối</h2>
-        <a href="${pageContext.request.contextPath}/admin/grade/add" class="btn btn-success mb-2">
-            <i class="bi bi-plus-circle"></i> Thêm mới
-        </a>
+        <h2>Danh sách khối</h2>
     </div>
 
     <section class="section dashboard">

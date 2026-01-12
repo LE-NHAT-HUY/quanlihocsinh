@@ -5,7 +5,7 @@
 
 <main id="main" class="main">
     <div class="pagetitle">
-        <h2>Danh sách chức năng</h2>
+        <h2>Danh sách khóa học</h2>
     </div>
 
     <section class="section dashboard">
@@ -40,13 +40,10 @@
                                         <td class="text-center">${item.endYear}</td>
                                         <td class="text-center">${item.cohortName}</td>
 
-                                        <td class="text-center">
+                                      <td class="text-center">
                                             <form action="${pageContext.request.contextPath}/admin/cohort/toggleStatus" method="post">
                                                 <input type="hidden" name="id" value="${item.cohortID}" />
-                                                <div class="form-check form-switch d-flex justify-content-center">
-                                                    <input class="form-check-input toggle-status-switch" type="checkbox"
-                                                           name="isActive" ${item.isActive ? 'checked' : ''} onchange="this.form.submit()" />
-                                                </div>
+                                                <input type="checkbox" name="isActive" ${item.isActive ? 'checked' : ''} onchange="this.form.submit()" />
                                             </form>
                                         </td>
 

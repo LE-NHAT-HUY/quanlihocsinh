@@ -4,10 +4,7 @@
 
 <main id="main" class="main">
     <div class="pagetitle">
-        <h2>Danh sách Năm học / Học kỳ</h2>
-        <a href="${pageContext.request.contextPath}/admin/yearsemester/add" class="btn btn-success mb-2">
-            <i class="bi bi-plus-circle"></i> Thêm mới
-        </a>
+        <h2>Danh sách Năm học - Học kỳ</h2>
     </div>
 
     <section class="section dashboard">

@@ -5,9 +5,6 @@
 <main id="main" class="main">
     <div class="pagetitle">
         <h2>Danh sách Môn học</h2>
-        <a href="${pageContext.request.contextPath}/admin/subject?action=add" class="btn btn-success mb-2">
-            <i class="bi bi-plus-circle"></i> Thêm mới
-        </a>
     </div>
 
     <section class="section dashboard">
