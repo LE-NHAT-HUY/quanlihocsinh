@@ -6,7 +6,7 @@ C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controlle
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\GradeController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\HomeController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\LoginController.java
-C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\LogoutContrller.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\LogoutController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\MenuController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\ScheduleController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\ScoreController.java
@@ -48,6 +48,7 @@ C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\UserR
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\dao\YearSemesterDAO.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\filter\AuthFilter.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\AdminMenu.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\ChartData.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Cohort.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Grade.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\menu.java

@@ -5,6 +5,6 @@
 </head>
 <body>
     <h1>Welcome to Quan Li Hoc Sinh</h1>
-    <a href="admin/home">Go to Admin Home</a>
+    <a href="admin/menu/">Go to Admin Home</a>
 </body>
 </html>

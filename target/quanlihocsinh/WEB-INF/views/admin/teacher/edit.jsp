@@ -57,7 +57,7 @@
                                 <input type="text" name="religion" value="${teacher.religion}" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>Nhóm DV</label>
+                                <label>Đảng viên</label>
                                 <input type="text" name="groupDV" value="${teacher.groupDV}" class="form-control" />
                             </div>
                             <div class="mb-3">

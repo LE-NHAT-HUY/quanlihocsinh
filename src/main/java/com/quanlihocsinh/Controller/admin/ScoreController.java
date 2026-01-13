@@ -1,8 +1,8 @@
 package com.quanlihocsinh.Controller.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.quanlihocsinh.dao.*; // Import rút gọn
-import com.quanlihocsinh.model.*; // Import rút gọn
+import com.quanlihocsinh.dao.*;
+import com.quanlihocsinh.model.*;
 import com.quanlihocsinh.service.ScoreService;
 import com.quanlihocsinh.util.DBUtil;
 
