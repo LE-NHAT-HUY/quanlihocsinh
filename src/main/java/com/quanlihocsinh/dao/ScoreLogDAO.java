@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ScoreLogDAO {
 
-    // Hàm Insert (Không thay đổi)
     public void insert(Connection conn, ScoreLog log) throws SQLException {
         String sql = "INSERT INTO ScoreLog (TeacherID, StudentID, SubjectID, SemesterID, ActionType, ChangeContent, ChangeDate) VALUES (?, ?, ?, ?, ?, ?, GETDATE())";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -32,23 +31,17 @@ public class ScoreLogDAO {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT l.LogID, ");
 
-        // 1. Tên Giáo viên (Bảng tblTeacher cột FullName)
         sql.append(" COALESCE(t.FullName, 'GV-' + CAST(l.TeacherID AS VARCHAR)) as TeacherNameStr, ");
 
-        // 2. Tên Học sinh (Bảng tblStudent cột FullName)
         sql.append(" COALESCE(s.FullName, l.StudentID) as StudentNameStr, ");
 
-        // 3. Tên Môn học
         sql.append(" sub.SubjectName, ");
 
-        // 4. Tên Học kỳ (Ghép SemesterName và SchoolYear cho đẹp)
-        // Ví dụ kết quả: "Học kỳ 1 (2025-2026)"
         sql.append(" (ys.SemesterName + ' (' + ys.SchoolYear + ')') as SemesterName, ");
 
         sql.append(" l.ActionType, l.ChangeContent, l.ChangeDate ");
         sql.append(" FROM ScoreLog l ");
 
-        // JOIN ĐÚNG TÊN BẢNG
         sql.append(" LEFT JOIN tblTeacher t ON l.TeacherID = t.TeacherID ");
         sql.append(" LEFT JOIN tblStudent s ON l.StudentID = s.StudentID ");
         sql.append(" LEFT JOIN tblSubject sub ON l.SubjectID = sub.SubjectID ");

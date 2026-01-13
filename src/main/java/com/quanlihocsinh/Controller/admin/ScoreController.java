@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects; // Cần thêm cái này để so sánh
+import java.util.Objects;
 
 @WebServlet("/admin/scores/*")
 public class ScoreController extends HttpServlet {
@@ -49,7 +49,7 @@ public class ScoreController extends HttpServlet {
         String path = req.getPathInfo();
 
         try {
-            // === LIST VIEW ===
+
             if (path == null || "/".equals(path) || "/list".equals(path)) {
                 List<tblClass> classes = tblClassDAO.getAll();
                 req.setAttribute("classes", classes);
@@ -96,7 +96,6 @@ public class ScoreController extends HttpServlet {
                 return;
             }
 
-            // === ADD VIEW ===
             if ("/add".equals(path)) {
                 int classID = parseInt(req.getParameter("classID"));
                 int subjectID = parseInt(req.getParameter("subjectID"));
@@ -129,7 +128,6 @@ public class ScoreController extends HttpServlet {
                 return;
             }
 
-            // === HISTORY VIEW ===
             if ("/history".equals(path)) {
                 List<ScoreLogDTO> logs = scoreLogDAO.getAllLogs();
                 req.setAttribute("logs", logs);
@@ -148,19 +146,17 @@ public class ScoreController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getPathInfo();
 
-        // 1. Lấy thông tin người đang đăng nhập để ghi log
         HttpSession session = req.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
-        // Nếu admin chưa đăng nhập, redirect về login (tuỳ logic của bạn)
         if (user == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
-        int adminID = user.getEntityId(); // Lấy ID của Admin thực hiện hành động
+        int adminID = user.getEntityId();
 
         try {
-            // === SAVE BULK (LƯU ĐIỂM) ===
+
             if ("/saveBulk".equals(path)) {
                 int classID = parseInt(req.getParameter("classID"));
                 int subjectID = parseInt(req.getParameter("subjectID"));
@@ -174,7 +170,7 @@ public class ScoreController extends HttpServlet {
                 List<StudentClass> students = studentClassDAO.getStudentsByClass(classID);
 
                 Connection conn = DBUtil.getConnection();
-                conn.setAutoCommit(false); // Bắt đầu Transaction
+                conn.setAutoCommit(false);
                 try {
                     for (StudentClass sc : students) {
                         int key = sc.getStudentClassID();
@@ -194,7 +190,6 @@ public class ScoreController extends HttpServlet {
 
                         Score existing = scoreDAO.findByStudentSubjectYear(studentID, subjectID, yearSemesterID);
 
-                        // Object tạm để so sánh
                         Score newScoreState = new Score();
                         newScoreState.setOralScore1(oral1);
                         newScoreState.setOralScore2(oral2);
@@ -208,12 +203,10 @@ public class ScoreController extends HttpServlet {
                         String action = "";
 
                         if (existing != null) {
-                            // Cập nhật điểm cũ
-                            // [MỚI]: Tính toán sự thay đổi
+
                             changeLog = getChangeDetails(existing, newScoreState);
                             action = "UPDATE";
 
-                            // Gán giá trị mới vào object existing
                             existing.setOralScore1(oral1);
                             existing.setOralScore2(oral2);
                             existing.setScore15Minute1(s15_1);
@@ -226,7 +219,7 @@ public class ScoreController extends HttpServlet {
                             scoreService.calculateAveragesAndRating(existing);
                             scoreDAO.update(existing);
                         } else {
-                            // Thêm mới
+
                             action = "INSERT";
                             changeLog = "Nhập mới điểm lần đầu (Admin).";
 
@@ -247,16 +240,15 @@ public class ScoreController extends HttpServlet {
                             scoreDAO.insert(s);
                         }
 
-                        // [MỚI]: GHI LOG VÀO DB
                         if (changeLog != null && !changeLog.isEmpty()) {
                             ScoreLog log = new ScoreLog(
-                                    adminID, // ID người sửa (Admin)
+                                    adminID,
                                     studentID,
                                     subjectID,
                                     yearSemesterID,
                                     action,
                                     changeLog);
-                            scoreLogDAO.insert(conn, log); // Dùng chung connection để cùng commit
+                            scoreLogDAO.insert(conn, log);
                         }
                     }
                     conn.commit();
@@ -279,7 +271,7 @@ public class ScoreController extends HttpServlet {
                 int yearSemesterID = parseInt(req.getParameter("yearSemesterID"));
                 if (scoreID > 0) {
                     scoreDAO.delete(scoreID);
-                    // Có thể thêm log xóa ở đây nếu muốn
+
                 }
                 resp.sendRedirect(req.getContextPath() + "/admin/scores?classID=" + classID + "&subjectID=" + subjectID
                         + "&yearSemesterID=" + yearSemesterID);
@@ -300,8 +292,6 @@ public class ScoreController extends HttpServlet {
         }
     }
 
-    // === CÁC HÀM PHỤ TRỢ (HELPER) ===
-
     private int parseInt(String v) {
         try {
             return Integer.parseInt(v);
@@ -320,7 +310,6 @@ public class ScoreController extends HttpServlet {
         }
     }
 
-    // [MỚI]: Hàm so sánh thay đổi để ghi log
     private String getChangeDetails(Score oldS, Score newS) {
         StringBuilder sb = new StringBuilder();
 

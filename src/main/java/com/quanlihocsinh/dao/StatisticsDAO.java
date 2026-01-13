@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 
 public class StatisticsDAO {
 
-    // Hàm chung để đếm số lượng từ bất kỳ bảng nào
     private int countTable(String tableName) {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM " + tableName;
@@ -23,24 +22,18 @@ public class StatisticsDAO {
         return count;
     }
 
-    // 1. Đếm Học sinh
-    // LƯU Ý: Kiểm tra tên bảng trong SQL của bạn là 'Student' hay 'tblStudent'
     public int countStudents() {
-        return countTable("tblStudent"); // Hoặc "tblStudent"
+        return countTable("tblStudent");
     }
 
-    // 2. Đếm Giáo viên
-    // LƯU Ý: Kiểm tra tên bảng là 'Teacher' hay 'tblTeacher'
     public int countTeachers() {
-        return countTable("tblTeacher"); // Hoặc "Teacher"
+        return countTable("tblTeacher");
     }
 
-    // 3. Đếm Lớp học
     public int countClasses() {
         return countTable("tblClass");
     }
 
-    // 4. Đếm Môn học
     public int countSubjects() {
         return countTable("tblSubject");
     }

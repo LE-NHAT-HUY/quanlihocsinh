@@ -91,10 +91,9 @@ public class YearSemesterDAO {
         }
     }
 
-    // Bỏ "throws SQLException" ở dòng này để Controller không bị lỗi
     public List<YearSemester> getAllActive() {
         List<YearSemester> list = new ArrayList<>();
-        // Lấy các học kỳ đang kích hoạt (IsActive = 1)
+
         String sql = "SELECT * FROM tblYearSemester WHERE IsActive = 1 ORDER BY YearSemesterID DESC";
 
         try (Connection conn = DBUtil.getConnection();
@@ -107,20 +106,16 @@ public class YearSemesterDAO {
                 ys.setSemesterName(rs.getString("SemesterName"));
                 ys.setSchoolYear(rs.getString("SchoolYear"));
 
-                // --- SỬA LẠI DÒNG NÀY ---
-                // Dùng setIsActive thay vì setActive
                 ys.setIsActive(rs.getBoolean("IsActive"));
 
                 list.add(ys);
             }
         } catch (Exception e) {
-            // Bắt lỗi tại đây để Controller sạch sẽ
+
             e.printStackTrace();
         }
         return list;
     }
-
-    // Thêm vào com.quanlihocsinh.dao.YearSemesterDAO
 
     public List<String> getDistinctSchoolYears() {
         List<String> years = new ArrayList<>();
@@ -138,14 +133,14 @@ public class YearSemesterDAO {
     }
 
     public int getSemesterIDByYearAndName(String schoolYear, String semesterKeyword) {
-        // Tìm kiếm tương đối: Ví dụ keyword là "1" sẽ tìm các kỳ có tên chứa số "1"
+
         String sql = "SELECT YearSemesterID FROM tblYearSemester WHERE SchoolYear = ? AND SemesterName LIKE ?";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, schoolYear);
-            ps.setString(2, "%" + semesterKeyword + "%"); // Tìm chuỗi chứa từ khóa
+            ps.setString(2, "%" + semesterKeyword + "%");
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
