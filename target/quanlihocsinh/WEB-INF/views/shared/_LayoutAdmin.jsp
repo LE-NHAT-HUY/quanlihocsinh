@@ -427,7 +427,7 @@
     </a>
     <ul id="yearsemester-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
-            <a href="${pageContext.request.contextPath}/admin/yearsemester?action=add">
+            <a href="${pageContext.request.contextPath}/admin/yearsemester/add">
                 <i class="bi bi-circle"></i><span>Thêm mới năm học – học kỳ</span>
             </a>
         </li>

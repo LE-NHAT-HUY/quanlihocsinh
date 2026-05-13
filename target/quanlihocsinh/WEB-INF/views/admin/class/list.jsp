@@ -4,9 +4,6 @@
 <main id="main" class="main">
     <div class="pagetitle">
         <h2>Danh sách Lớp học</h2>
-        <a href="${pageContext.request.contextPath}/admin/class?action=add" class="btn btn-success mb-2">
-            <i class="bi bi-plus-circle"></i> Thêm mới
-        </a>
     </div>
 
     <section class="section dashboard">
@@ -78,9 +75,6 @@
                                     <a href="${pageContext.request.contextPath}/admin/class?action=delete&id=${cls.classID}" class="btn btn-danger btn-sm"
                                        onclick="return confirm('Bạn có chắc muốn xóa lớp này không?');">
                                         <i class="bi bi-trash"></i>
-                                    </a>
-                                    <a href="${pageContext.request.contextPath}/admin/studentclass/list?classID=${cls.classID}" class="btn btn-info btn-sm" title="Xem học sinh">
-                                        <i class="bi bi-people"></i>
                                     </a>
                                 </td>
                             </tr>

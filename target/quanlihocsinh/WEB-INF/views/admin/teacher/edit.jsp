@@ -73,27 +73,27 @@
                                 <label class="form-check-label">Kích hoạt</label>
                             </div>
                             <div class="mb-3">
-                                <label>DepartmentID</label>
+                                <label>Mã số phòng ban</label>
                                 <input type="number" name="departmentID" value="${teacher.departmentID}" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>Hamlet</label>
+                                <label>Thôn/xóm</label>
                                 <input type="number" name="hamlet" value="${teacher.hamlet}" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>Commune</label>
+                                <label>Huyên/Thành phố</label>
                                 <input type="text" name="commune" value="${teacher.commune}" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>Province</label>
+                                <label>Tỉnh</label>
                                 <input type="text" name="province" value="${teacher.province}" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>Nationality</label>
+                                <label>Quốc tịch</label>
                                 <input type="text" name="nationality" value="${teacher.nationality}" class="form-control" />
                             </div>
                             <div class="mb-3">
-                                <label>Images</label>
+                                <label>ảnh</label>
                                 <input type="text" name="images" value="${teacher.images}" class="form-control" />
                             </div>
 

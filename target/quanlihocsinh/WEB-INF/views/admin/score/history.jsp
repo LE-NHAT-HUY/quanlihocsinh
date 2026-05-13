@@ -1,106 +1,110 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Lịch sử thay đổi điểm</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        .badge-update { background-color: #ffc107; color: #000; } /* Màu vàng */
-        .badge-insert { background-color: #28a745; color: #fff; } /* Màu xanh lá */
-        
-        /* Giúp nội dung dài tự xuống dòng và giữ nguyên định dạng dòng */
-        .content-cell { 
-            max-width: 450px; 
-            word-wrap: break-word; 
-            white-space: pre-line; 
-            font-size: 0.95em;
-            color: #333;
-        }
-        .table th { vertical-align: middle; text-align: center; }
-        .table td { vertical-align: middle; }
-    </style>
-</head>
-<body>
+<main id="main" class="main">
 
-<div class="container-fluid mt-4">
-    
-    <div class="alert alert-info">
-        <strong>Debug Info:</strong> 
-        Số lượng bản ghi tìm thấy: 
-        <span class="badge badge-light" style="font-size: 1.2em;">
-            ${logs != null ? logs.size() : "NULL (Chưa nhận được biến 'logs')"}
-        </span>
-    </div>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="text-primary"><i class="fas fa-history"></i> Lịch sử thay đổi điểm số</h3>
-        <a href="${pageContext.request.contextPath}/admin/scores" class="btn btn-secondary">
-            <i class="fa fa-arrow-left"></i> Quay lại bảng điểm
-        </a>
+    <div class="pagetitle">
+        <h1>Lịch sử thay đổi điểm số</h1>
     </div>
 
-    <div class="card shadow">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped mb-0">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th style="width: 150px;">Thời gian</th>
-                        <th style="width: 180px;">Giáo viên</th>
-                        <th style="width: 180px;">Học sinh</th>
-                        <th style="width: 200px;">Môn / Kỳ</th>
-                        <th style="width: 100px;">Hành động</th>
-                        <th>Chi tiết thay đổi</th>
-                    </tr>
+    <section class="section dashboard">
+        <div class="card recent-sales overflow-auto">
+            <div class="card-body mt-4">
+                
+                <style>
+                    .badge-update { background-color: #ffc107; color: #000; } 
+                    .badge-insert { background-color: #28a745; color: #fff; } 
+                    .content-cell { 
+                        max-width: 400px; 
+                        word-wrap: break-word; 
+                        white-space: pre-line; 
+                        font-size: 0.85rem;
+                    }
+                    /* Tùy chỉnh màu chữ DataTables để khớp với theme */
+                    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, 
+                    .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate {
+                        margin-bottom: 15px;
+                        font-size: 0.9rem;
+                    }
+                </style>
+
+                <div class="d-flex justify-content-end mb-3">
+                    <a href="${pageContext.request.contextPath}/admin/scores" class="btn btn-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+
+                <table class="table table-borderless datatable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Thời gian</th>
+                            <th class="text-center">Người thay đổi</th>
+                            <th class="text-center">Học sinh</th>
+                            <th class="text-center">Môn / Kỳ</th>
+                            <th class="text-center">Hành động</th>
+                            <th class="text-center">Nội dung thay đổi</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    
-                    <c:if test="${empty logs}">
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">
-                                <i>Chưa có dữ liệu lịch sử nào được ghi nhận.</i>
-                            </td>
-                        </tr>
-                    </c:if>
-
-                    <c:forEach var="log" items="${logs}">
-                        <tr>
-                            <td class="text-center">
-                                <fmt:formatDate value="${log.changeDate}" pattern="dd/MM/yyyy"/><br>
-                                <small class="text-muted"><fmt:formatDate value="${log.changeDate}" pattern="HH:mm:ss"/></small>
-                            </td>
-                            <td>
-                                <i class="fas fa-chalkboard-teacher text-muted"></i> ${log.teacherName}
-                            </td>
-                            <td>
-                                <i class="fas fa-user-graduate text-muted"></i> ${log.studentName}
-                            </td>
-                            <td>
-                                <strong>${log.subjectName}</strong><br>
-                                <small class="text-info">${log.semesterName}</small>
-                            </td>
-                            <td class="text-center">
-                                <c:choose>
-                                    <c:when test="${log.actionType == 'INSERT'}">
-                                        <span class="badge badge-insert p-2">Thêm mới</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="badge badge-update p-2">Cập nhật</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td class="content-cell">${log.changeContent}</td>
-                        </tr>
-                    </c:forEach>
+                        <c:forEach var="log" items="${logs}">
+                            <tr>
+                                <td class="text-center">
+                                    <fmt:formatDate value="${log.changeDate}" pattern="dd/MM/yyyy"/><br>
+                                    <small class="text-muted"><fmt:formatDate value="${log.changeDate}" pattern="HH:mm:ss"/></small>
+                                </td>
+                                <td><i class="bi bi-person-badge"></i> ${log.teacherName}</td>
+                                <td><i class="bi bi-person"></i> ${log.studentName}</td>
+                                <td>
+                                    <strong>${log.subjectName}</strong><br>
+                                    <small class="text-info">${log.semesterName}</small>
+                                </td>
+                                <td class="text-center">
+                                    <c:choose>
+                                        <c:when test="${log.actionType == 'INSERT'}">
+                                            <span class="badge badge-insert">Thêm mới</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="badge badge-update">Cập nhật</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td class="content-cell">${log.changeContent}</td>
+                            </tr>
+                        </c:forEach>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-</div>
+    </section>
+</main>
 
-</body>
-</html>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('.datatable').DataTable({
+        "pageLength": 10, // Số dòng hiển thị mặc định
+        "lengthMenu": [5, 10, 25, 50], // Các tùy chọn số dòng
+        "order": [[0, "desc"]], // Mặc định sắp xếp theo cột Thời gian (cột 0) mới nhất
+        "language": {
+            "search": "Tìm kiếm:",
+            "lengthMenu": "Hiển thị _MENU_ dòng",
+            "info": "Đang hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+            "paginate": {
+                "first": "Đầu",
+                "last": "Cuối",
+                "next": "Tiếp",
+                "previous": "Trước"
+            },
+            "emptyTable": "Chưa có dữ liệu lịch sử nào"
+        },
+        "columnDefs": [ 
+            { "orderable": false, "targets": [5] } // Tắt sắp xếp cho cột Nội dung thay đổi
+        ]
+    });
+});
+</script>

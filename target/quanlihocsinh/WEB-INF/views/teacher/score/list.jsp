@@ -9,7 +9,7 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <h2 class="mb-1">
-                    <i class="bi bi-journal-check me-2"></i>Quản lý điểm số
+                    <i class="bi bi-journal-check me-2"></i>Lớp giảng dạy - Bảng điểm
                 </h2>
                 <p class="mb-0 opacity-75">Xem và quản lý bảng điểm chi tiết của từng lớp học.</p>
             </div>

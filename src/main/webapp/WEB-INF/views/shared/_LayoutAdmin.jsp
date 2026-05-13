@@ -285,9 +285,9 @@
     </a>
     <ul id="cohort-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
-            <a href="${pageContext.request.contextPath}/admin/cohort?action=add">
-                <i class="bi bi-circle"></i><span>Thêm mới Khóa Học</span>
-            </a>
+            <a href="${pageContext.request.contextPath}/admin/cohort/add">
+            <i class="bi bi-circle"></i><span>Thêm mới Khóa Học</span>
+        </a>
         </li>
         <li>
             <a href="${pageContext.request.contextPath}/admin/cohort?action=list">

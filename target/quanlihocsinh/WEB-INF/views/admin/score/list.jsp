@@ -5,7 +5,7 @@
 
 <main id="main" class="main">
     <div class="pagetitle">
-        <h2>Danh sách học sinh theo lớp</h2>
+        <h2>Danh sách điểm theo lớp học - môn học - học kỳ</h2>
     </div>
 
     <section class="section dashboard">

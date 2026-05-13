@@ -128,7 +128,7 @@
             <img src="${pageContext.request.contextPath}/assets/img/logo-truong-anh-son-1.png" alt="Logo Trường">
             <h2>Chào mừng quay lại</h2>
             <p>
-                Chào mừng đến với THPT Anh Sơn I
+                Chào mừng đến với THCS Anh Sơn I
             </p>
         </div>
 

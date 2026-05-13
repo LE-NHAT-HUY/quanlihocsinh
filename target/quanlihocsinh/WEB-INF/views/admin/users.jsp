@@ -1,11 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
 
 <main id="main" class="main">
     <div class="pagetitle d-flex justify-content-between align-items-center">
         <h2>Danh sách tài khoản</h2>
-        <a href="${pageContext.request.contextPath}/admin/createUser" class="btn btn-primary">
+        <a href="${pageContext.request.contextPath}/admin/createUser" class="btn btn-success">
             <i class="bi bi-plus-circle me-1"></i> Thêm tài khoản mới
         </a>
     </div>
@@ -22,30 +23,44 @@
 
                 <div class="card recent-sales overflow-auto mt-3">
                     <div class="card-body mt-4">
-                        <table class="table table-borderless datatable table-hover">
-                            <thead class="table-light">
+                        <style>
+                            /* Loại bỏ đường kẻ ngang giữa các hàng và màu nền xám */
+                            .table-no-border, .table-no-border tr, .table-no-border td, .table-no-border th {
+                                border: none !important;
+                                background-color: transparent !important;
+                            }
+                            /* Tùy chỉnh avatar tròn */
+                            .avatar-circle {
+                                width: 32px; 
+                                height: 32px; 
+                                overflow: hidden;
+                                background-color: #f8f9fa;
+                            }
+                        </style>
+
+                        <table class="table table-borderless table-no-border datatable">
+                            <thead>
                                 <tr>
+                                    <th class="text-center">STT</th>
                                     <th class="text-center">ID</th>
                                     <th>Tên đăng nhập</th>
                                     <th>Họ và tên</th>
                                     <th class="text-center">Vai trò</th>
-                                    <th class="text-center">Hành động</th>
+                                    <th class="text-center">Chức năng</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <c:set var="stt" value="0"/>
                                 <c:forEach var="u" items="${users}">
+                                    <c:set var="stt" value="${stt + 1}" />
                                     <tr>
-                                        <td class="text-center text-muted">#${u.userID}</td>
-                                        
-                                        <td class="fw-bold text-primary">
-                                            ${u.username}
-                                        </td>
-                                        
+                                        <td class="text-center">${stt}</td>
+                                        <td class="text-center text-muted">${u.userID}</td>
+                                        <td class="fw-bold">${u.username}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-light me-2" style="width: 32px; height: 32px; overflow: hidden;">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center avatar-circle me-2">
                                                     <c:choose>
-                                                        <%-- Sửa fullname -> fullName --%>
                                                         <c:when test="${not empty u.profile.images}">
                                                             <img src="${pageContext.request.contextPath}/assets/img/${u.profile.images}" style="width: 100%; height: 100%; object-fit: cover;">
                                                         </c:when>
@@ -57,35 +72,31 @@
                                                 <span>${u.profile.fullName}</span>
                                             </div>
                                         </td>
-                                        
                                         <td class="text-center">
                                             <c:choose>
                                                 <c:when test="${u.roleId == 1}">
-                                                    <span class="badge bg-danger"><i class="bi bi-shield-lock me-1"></i>Admin</span>
+                                                    <span class="badge bg-danger">Admin</span>
                                                 </c:when>
                                                 <c:when test="${u.roleId == 2}">
-                                                    <span class="badge bg-primary"><i class="bi bi-person-video3 me-1"></i>Giáo viên</span>
+                                                    <span class="badge bg-primary">Giáo viên</span>
                                                 </c:when>
                                                 <c:when test="${u.roleId == 3}">
-                                                    <span class="badge bg-success"><i class="bi bi-mortarboard me-1"></i>Học sinh</span>
+                                                    <span class="badge bg-success">Học sinh</span>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="badge bg-secondary">Khách</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
-                                        
                                         <td class="text-center">
                                             <a href="${pageContext.request.contextPath}/admin/editUser?id=${u.userID}" 
-                                               class="btn btn-outline-primary btn-sm" title="Sửa">
+                                               class="btn btn-primary btn-sm">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            
                                             <c:if test="${sessionScope.user.userID != u.userID}">
                                                 <a href="${pageContext.request.contextPath}/admin/deleteUser?id=${u.userID}" 
-                                                   class="btn btn-outline-danger btn-sm" 
-                                                   onclick="return confirm('Bạn có chắc muốn xóa tài khoản ${u.username}?');"
-                                                   title="Xóa">
+                                                   class="btn btn-danger btn-sm" 
+                                                   onclick="return confirm('Bạn có chắc muốn xóa tài khoản ${u.username}?');">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
                                             </c:if>
@@ -108,7 +119,9 @@
     $(document).ready(function() {
         $('.datatable').DataTable({
             "pageLength": 10,
-            "columnDefs": [ { "orderable": false, "targets": [4] } ],
+            "lengthMenu": [5, 10, 25, 50, 100],
+            "order": [],
+            "columnDefs": [ { "orderable": false, "targets": [5] } ],
             "language": { "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json" }
         });
     });

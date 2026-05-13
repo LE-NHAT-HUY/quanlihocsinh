@@ -4,21 +4,15 @@
 <%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
 
 <main id="main" class="main">
-
-    <!-- Tiêu đề trang -->
     <div class="pagetitle">
         <h2>Danh sách học sinh theo lớp</h2>
     </div>
 
     <section class="section dashboard">
-
-        <!-- Bộ lọc -->
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <form method="get" action="${pageContext.request.contextPath}/admin/studentclass/list" class="row g-3 align-items-end">
-
                     <div class="col-md-4">
-                        <label class="form-label">Chọn lớp</label>
                         <select name="classID" class="form-select" onchange="this.form.submit()">
                             <option value="">-- Tất cả lớp --</option>
                             <c:forEach var="cls" items="${classes}">
@@ -28,27 +22,18 @@
                             </c:forEach>
                         </select>
                     </div>
-
                     <div class="col-md-4 d-flex gap-2">
-
-                        <!-- NÚT LỌC (thuộc form lọc bên ngoài) -->
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search me-1"></i> Lọc
                         </button>
                     </div>
-
-
-
                 </form>
             </div>
         </div>
 
-        <!-- Danh sách học sinh -->
         <div class="card recent-sales overflow-auto">
-
             <div class="card-header bg-white border-bottom">
                 <div class="d-flex justify-content-between align-items-center">
-
                     <h5 class="mb-0">
                         <i class="bi bi-people me-2 text-primary"></i>
                         Danh sách học sinh
@@ -60,22 +45,31 @@
                             </c:forEach>
                         </c:if>
                     </h5>
-
                     <c:if test="${classID > 0}">
                         <a href="${pageContext.request.contextPath}/admin/studentclass/add?classID=${classID}&yearSemesterID=${yearSemesterID}"
                            class="btn btn-primary btn-sm">
                             <i class="bi bi-person-plus me-1"></i> Thêm học sinh
                         </a>
                     </c:if>
-
                 </div>
             </div>
 
             <div class="card-body p-0">
-                <div class="table-responsive">
+                <style>
+                    /* 1. Loại bỏ màu nền và đường kẻ ngang cho bảng */
+                    .table-clean, .table-clean tr, .table-clean td, .table-clean th {
+                        border: none !important;
+                        background-color: transparent !important;
+                    }
+                    /* Tùy chỉnh khoảng cách hàng sau khi bỏ border */
+                    .table-clean tbody tr td {
+                        padding: 12px 8px;
+                    }
+                </style>
 
-                    <table class="table table-hover table-striped mb-0 datatable">
-                        <thead class="table-light">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-clean mb-0 datatable">
+                        <thead>
                             <tr>
                                 <th class="text-center" style="width: 60px;">STT</th>
                                 <th>Mã học sinh</th>
@@ -87,12 +81,10 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <c:forEach var="sc" items="${studentsInClass}" varStatus="loop">
                                 <tr>
                                     <td class="text-center">${loop.index + 1}</td>
                                     <td><strong>${sc.studentID}</strong></td>
-
                                     <td>
                                         <c:choose>
                                             <c:when test="${not empty sc.student}">
@@ -103,36 +95,32 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-
                                     <td>
                                         <c:if test="${not empty sc.student}">
                                             ${sc.student.gender}
                                         </c:if>
                                     </td>
-
                                     <td>
                                         <c:if test="${not empty sc.student and not empty sc.student.birth}">
                                             <fmt:formatDate value="${sc.student.birth}" pattern="dd/MM/yyyy"/>
                                         </c:if>
                                     </td>
-
                                     <td class="text-center">
                                         <c:choose>
                                             <c:when test="${sc.active}">
-                                                <span class="badge bg-success">Đang học</span>
+                                                <span class="">Đang học</span>
                                             </c:when>
                                             <c:otherwise>
                                                 <span class="badge bg-secondary">Không hoạt động</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-
                                     <td class="text-center">
-                                        <a href="${pageContext.request.contextPath}/admin/studentclass/delete?studentClassID=${sc.studentClassID}&classID=${classID}&yearSemesterID=${yearSemesterID}"
-                                           class="btn btn-outline-danger btn-sm"
-                                           onclick="return confirm('Bạn có chắc muốn xóa học sinh này khỏi lớp?')">
+                                         <a href="${pageContext.request.contextPath}/admin/studentclass/delete?studentClassID=${sc.studentClassID}&classID=${classID}&yearSemesterID=${yearSemesterID}" 
+                                            class="btn btn-danger btn-sm" title="Xóa học sinh khỏi lớp"
+                                            onclick="return confirm('Bạn có chắc muốn xóa học sinh này khỏi lớp?')">
                                             <i class="bi bi-trash"></i>
-                                        </a>
+                                         </a>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -152,18 +140,14 @@
                                     </td>
                                 </tr>
                             </c:if>
-
                         </tbody>
                     </table>
-
                 </div>
             </div>
-
         </div>
     </section>
 </main>
 
-<!-- DataTables -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -182,4 +166,3 @@ $(document).ready(function () {
 });
 </script>
 </c:if>
-

@@ -25,9 +25,11 @@ com\quanlihocsinh\Controller\admin\ScheduleController.class
 com\quanlihocsinh\dao\TeacherDAO.class
 com\quanlihocsinh\model\Score.class
 com\quanlihocsinh\model\Role.class
+com\quanlihocsinh\Controller\admin\LoginController.class
 com\quanlihocsinh\model\Cohort.class
 com\quanlihocsinh\model\tblClass.class
 com\quanlihocsinh\Controller\student\ProfileController.class
+com\quanlihocsinh\model\ChartData.class
 com\quanlihocsinh\Controller\admin\YearSemesterController.class
 com\quanlihocsinh\dao\GradeDAO.class
 com\quanlihocsinh\model\User.class
@@ -37,6 +39,7 @@ com\quanlihocsinh\model\YearSemester.class
 com\quanlihocsinh\model\Subject.class
 com\quanlihocsinh\dao\TeacherSubjectDAO.class
 com\quanlihocsinh\model\Person.class
+com\quanlihocsinh\Controller\admin\CreateUserController.class
 com\quanlihocsinh\model\menu.class
 com\quanlihocsinh\Controller\admin\CohortController.class
 com\quanlihocsinh\Controller\admin\ScoreController.class
@@ -60,6 +63,7 @@ com\quanlihocsinh\Controller\advice\AdminMenuAvice.class
 com\quanlihocsinh\dao\MenuDAO.class
 com\quanlihocsinh\filter\AuthFilter.class
 com\quanlihocsinh\util\DBUtil.class
+com\quanlihocsinh\Controller\admin\LogoutController.class
 com\quanlihocsinh\Controller\teacher\ProfileController.class
 com\quanlihocsinh\dao\RoleDAO.class
 com\quanlihocsinh\Controller\admin\MenuController.class
