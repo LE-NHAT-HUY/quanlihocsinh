@@ -55,7 +55,8 @@
                                             <th style="min-width: 150px;">Họ và tên</th>
                                             <th style="width: 60px;">GT</th>
                                             
-                                            <th class="bg-primary bg-opacity-10" style="width: 65px;">Miệng<br><small>(1)</small></th>
+                                            
+                                            <th class="bg-primary bg-opacity-10" style="width: 65px;">Miệng<br><small>(1)</small></th> 
                                             <th class="bg-primary bg-opacity-10" style="width: 65px;">Miệng<br><small>(2)</small></th>
                                             <th class="bg-success bg-opacity-10" style="width: 65px;">15p<br><small>(1)</small></th>
                                             <th class="bg-success bg-opacity-10" style="width: 65px;">15p<br><small>(2)</small></th>
@@ -79,9 +80,15 @@
                                                 </td>
                                                 <td class="text-center small">
                                                     <c:choose>
-                                                        <c:when test="${student.gender == 'M' or student.gender == 'Nam'}"><span class="text-primary"><i class="bi bi-gender-male"></i></span></c:when>
-                                                        <c:when test="${student.gender == 'F' or student.gender == 'Nữ'}"><span class="text-danger"><i class="bi bi-gender-female"></i></span></c:when>
-                                                        <c:otherwise>${student.gender}</c:otherwise>
+                                                        <c:when test="${student.gender == 'M' or student.gender == 'Nam'}">
+                                                            <span class="fw-bold text-primary">Nam</span>
+                                                        </c:when>
+                                                        <c:when test="${student.gender == 'F' or student.gender == 'Nữ'}">
+                                                            <span class="fw-bold text-danger">Nữ</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="text-muted">Khác</span>
+                                                        </c:otherwise>
                                                     </c:choose>
                                                 </td>
 

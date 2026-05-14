@@ -365,11 +365,18 @@
         <span>Học sinh theo lớp</span>
         <i class="bi bi-chevron-down ms-auto"></i>
     </a>
+
     <ul id="studentclass-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
             <a href="${pageContext.request.contextPath}/admin/studentclass?action=list">
                 <i class="bi bi-circle"></i>
                 <span>Danh sách học sinh theo lớp</span>
+            </a>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/studentclass?action=transfer">
+                <i class="bi bi-circle"></i>
+                <span>Chuyển lớp học sinh</span>
             </a>
         </li>
     </ul>
