@@ -12,6 +12,7 @@ public class TeacherDAO {
     private Teacher mapResultSetToTeacher(ResultSet rs) throws SQLException {
         Teacher t = new Teacher();
         t.setId(rs.getInt("ID"));
+        t.setPersonId(rs.getInt("PersonID"));
         t.setTeacherID(rs.getString("TeacherID"));
         t.setFullName(rs.getString("FullName"));
         t.setBirth(rs.getDate("Birth"));
@@ -244,6 +245,7 @@ public class TeacherDAO {
             while (rs.next()) {
                 Teacher t = new Teacher();
                 t.setId(rs.getInt("ID"));
+                t.setPersonId(rs.getInt("PersonID"));
                 t.setTeacherID(rs.getString("TeacherID"));
                 t.setFullName(rs.getString("FullName"));
                 list.add(t);

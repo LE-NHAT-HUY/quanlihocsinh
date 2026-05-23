@@ -2,6 +2,7 @@ package com.quanlihocsinh.Controller.admin;
 
 import com.quanlihocsinh.dao.TeacherDAO;
 import com.quanlihocsinh.model.Teacher;
+import com.quanlihocsinh.service.TeacherService;
 import com.quanlihocsinh.util.FileUploadUtil;
 
 import javax.servlet.ServletException;
@@ -19,6 +20,17 @@ import java.util.List;
 public class TeacherController extends HttpServlet {
 
     private TeacherDAO teacherDAO = new TeacherDAO();
+    private TeacherService teacherService = new TeacherService();
+
+    private void setFlashMessage(HttpServletRequest request, String success, String error) {
+        HttpSession session = request.getSession();
+        if (success != null) {
+            session.setAttribute("flashSuccess", success);
+        }
+        if (error != null) {
+            session.setAttribute("flashError", error);
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -74,7 +86,20 @@ public class TeacherController extends HttpServlet {
 
         if ("add".equals(action)) {
             Teacher t = getTeacherFromRequest(request);
-            teacherDAO.add(t);
+            try {
+                TeacherService.RegistrationResult result = teacherService.createTeacherWithAccount(t);
+                setFlashMessage(request, "Thêm giáo viên thành công. Tài khoản: " + t.getTeacherID()
+                        + " | Mật khẩu tạm: " + result.getRawPassword(), null);
+            } catch (IllegalArgumentException e) {
+                setFlashMessage(request, null, e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/admin/teacher?action=add");
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                setFlashMessage(request, null, "Lỗi khi thêm giáo viên: " + e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/admin/teacher?action=add");
+                return;
+            }
             response.sendRedirect(request.getContextPath() + "/admin/teacher");
         } else if ("edit".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));

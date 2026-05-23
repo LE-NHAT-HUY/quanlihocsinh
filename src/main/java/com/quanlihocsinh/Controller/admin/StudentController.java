@@ -2,6 +2,7 @@ package com.quanlihocsinh.Controller.admin;
 
 import com.quanlihocsinh.dao.StudentDAO;
 import com.quanlihocsinh.model.Student;
+import com.quanlihocsinh.service.StudentService;
 import com.quanlihocsinh.util.FileUploadUtil;
 
 import javax.servlet.ServletException;
@@ -22,7 +23,18 @@ import java.util.List;
 )
 public class StudentController extends HttpServlet {
     private StudentDAO dao = new StudentDAO();
+    private StudentService studentService = new StudentService();
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    private void setFlashMessage(HttpServletRequest request, String success, String error) {
+        HttpSession session = request.getSession();
+        if (success != null) {
+            session.setAttribute("flashSuccess", success);
+        }
+        if (error != null) {
+            session.setAttribute("flashError", error);
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -97,25 +109,26 @@ public class StudentController extends HttpServlet {
 
                 // Tránh lỗi unique key và giúp thông báo rõ nguyên nhân ngay tại controller.
                 if (dao.getByStudentId(sAdd.getStudentID().trim()) != null) {
-                    String error = URLEncoder.encode("Mã học sinh đã tồn tại", "UTF-8");
-                    response.sendRedirect(request.getContextPath() + "/admin/student?action=add&error=" + error);
+                    setFlashMessage(request, null, "Mã học sinh đã tồn tại");
+                    response.sendRedirect(request.getContextPath() + "/admin/student?action=add");
                     return;
                 }
 
                 try {
-                    int affectedRows = dao.add(sAdd);
-                    if (affectedRows > 0) {
-                        String msg = URLEncoder.encode("Thêm học sinh thành công", "UTF-8");
-                        response.sendRedirect(request.getContextPath() + "/admin/student?action=list&msg=" + msg);
-                    } else {
-                        String error = URLEncoder.encode("Không thể thêm học sinh", "UTF-8");
-                        response.sendRedirect(request.getContextPath() + "/admin/student?action=add&error=" + error);
-                    }
+                    StudentService.RegistrationResult result = studentService.createStudentWithAccount(sAdd);
+                    String success = "Thêm học sinh thành công. Tài khoản: " + sAdd.getStudentID()
+                            + " | Mật khẩu tạm: " + result.getRawPassword();
+                    setFlashMessage(request, success, null);
+                    response.sendRedirect(request.getContextPath() + "/admin/student?action=list");
+                } catch (IllegalArgumentException e) {
+                    System.err.println("[StudentController.add] Validation failed: " + e.getMessage());
+                    setFlashMessage(request, null, e.getMessage());
+                    response.sendRedirect(request.getContextPath() + "/admin/student?action=add");
                 } catch (SQLException e) {
                     System.err.println("[StudentController.add] INSERT failed: " + e.getMessage());
                     e.printStackTrace();
-                    String error = URLEncoder.encode("Lỗi CSDL khi thêm học sinh: " + e.getMessage(), "UTF-8");
-                    response.sendRedirect(request.getContextPath() + "/admin/student?action=add&error=" + error);
+                    setFlashMessage(request, null, "Lỗi CSDL khi thêm học sinh: " + e.getMessage());
+                    response.sendRedirect(request.getContextPath() + "/admin/student?action=add");
                 }
                 break;
             case "edit":

@@ -13,6 +13,7 @@ public class StudentDAO {
     private Student mapResultSetToStudent(ResultSet rs) throws SQLException {
         Student s = new Student();
         s.setId(rs.getInt("ID"));
+        s.setPersonId(rs.getInt("PersonID"));
         s.setStudentID(rs.getString("StudentID"));
         s.setFullName(rs.getString("FullName"));
 

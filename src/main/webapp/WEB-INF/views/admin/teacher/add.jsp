@@ -13,6 +13,14 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        <c:if test="${not empty sessionScope.flashSuccess}">
+                            <div class="alert alert-success">${sessionScope.flashSuccess}</div>
+                            <c:remove var="flashSuccess" scope="session" />
+                        </c:if>
+                        <c:if test="${not empty sessionScope.flashError}">
+                            <div class="alert alert-danger">${sessionScope.flashError}</div>
+                            <c:remove var="flashError" scope="session" />
+                        </c:if>
                         <form action="${pageContext.request.contextPath}/admin/teacher" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="add" />
                             <input type="hidden" name="existingImages" id="existingImages" value="" />

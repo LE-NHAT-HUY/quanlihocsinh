@@ -3,6 +3,7 @@ C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controlle
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\CohortController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\CreateUserController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\DbTestController.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\EditUserController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\GradeController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\HomeController.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\Controller\admin\LoginController.java
@@ -70,5 +71,8 @@ C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\Yea
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\model\YearSemester.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\service\AchievementService.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\service\ScoreService.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\service\StudentService.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\service\TeacherService.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\util\DBUtil.java
 C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\util\FileUploadUtil.java
+C:\Users\LENOVO\Projects\quanlyhocsinh\src\main\java\com\quanlihocsinh\util\PasswordUtil.java

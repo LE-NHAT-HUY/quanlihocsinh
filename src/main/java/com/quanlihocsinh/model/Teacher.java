@@ -5,6 +5,7 @@ import java.util.Date;
 public class Teacher {
 
     private int id;
+    private int personId;
     private String teacherID;
     private String fullName;
     private Date birth;
@@ -31,6 +32,14 @@ public class Teacher {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 
     public String getTeacherID() {
