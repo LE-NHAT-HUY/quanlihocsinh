@@ -26,6 +26,23 @@ public class StudentClassController extends HttpServlet {
     private StudentDAO studentDAO = new StudentDAO();
     private CohortDAO cohortDAO = new CohortDAO();
 
+    private int parseIntOrDefault(String value, int defaultValue) {
+        if (value == null || value.trim().isEmpty()) {
+            return defaultValue;
+        }
+        return Integer.parseInt(value.trim());
+    }
+
+    private void setFlashMessage(HttpServletRequest request, String success, String error) {
+        HttpSession session = request.getSession();
+        if (success != null) {
+            session.setAttribute("flashSuccess", success);
+        }
+        if (error != null) {
+            session.setAttribute("flashError", error);
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,6 +52,43 @@ public class StudentClassController extends HttpServlet {
             action = "/list";
 
         try {
+            if (action.equals("/delete")) {
+                String studentClassIDStr = request.getParameter("studentClassID");
+                String classIDStr = request.getParameter("classID");
+                String yearSemesterIDStr = request.getParameter("yearSemesterID");
+
+                System.out.println("[StudentClassController.delete] studentClassID=" + studentClassIDStr
+                        + ", classID=" + classIDStr
+                        + ", yearSemesterID=" + yearSemesterIDStr);
+
+                int studentClassID = parseIntOrDefault(studentClassIDStr, 0);
+                int classID = parseIntOrDefault(classIDStr, 0);
+                int yearSemesterID = parseIntOrDefault(yearSemesterIDStr, 1);
+
+                if (studentClassID <= 0) {
+                    setFlashMessage(request, null, "Không thể xóa: dữ liệu không hợp lệ");
+                    response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID=" + classID
+                            + "&yearSemesterID=" + yearSemesterID);
+                    return;
+                }
+
+                boolean deleted = scDAO.delete(studentClassID);
+                System.out.println("[StudentClassController.delete] deleted=" + deleted);
+
+                if (deleted) {
+                    if (classID > 0) {
+                        classDAO.decrementCurrentStudents(classID);
+                    }
+                    setFlashMessage(request, "Xóa học sinh khỏi lớp thành công", null);
+                } else {
+                    setFlashMessage(request, null, "Xóa học sinh khỏi lớp thất bại");
+                }
+
+                response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID=" + classID
+                        + "&yearSemesterID=" + yearSemesterID);
+                return;
+            }
+
             if (action.equals("/list")) {
                 int classID = 0;
                 String classIDStr = request.getParameter("classID");
@@ -88,12 +142,32 @@ public class StudentClassController extends HttpServlet {
 
             } else if (action.equals("/add")) {
                 String classIDStr = request.getParameter("classID");
-                int classID = (classIDStr != null) ? Integer.parseInt(classIDStr) : 0;
+                String yearSemesterIDStr = request.getParameter("yearSemesterID");
+
+                int classID = parseIntOrDefault(classIDStr, 0);
+                int yearSemesterID = parseIntOrDefault(yearSemesterIDStr, 1);
+
+                System.out.println("[StudentClassController.add-doGet] classID=" + classID
+                        + ", yearSemesterID=" + yearSemesterID
+                        + ", classIDStr='" + classIDStr + "'"
+                        + ", yearSemesterIDStr='" + yearSemesterIDStr + "'");
+
+                if (classID <= 0) {
+                    setFlashMessage(request, null, "Vui lòng chọn một lớp hợp lệ, không được dùng '-- Tất cả lớp --'");
+                    response.sendRedirect(
+                            request.getContextPath() + "/admin/studentclass/list?yearSemesterID=" + yearSemesterID);
+                    return;
+                }
+
+                // ✅ FIX: Lấy CHỈ những học sinh CHƯA có lớp trong năm học này
+                List<Student> availableStudents = scDAO.getStudentsNotInClass(classID, yearSemesterID);
 
                 request.setAttribute("classes", classDAO.getAll());
-                request.setAttribute("students", studentDAO.getAll());
+                request.setAttribute("students", availableStudents);
                 request.setAttribute("cohorts", cohortDAO.getAll());
+                request.setAttribute("classID", classID);
                 request.setAttribute("selectedClassID", classID);
+                request.setAttribute("yearSemesterID", yearSemesterID);
 
                 request.getRequestDispatcher("/WEB-INF/views/admin/studentclass/add.jsp").forward(request, response);
             }
@@ -132,15 +206,18 @@ public class StudentClassController extends HttpServlet {
                         classDAO.decrementCurrentStudents(fromClassId);
                         classDAO.incrementCurrentStudents(toClassId);
 
+                        setFlashMessage(request, "Chuyển lớp thành công", null);
                         response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID="
-                                + fromClassId + "&yearSemesterID=" + yearSemesterId + "&msg=transfer_success");
+                                + fromClassId + "&yearSemesterID=" + yearSemesterId);
                     } else {
+                        setFlashMessage(request, null, "Chuyển lớp thất bại");
                         response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID="
-                                + fromClassId + "&yearSemesterID=" + yearSemesterId + "&error=transfer_failed");
+                                + fromClassId + "&yearSemesterID=" + yearSemesterId);
                     }
                 } else {
+                    setFlashMessage(request, null, "Chuyển lớp thất bại: thông tin không hợp lệ");
                     response.sendRedirect(request.getContextPath()
-                            + "/admin/studentclass/list?error=transfer_failed_invalid_params");
+                            + "/admin/studentclass/list");
                 }
                 return;
             }
@@ -151,16 +228,45 @@ public class StudentClassController extends HttpServlet {
             String yearSemesterIDStr = request.getParameter("yearSemesterID");
             String cohortIDStr = request.getParameter("cohortID");
 
+            System.out.println("[StudentClassController.add] Enter doPost /add");
+            System.out.println("[StudentClassController.add] studentID=" + studentID
+                    + ", classID=" + classIDStr
+                    + ", yearSemesterID=" + yearSemesterIDStr
+                    + ", cohortID=" + cohortIDStr);
+
             if (studentID == null || studentID.isEmpty() ||
                     classIDStr == null || classIDStr.isEmpty() ||
                     yearSemesterIDStr == null || yearSemesterIDStr.isEmpty()) {
-                response.sendRedirect(request.getContextPath() + "/admin/studentclass/list");
+                setFlashMessage(request, null, "Thông tin không hợp lệ");
+                response.sendRedirect(request.getContextPath() + "/admin/studentclass/add?classID=" + classIDStr
+                        + "&yearSemesterID=" + yearSemesterIDStr);
                 return;
             }
 
             int classID = Integer.parseInt(classIDStr);
             int yearSemesterID = Integer.parseInt(yearSemesterIDStr);
             int cohortID = (cohortIDStr != null && !cohortIDStr.isEmpty()) ? Integer.parseInt(cohortIDStr) : 0;
+
+            if (classID <= 0) {
+                setFlashMessage(request, null, "Vui lòng chọn lớp hợp lệ, không được dùng '-- Tất cả lớp --'");
+                response.sendRedirect(
+                        request.getContextPath() + "/admin/studentclass/list?yearSemesterID=" + yearSemesterID);
+                return;
+            }
+
+            System.out.println("[StudentClassController.add] Parsed values: classID=" + classID
+                    + ", yearSemesterID=" + yearSemesterID
+                    + ", cohortID=" + cohortID);
+
+            // ✅ KIỂM TRA: Học sinh đã tồn tại trong lớp khác chưa?
+            System.out.println("[StudentClassController.add] Checking existing class assignment...");
+            if (scDAO.isStudentInAnyClass(studentID, yearSemesterID)) {
+                // Học sinh đã thuộc một lớp khác
+                setFlashMessage(request, null, "Học sinh này đã được xếp vào lớp khác");
+                response.sendRedirect(request.getContextPath() + "/admin/studentclass/add?classID=" + classID
+                        + "&yearSemesterID=" + yearSemesterID);
+                return;
+            }
 
             StudentClass sc = new StudentClass();
             sc.setStudentID(studentID);
@@ -169,13 +275,32 @@ public class StudentClassController extends HttpServlet {
             sc.setActive(true);
             sc.setYearSemesterID(yearSemesterID);
 
-            boolean isAdded = scDAO.add(sc);
-            if (isAdded) {
-                classDAO.incrementCurrentStudents(classID);
-            }
+            System.out.println("[StudentClassController.add] Before DAO insert: studentID=" + sc.getStudentID()
+                    + ", classID=" + sc.getClassID()
+                    + ", cohortID=" + sc.getCohortID()
+                    + ", active=" + sc.isActive()
+                    + ", yearSemesterID=" + sc.getYearSemesterID());
 
-            response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID=" + classID
-                    + "&yearSemesterID=" + yearSemesterID);
+            // ✅ FIX: Kiểm tra kết quả thêm và xử lý lỗi
+            try {
+                boolean isAdded = scDAO.add(sc);
+                System.out.println("[StudentClassController.add] DAO insert result=" + isAdded);
+                if (isAdded) {
+                    classDAO.incrementCurrentStudents(classID);
+                    setFlashMessage(request, "Thêm học sinh thành công", null);
+                    response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID=" + classID
+                            + "&yearSemesterID=" + yearSemesterID);
+                } else {
+                    setFlashMessage(request, null, "Thêm học sinh thất bại. Vui lòng thử lại");
+                    response.sendRedirect(request.getContextPath() + "/admin/studentclass/add?classID=" + classID
+                            + "&yearSemesterID=" + yearSemesterID);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                setFlashMessage(request, null, "Lỗi cơ sở dữ liệu: " + e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/admin/studentclass/add?classID=" + classID
+                        + "&yearSemesterID=" + yearSemesterID);
+            }
 
         } catch (NumberFormatException | SQLException e) {
             throw new ServletException(e);

@@ -10,9 +10,10 @@
   </div>
 
   <section class="section mt-3">
-    <form action="${pageContext.request.contextPath}/admin/student" method="post">
+    <form action="${pageContext.request.contextPath}/admin/student" method="post" enctype="multipart/form-data">
       <input type="hidden" name="action" value="edit" />
       <input type="hidden" name="id" value="${student.id}" />
+      <input type="hidden" name="existingImages" id="existingImages" value="${student.images}" />
 
       <div class="mb-3">
         <label class="form-label">Mã HS</label>
@@ -60,9 +61,23 @@
         <label class="form-check-label" for="isActive">Hoạt động</label>
       </div>
 
+      <!-- Ảnh upload -->
       <div class="mb-3">
-        <label class="form-label">Ảnh (URL hoặc base64)</label>
-        <input type="text" name="images" class="form-control" value="${student.images}" />
+        <label class="form-label">Ảnh</label>
+        <div class="d-flex align-items-start gap-3">
+          <div class="flex-grow-1">
+            <input type="file" name="imageFile" id="imageFile" class="form-control" 
+                   accept="image/jpeg,image/png,image/gif,image/webp" />
+            <small class="text-muted d-block mt-2">
+              Định dạng: JPEG, PNG, GIF, WebP. Kích thước tối đa: 5MB
+            </small>
+          </div>
+          <!-- Ảnh preview -->
+          <div class="image-preview-container" style="flex-shrink: 0;">
+            <img id="imagePreview" src="${student.images}" alt="Preview" 
+                 style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; ${empty student.images ? 'display: none;' : ''}" />
+          </div>
+        </div>
       </div>
 
       <div class="mb-3">
@@ -86,3 +101,29 @@
     </form>
   </section>
 </main>
+
+<script>
+  // Preview ảnh khi chọn file
+  document.getElementById('imageFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('imagePreview');
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        preview.src = event.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      // Nếu không chọn file mới, hiện ảnh cũ
+      const existingImage = document.getElementById('existingImages').value;
+      if (existingImage) {
+        preview.src = existingImage;
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+  });
+</script>

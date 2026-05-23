@@ -9,6 +9,7 @@ com\quanlihocsinh\model\AdminMenu.class
 com\quanlihocsinh\model\Post.class
 com\quanlihocsinh\dao\StudentDAO.class
 com\quanlihocsinh\Controller\student\StudentAchievementController.class
+com\quanlihocsinh\util\FileUploadUtil.class
 com\quanlihocsinh\Controller\student\StudentScoreController.class
 com\quanlihocsinh\dao\ScheduleDAO.class
 com\quanlihocsinh\model\TeacherSubject.class
@@ -53,6 +54,7 @@ com\quanlihocsinh\model\Grade.class
 com\quanlihocsinh\dao\StudentClassDAO.class
 com\quanlihocsinh\Controller\admin\StudentClassController.class
 com\quanlihocsinh\model\Schedule.class
+com\quanlihocsinh\model\ClassTransferOption.class
 com\quanlihocsinh\dao\PostDAO.class
 com\quanlihocsinh\Controller\teacher\HomeController.class
 com\quanlihocsinh\Controller\admin\SubjectController.class

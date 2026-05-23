@@ -2,17 +2,24 @@ package com.quanlihocsinh.Controller.admin;
 
 import com.quanlihocsinh.dao.StudentDAO;
 import com.quanlihocsinh.model.Student;
+import com.quanlihocsinh.util.FileUploadUtil;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @WebServlet("/admin/student")
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024, // 5MB
+        maxRequestSize = 10 * 1024 * 1024 // 10MB
+)
 public class StudentController extends HttpServlet {
     private StudentDAO dao = new StudentDAO();
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -75,8 +82,41 @@ public class StudentController extends HttpServlet {
         switch (action) {
             case "add":
                 Student sAdd = extractStudentFromRequest(request);
-                dao.add(sAdd);
-                response.sendRedirect(request.getContextPath() + "/admin/student?action=list");
+                System.out.println("[StudentController.add] Raw payload: studentID=" + sAdd.getStudentID()
+                        + ", fullName=" + sAdd.getFullName()
+                        + ", birth=" + sAdd.getBirth()
+                        + ", gender=" + sAdd.getGender()
+                        + ", isActive=" + sAdd.isIsActive());
+
+                if (sAdd.getStudentID() == null || sAdd.getStudentID().trim().isEmpty()
+                        || sAdd.getFullName() == null || sAdd.getFullName().trim().isEmpty()) {
+                    String error = URLEncoder.encode("Mã học sinh và họ tên là bắt buộc", "UTF-8");
+                    response.sendRedirect(request.getContextPath() + "/admin/student?action=add&error=" + error);
+                    return;
+                }
+
+                // Tránh lỗi unique key và giúp thông báo rõ nguyên nhân ngay tại controller.
+                if (dao.getByStudentId(sAdd.getStudentID().trim()) != null) {
+                    String error = URLEncoder.encode("Mã học sinh đã tồn tại", "UTF-8");
+                    response.sendRedirect(request.getContextPath() + "/admin/student?action=add&error=" + error);
+                    return;
+                }
+
+                try {
+                    int affectedRows = dao.add(sAdd);
+                    if (affectedRows > 0) {
+                        String msg = URLEncoder.encode("Thêm học sinh thành công", "UTF-8");
+                        response.sendRedirect(request.getContextPath() + "/admin/student?action=list&msg=" + msg);
+                    } else {
+                        String error = URLEncoder.encode("Không thể thêm học sinh", "UTF-8");
+                        response.sendRedirect(request.getContextPath() + "/admin/student?action=add&error=" + error);
+                    }
+                } catch (SQLException e) {
+                    System.err.println("[StudentController.add] INSERT failed: " + e.getMessage());
+                    e.printStackTrace();
+                    String error = URLEncoder.encode("Lỗi CSDL khi thêm học sinh: " + e.getMessage(), "UTF-8");
+                    response.sendRedirect(request.getContextPath() + "/admin/student?action=add&error=" + error);
+                }
                 break;
             case "edit":
                 Student sEdit = extractStudentFromRequest(request);
@@ -95,8 +135,11 @@ public class StudentController extends HttpServlet {
 
     private Student extractStudentFromRequest(HttpServletRequest request) {
         Student s = new Student();
-        s.setStudentID(request.getParameter("studentID"));
-        s.setFullName(request.getParameter("fullName"));
+        String studentID = request.getParameter("studentID");
+        String fullName = request.getParameter("fullName");
+
+        s.setStudentID(studentID != null ? studentID.trim() : null);
+        s.setFullName(fullName != null ? fullName.trim() : null);
 
         String birthStr = request.getParameter("birth");
         if (birthStr != null && !birthStr.isEmpty()) {
@@ -115,11 +158,29 @@ public class StudentController extends HttpServlet {
         s.setStatusStudent(request.getParameter("statusStudent"));
         s.setNumberPhone(request.getParameter("numberPhone"));
         s.setIsActive(request.getParameter("isActive") != null);
-        s.setImages(request.getParameter("images"));
         s.setHamlet(request.getParameter("hamlet"));
         s.setCommune(request.getParameter("commune"));
         s.setProvince(request.getParameter("province"));
         s.setNationality(request.getParameter("nationality"));
+
+        // Xử lý upload ảnh
+        try {
+            Part imagePart = request.getPart("imageFile");
+            if (imagePart != null && imagePart.getSize() > 0) {
+                String base64Image = FileUploadUtil.convertPartToBase64(imagePart);
+                s.setImages(base64Image);
+            } else {
+                // Nếu không upload file mới, giữ ảnh cũ
+                String existingImage = request.getParameter("existingImages");
+                if (existingImage != null && !existingImage.isEmpty()) {
+                    s.setImages(existingImage);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error uploading image: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         return s;
     }
 }

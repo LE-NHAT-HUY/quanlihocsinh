@@ -100,40 +100,77 @@ public class StudentDAO {
         return s;
     }
 
-    public void add(Student s) {
-        String sql = "INSERT INTO dbo.tblStudent " +
-                "(StudentID, FullName, Birth, Gender, Address, Nation, Religion, StatusStudent, NumberPhone, IsActive, Images, Hamlet, Commune, Province, Nationality) "
+    public int add(Student s) throws SQLException {
+        String personSql = "INSERT INTO Person(fullname, birth, gender, address, phone, images, is_active) " +
+                "VALUES (?, ?, ?, ?, ?, ?, 1)";
+        String studentSql = "INSERT INTO dbo.tblStudent " +
+                "(StudentID, FullName, PersonID, Birth, Gender, Address, Nation, Religion, StatusStudent, NumberPhone, IsActive, Images, Hamlet, Commune, Province, Nationality) "
                 +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        try (Connection conn = DBUtil.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+        Connection conn = DBUtil.getConnection();
+        try {
+            conn.setAutoCommit(false);
+            System.out.println("[StudentDAO.add] Preparing transactional INSERT for studentID=" + s.getStudentID());
 
-            ps.setString(1, s.getStudentID());
-            ps.setString(2, s.getFullName());
+            int personId;
+            try (PreparedStatement personPs = conn.prepareStatement(personSql, Statement.RETURN_GENERATED_KEYS)) {
+                personPs.setString(1, s.getFullName());
+                if (s.getBirth() != null) {
+                    personPs.setDate(2, new java.sql.Date(s.getBirth().getTime()));
+                } else {
+                    personPs.setNull(2, Types.DATE);
+                }
+                personPs.setString(3, s.getGender());
+                personPs.setString(4, s.getAddress());
+                personPs.setString(5, s.getNumberPhone());
+                personPs.setString(6, s.getImages());
 
-            if (s.getBirth() != null)
-                ps.setDate(3, new java.sql.Date(s.getBirth().getTime()));
-            else
-                ps.setNull(3, Types.DATE);
+                personPs.executeUpdate();
+                try (ResultSet rs = personPs.getGeneratedKeys()) {
+                    if (!rs.next()) {
+                        throw new SQLException("Không lấy được person_id sau khi insert Person");
+                    }
+                    personId = rs.getInt(1);
+                }
+            }
 
-            ps.setString(4, s.getGender());
-            ps.setString(5, s.getAddress());
-            ps.setString(6, s.getNation());
-            ps.setString(7, s.getReligion());
-            ps.setString(8, s.getStatusStudent());
-            ps.setString(9, s.getNumberPhone());
-            ps.setBoolean(10, s.isIsActive());
-            ps.setString(11, s.getImages());
-            ps.setString(12, s.getHamlet());
-            ps.setString(13, s.getCommune());
-            ps.setString(14, s.getProvince());
-            ps.setString(15, s.getNationality());
+            int affected;
+            try (PreparedStatement studentPs = conn.prepareStatement(studentSql)) {
+                studentPs.setString(1, s.getStudentID());
+                studentPs.setString(2, s.getFullName());
+                studentPs.setInt(3, personId);
 
-            ps.executeUpdate();
+                if (s.getBirth() != null)
+                    studentPs.setDate(4, new java.sql.Date(s.getBirth().getTime()));
+                else
+                    studentPs.setNull(4, Types.DATE);
 
+                studentPs.setString(5, s.getGender());
+                studentPs.setString(6, s.getAddress());
+                studentPs.setString(7, s.getNation());
+                studentPs.setString(8, s.getReligion());
+                studentPs.setString(9, s.getStatusStudent());
+                studentPs.setString(10, s.getNumberPhone());
+                studentPs.setBoolean(11, s.isIsActive());
+                studentPs.setString(12, s.getImages());
+                studentPs.setString(13, s.getHamlet());
+                studentPs.setString(14, s.getCommune());
+                studentPs.setString(15, s.getProvince());
+                studentPs.setString(16, s.getNationality());
+
+                affected = studentPs.executeUpdate();
+            }
+
+            conn.commit();
+            System.out.println("[StudentDAO.add] INSERT affected rows=" + affected + ", personId=" + personId);
+            return affected;
         } catch (SQLException e) {
-            e.printStackTrace();
+            conn.rollback();
+            throw e;
+        } finally {
+            conn.setAutoCommit(true);
+            conn.close();
         }
     }
 

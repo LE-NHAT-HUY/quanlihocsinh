@@ -13,9 +13,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="${pageContext.request.contextPath}/admin/teacher" method="post">
+                        <form action="${pageContext.request.contextPath}/admin/teacher" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="edit" />
                             <input type="hidden" name="id" value="${teacher.id}" />
+                            <input type="hidden" name="existingImages" id="existingImages" value="${teacher.images}" />
 
                             <div class="mb-3">
                                 <label>Mã GV</label>
@@ -92,9 +93,24 @@
                                 <label>Quốc tịch</label>
                                 <input type="text" name="nationality" value="${teacher.nationality}" class="form-control" />
                             </div>
+
+                            <!-- Ảnh upload -->
                             <div class="mb-3">
-                                <label>ảnh</label>
-                                <input type="text" name="images" value="${teacher.images}" class="form-control" />
+                                <label>Ảnh</label>
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="flex-grow-1">
+                                        <input type="file" name="imageFile" id="imageFile" class="form-control" 
+                                               accept="image/jpeg,image/png,image/gif,image/webp" />
+                                        <small class="text-muted d-block mt-2">
+                                            Định dạng: JPEG, PNG, GIF, WebP. Kích thước tối đa: 5MB
+                                        </small>
+                                    </div>
+                                    <!-- Ảnh preview -->
+                                    <div class="image-preview-container" style="flex-shrink: 0;">
+                                        <img id="imagePreview" src="${teacher.images}" alt="Preview" 
+                                             style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; ${empty teacher.images ? 'display: none;' : ''}" />
+                                    </div>
+                                </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Cập nhật</button>
@@ -105,3 +121,29 @@
         </div>
     </section>
 </main>
+
+<script>
+  // Preview ảnh khi chọn file
+  document.getElementById('imageFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('imagePreview');
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        preview.src = event.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      // Nếu không chọn file mới, hiện ảnh cũ
+      const existingImage = document.getElementById('existingImages').value;
+      if (existingImage) {
+        preview.src = existingImage;
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+  });
+</script>

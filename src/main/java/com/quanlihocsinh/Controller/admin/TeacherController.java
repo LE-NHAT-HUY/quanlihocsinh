@@ -2,8 +2,10 @@ package com.quanlihocsinh.Controller.admin;
 
 import com.quanlihocsinh.dao.TeacherDAO;
 import com.quanlihocsinh.model.Teacher;
+import com.quanlihocsinh.util.FileUploadUtil;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
@@ -11,6 +13,9 @@ import java.sql.Date;
 import java.util.List;
 
 @WebServlet("/admin/teacher/*")
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024, // 5MB
+        maxRequestSize = 10 * 1024 * 1024 // 10MB
+)
 public class TeacherController extends HttpServlet {
 
     private TeacherDAO teacherDAO = new TeacherDAO();
@@ -106,7 +111,24 @@ public class TeacherController extends HttpServlet {
         t.setCommune(request.getParameter("commune"));
         t.setProvince(request.getParameter("province"));
         t.setNationality(request.getParameter("nationality"));
-        t.setImages(request.getParameter("images"));
+
+        // Xử lý upload ảnh
+        try {
+            Part imagePart = request.getPart("imageFile");
+            if (imagePart != null && imagePart.getSize() > 0) {
+                String base64Image = FileUploadUtil.convertPartToBase64(imagePart);
+                t.setImages(base64Image);
+            } else {
+                // Nếu không upload file mới, giữ ảnh cũ
+                String existingImage = request.getParameter("existingImages");
+                if (existingImage != null && !existingImage.isEmpty()) {
+                    t.setImages(existingImage);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error uploading image: " + e.getMessage());
+            e.printStackTrace();
+        }
 
         return t;
     }

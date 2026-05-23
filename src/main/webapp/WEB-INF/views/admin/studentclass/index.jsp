@@ -94,7 +94,7 @@
                                             </button>
 
                                             <!-- NÚT XÓA -->
-                                            <a href="${pageContext.request.contextPath}/admin/studentclass/delete?studentClassID=${sc.studentClassID}&classID=${classID}" 
+                                            <a href="${pageContext.request.contextPath}/admin/studentclass/delete?studentClassID=${sc.studentClassID}&classID=${sc.classID}&yearSemesterID=${yearSemesterID}" 
                                                class="btn btn-danger btn-sm" 
                                                onclick="return confirm('Xóa học sinh này khỏi lớp?')">
                                                 <i class="bi bi-trash"></i>

@@ -13,6 +13,28 @@ import java.util.regex.Matcher;
 
 public class StudentClassDAO {
 
+    /**
+     * Kiểm tra xem học sinh này đã tồn tại trong lớp nào khác chưa (trong năm học
+     * hiện tại)
+     * 
+     * @param studentID      ID của học sinh cần kiểm tra
+     * @param yearSemesterID Năm học
+     * @return true nếu học sinh đã có trong lớp khác, false nếu chưa
+     */
+    public boolean isStudentInAnyClass(String studentID, int yearSemesterID) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM tblStudentClass WHERE studentID = ? AND yearSemesterID = ? AND isActive = 1 AND classID > 0";
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, studentID);
+            ps.setInt(2, yearSemesterID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
+
     public boolean add(StudentClass sc) throws SQLException {
         String sql = "INSERT INTO tblStudentClass(studentID, classID, cohortID, isActive, yearSemesterID) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
@@ -63,11 +85,18 @@ public class StudentClassDAO {
         return list;
     }
 
+    /**
+     * Lấy danh sách học sinh CHƯA ĐƯỢC phân lớp trong năm học chỉ định
+     * 
+     * @param yearSemesterID Năm học
+     * @return Danh sách học sinh chưa có lớp
+     */
     public List<Student> getStudentsNotInClass(int classID, int yearSemesterID) throws SQLException {
         List<Student> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM tblStudent WHERE studentID NOT IN " +
-                "(SELECT studentID FROM tblStudentClass WHERE yearSemesterID = ? AND isActive = 1)";
+        String sql = "SELECT s.* FROM tblStudent s WHERE s.studentID NOT IN " +
+                "(SELECT DISTINCT studentID FROM tblStudentClass WHERE yearSemesterID = ? AND isActive = 1) " +
+                "ORDER BY s.fullName";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -80,6 +109,10 @@ public class StudentClassDAO {
                 s.setId(rs.getInt("id"));
                 s.setStudentID(rs.getString("studentID"));
                 s.setFullName(rs.getString("fullName"));
+                s.setGender(rs.getString("gender"));
+                s.setBirth(rs.getDate("birth"));
+                s.setAddress(rs.getString("address"));
+                s.setNumberPhone(rs.getString("numberPhone"));
 
                 list.add(s);
             }

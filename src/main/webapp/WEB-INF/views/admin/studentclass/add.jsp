@@ -16,6 +16,15 @@
     <!-- Nội dung -->
     <section class="section dashboard mt-3">
 
+        <c:if test="${not empty sessionScope.flashSuccess}">
+            <div class="alert alert-success">${sessionScope.flashSuccess}</div>
+            <c:remove var="flashSuccess" scope="session" />
+        </c:if>
+        <c:if test="${not empty sessionScope.flashError}">
+            <div class="alert alert-danger">${sessionScope.flashError}</div>
+            <c:remove var="flashError" scope="session" />
+        </c:if>
+
         <!-- Thông tin lớp -->
         <c:if test="${not empty currentClass}">
             <div class="alert alert-info">
@@ -27,7 +36,7 @@
 
         <!-- Form -->
         <form action="${pageContext.request.contextPath}/admin/studentclass/add" method="post">
-            <input type="hidden" name="classID" value="${classID}">
+            <input type="hidden" name="classID" value="${not empty classID ? classID : selectedClassID}">
             <input type="hidden" name="yearSemesterID" value="${yearSemesterID}">
 
             <!-- Chọn học sinh -->
