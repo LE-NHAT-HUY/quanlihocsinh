@@ -7,6 +7,7 @@ public class Subject {
     private String semester;
     private boolean isActive;
     private Integer departmentID;
+    private Department department;
 
     public int getSubjectID() {
         return subjectID;
@@ -54,5 +55,13 @@ public class Subject {
 
     public void setDepartmentID(Integer departmentID) {
         this.departmentID = departmentID;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }

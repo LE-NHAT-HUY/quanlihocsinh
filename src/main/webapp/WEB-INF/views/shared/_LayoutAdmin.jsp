@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -67,79 +68,15 @@
           </a>
         </li><!-- End Search Icon-->
 
-        <li class="nav-item dropdown">
-
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+        <li class="nav-item">
+          <a class="nav-link nav-icon position-relative" href="${pageContext.request.contextPath}/admin/notifications" title="Thông báo">
             <i class="bi bi-bell"></i>
-            <span class="badge bg-primary badge-number">4</span>
-          </a><!-- End Notification Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <li class="dropdown-header">
-              You have 4 new notifications
-              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-exclamation-circle text-warning"></i>
-              <div>
-                <h4>Lorem Ipsum</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>30 min. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-x-circle text-danger"></i>
-              <div>
-                <h4>Atque rerum nesciunt</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>1 hr. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-check-circle text-success"></i>
-              <div>
-                <h4>Sit rerum fuga</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>2 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-info-circle text-primary"></i>
-              <div>
-                <h4>Dicta reprehenderit</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>4 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="dropdown-footer">
-              <a href="#">Show all notifications</a>
-            </li>
-
-          </ul><!-- End Notification Dropdown Items -->
-
+            <c:if test="${not empty notifUnreadCount and notifUnreadCount > 0}">
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                ${notifUnreadCount}
+              </span>
+            </c:if>
+          </a>
         </li><!-- End Notification Nav -->
 
         <li class="nav-item dropdown">
@@ -317,6 +254,27 @@
         </li>
     </ul>
 </li>
+
+  <!-- Quản lý Phòng ban -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#department-nav" data-bs-toggle="collapse" href="#">
+      <i class="bi bi-diagram-3"></i>
+      <span>Quản lý Khoa / Tổ bộ môn</span>
+      <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="department-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+      <li>
+        <a href="${pageContext.request.contextPath}/admin/department/add">
+          <i class="bi bi-circle"></i><span>Thêm mới Khoa / Tổ bộ môn</span>
+        </a>
+      </li>
+      <li>
+        <a href="${pageContext.request.contextPath}/admin/department/list">
+          <i class="bi bi-circle"></i><span>Danh sách Khoa / Tổ bộ môn</span>
+        </a>
+      </li>
+    </ul>
+  </li>
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#class-nav" data-bs-toggle="collapse" href="#">

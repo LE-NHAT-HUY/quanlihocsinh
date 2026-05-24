@@ -68,7 +68,14 @@
             </div>
 
             <div class="topbar-right">
-                <i class="bi bi-bell"></i>
+                <a class="nav-link nav-icon me-2 position-relative" href="${pageContext.request.contextPath}/teacher/notifications" title="Thông báo">
+                    <i class="bi bi-bell"></i>
+                    <c:if test="${not empty notifUnreadCount and notifUnreadCount > 0}">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            ${notifUnreadCount}
+                        </span>
+                    </c:if>
+                </a>
                 
                 <c:choose>
                     <c:when test="${not empty sessionScope.user.profile.images}">

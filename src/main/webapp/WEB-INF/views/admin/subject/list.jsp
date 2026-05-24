@@ -35,7 +35,16 @@
                                         <td class="text-center">${item.subjectName}</td>
                                         <td class="text-center">${item.numberOfLesson}</td>
                                         <td class="text-center">${item.semester}</td>
-                                        <td class="text-center">${item.departmentID}</td>
+                                        <td class="text-center">
+                                            <c:choose>
+                                                <c:when test="${not empty item.department and not empty item.department.departmentName}">
+                                                    ${item.department.departmentName}
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="text-muted">Chưa gán</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
 
                                         <td class="text-center">
                                             <form action="${pageContext.request.contextPath}/admin/subject" method="post">

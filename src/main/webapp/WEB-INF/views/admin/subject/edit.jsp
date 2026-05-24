@@ -28,8 +28,15 @@
             </div>
             <div class="mb-3">
                 <label for="departmentID" class="form-label">Phòng ban</label>
-                <input type="number" name="departmentID" class="form-control" id="departmentID"
-                       value="${subject.departmentID}">
+                <select name="departmentID" class="form-select" id="departmentID">
+                    <option value="">-- Chọn phòng ban --</option>
+                    <c:forEach var="department" items="${departments}">
+                        <option value="${department.departmentID}"
+                                ${subject.departmentID == department.departmentID ? 'selected="selected"' : ''}>
+                            ${department.departmentName}
+                        </option>
+                    </c:forEach>
+                </select>
             </div>
             <div class="mb-3 form-check">
                 <input type="checkbox" name="isActive" class="form-check-input" id="isActive"

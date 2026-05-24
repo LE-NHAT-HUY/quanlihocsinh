@@ -17,12 +17,26 @@ public class SubjectDAO {
         s.setSemester(rs.getString("Semester"));
         s.setIsActive(rs.getBoolean("IsActive"));
         s.setDepartmentID((Integer) rs.getObject("DepartmentID"));
+
+        int departmentId = rs.getInt("DepartmentID");
+        if (!rs.wasNull() && rs.getMetaData().getColumnCount() >= 7) {
+            try {
+                com.quanlihocsinh.model.Department department = new com.quanlihocsinh.model.Department();
+                department.setDepartmentID(departmentId);
+                department.setDepartmentName(rs.getString("DepartmentName"));
+                s.setDepartment(department);
+            } catch (Exception ignored) {
+            }
+        }
         return s;
     }
 
     public List<Subject> getAllSubjects() {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM tblSubject ORDER BY SubjectName";
+        String sql = "SELECT s.*, d.DepartmentName " +
+                "FROM tblSubject s " +
+                "LEFT JOIN tblDepartment d ON s.DepartmentID = d.DepartmentID " +
+                "ORDER BY s.SubjectName";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -41,7 +55,10 @@ public class SubjectDAO {
 
     public Subject getSubjectById(int id) {
         Subject s = null;
-        String sql = "SELECT * FROM tblSubject WHERE SubjectID=?";
+        String sql = "SELECT s.*, d.DepartmentName " +
+                "FROM tblSubject s " +
+                "LEFT JOIN tblDepartment d ON s.DepartmentID = d.DepartmentID " +
+                "WHERE s.SubjectID=?";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -133,7 +150,10 @@ public class SubjectDAO {
 
     public List<Subject> findAllActive() {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM tblSubject WHERE IsActive = 1 ORDER BY SubjectName";
+        String sql = "SELECT s.*, d.DepartmentName " +
+                "FROM tblSubject s " +
+                "LEFT JOIN tblDepartment d ON s.DepartmentID = d.DepartmentID " +
+                "WHERE s.IsActive = 1 ORDER BY s.SubjectName";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -156,17 +176,16 @@ public class SubjectDAO {
 
     public List<Subject> findAll() {
         List<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM tblSubject";
+        String sql = "SELECT s.*, d.DepartmentName " +
+                "FROM tblSubject s " +
+                "LEFT JOIN tblDepartment d ON s.DepartmentID = d.DepartmentID";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Subject s = new Subject();
-                s.setSubjectID(rs.getInt("SubjectID"));
-                s.setSubjectName(rs.getString("SubjectName"));
-                list.add(s);
+                list.add(map(rs));
             }
 
         } catch (Exception e) {

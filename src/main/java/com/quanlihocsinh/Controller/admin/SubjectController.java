@@ -1,6 +1,8 @@
 package com.quanlihocsinh.Controller.admin;
 
+import com.quanlihocsinh.dao.DepartmentRepository;
 import com.quanlihocsinh.dao.SubjectDAO;
+import com.quanlihocsinh.model.Department;
 import com.quanlihocsinh.model.Subject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +13,7 @@ import java.util.List;
 @WebServlet(name = "SubjectController", urlPatterns = { "/admin/subject/*" })
 public class SubjectController extends HttpServlet {
     private SubjectDAO dao = new SubjectDAO();
+    private DepartmentRepository departmentRepository = new DepartmentRepository();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -78,6 +81,7 @@ public class SubjectController extends HttpServlet {
 
     private void showAddForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setAttribute("departments", departmentRepository.findAllActive());
         request.getRequestDispatcher("/WEB-INF/views/admin/subject/add.jsp").forward(request, response);
     }
 
@@ -86,6 +90,7 @@ public class SubjectController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Subject s = dao.getSubjectById(id);
         request.setAttribute("subject", s);
+        request.setAttribute("departments", departmentRepository.findAllActive());
         request.getRequestDispatcher("/WEB-INF/views/admin/subject/edit.jsp").forward(request, response);
     }
 
