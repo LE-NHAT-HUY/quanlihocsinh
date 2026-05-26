@@ -24,8 +24,10 @@ public class TeacherDAO {
         t.setReligion(rs.getString("Religion"));
         t.setGroupDV(rs.getString("GroupDV"));
         t.setNumberPhone(rs.getString("NumberPhone"));
+        t.setEmail(rs.getString("Email"));
         t.setNumberBHXH(rs.getString("NumberBHXH"));
         t.setIsActive(rs.getBoolean("IsActive"));
+        t.setPosition(rs.getString("Position"));
 
         int depID = rs.getInt("DepartmentID");
         t.setDepartmentID(rs.wasNull() ? null : depID);
@@ -36,6 +38,11 @@ public class TeacherDAO {
         t.setCommune(rs.getString("Commune"));
         t.setProvince(rs.getString("Province"));
         t.setNationality(rs.getString("Nationality"));
+        t.setEmergencyContactName(rs.getString("EmergencyContactName"));
+        t.setEmergencyPhone(rs.getString("EmergencyContactPhone"));
+        t.setTaxCode(rs.getString("TaxCode"));
+        t.setBankName(rs.getString("BankName"));
+        t.setAccountNumber(rs.getString("BankAccount"));
         t.setImages(rs.getString("Images"));
 
         return t;
@@ -50,29 +57,7 @@ public class TeacherDAO {
                 ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Teacher t = new Teacher();
-                t.setId(rs.getInt("ID"));
-                t.setTeacherID(rs.getString("TeacherID"));
-                t.setFullName(rs.getString("FullName"));
-                t.setBirth(rs.getDate("Birth"));
-                t.setGender(rs.getString("Gender"));
-                t.setAddress(rs.getString("Address"));
-                t.setStatusTeacher(rs.getString("StatusTeacher"));
-                t.setCccd(rs.getString("CCCD"));
-                t.setNation(rs.getString("Nation"));
-                t.setReligion(rs.getString("Religion"));
-                t.setGroupDV(rs.getString("GroupDV"));
-                t.setNumberPhone(rs.getString("NumberPhone"));
-                t.setNumberBHXH(rs.getString("NumberBHXH"));
-                t.setIsActive(rs.getBoolean("IsActive"));
-                t.setDepartmentID(rs.getInt("DepartmentID"));
-                t.setHamlet(rs.getInt("Hamlet"));
-                t.setCommune(rs.getString("Commune"));
-                t.setProvince(rs.getString("Province"));
-                t.setNationality(rs.getString("Nationality"));
-                t.setImages(rs.getString("Images"));
-
-                list.add(t);
+                list.add(mapResultSetToTeacher(rs));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,8 +88,8 @@ public class TeacherDAO {
     }
 
     public void add(Teacher t) {
-        String sql = "INSERT INTO tblTeacher(TeacherID, FullName, Birth, Gender, Address, StatusTeacher, CCCD, Nation, Religion, GroupDV, NumberPhone, NumberBHXH, IsActive, DepartmentID, Hamlet, Commune, Province, Nationality, Images) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tblTeacher(TeacherID, FullName, Birth, Gender, Address, StatusTeacher, CCCD, Nation, Religion, GroupDV, NumberPhone, Email, NumberBHXH, IsActive, Position, DepartmentID, Hamlet, Commune, Province, Nationality, EmergencyContactName, EmergencyContactPhone, TaxCode, BankName, BankAccount, Images) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -120,23 +105,30 @@ public class TeacherDAO {
             ps.setString(9, t.getReligion());
             ps.setString(10, t.getGroupDV());
             ps.setString(11, t.getNumberPhone());
-            ps.setString(12, t.getNumberBHXH());
-            ps.setBoolean(13, t.isIsActive());
+            ps.setString(12, t.getEmail());
+            ps.setString(13, t.getNumberBHXH());
+            ps.setBoolean(14, t.isIsActive());
+            ps.setString(15, t.getPosition());
 
             if (t.getDepartmentID() != null)
-                ps.setInt(14, t.getDepartmentID());
+                ps.setInt(16, t.getDepartmentID());
             else
-                ps.setNull(14, Types.INTEGER);
+                ps.setNull(16, Types.INTEGER);
 
             if (t.getHamlet() != null)
-                ps.setInt(15, t.getHamlet());
+                ps.setInt(17, t.getHamlet());
             else
-                ps.setNull(15, Types.INTEGER);
+                ps.setNull(17, Types.INTEGER);
 
-            ps.setString(16, t.getCommune());
-            ps.setString(17, t.getProvince());
-            ps.setString(18, t.getNationality());
-            ps.setString(19, t.getImages());
+            ps.setString(18, t.getCommune());
+            ps.setString(19, t.getProvince());
+            ps.setString(20, t.getNationality());
+            ps.setString(21, t.getEmergencyContactName());
+            ps.setString(22, t.getEmergencyPhone());
+            ps.setString(23, t.getTaxCode());
+            ps.setString(24, t.getBankName());
+            ps.setString(25, t.getAccountNumber());
+            ps.setString(26, t.getImages());
 
             ps.executeUpdate();
 
@@ -146,7 +138,7 @@ public class TeacherDAO {
     }
 
     public void update(Teacher t) {
-        String sql = "UPDATE tblTeacher SET TeacherID=?, FullName=?, Birth=?, Gender=?, Address=?, StatusTeacher=?, CCCD=?, Nation=?, Religion=?, GroupDV=?, NumberPhone=?, NumberBHXH=?, IsActive=?, DepartmentID=?, Hamlet=?, Commune=?, Province=?, Nationality=?, Images=? "
+        String sql = "UPDATE tblTeacher SET TeacherID=?, FullName=?, Birth=?, Gender=?, Address=?, StatusTeacher=?, CCCD=?, Nation=?, Religion=?, GroupDV=?, NumberPhone=?, Email=?, NumberBHXH=?, IsActive=?, Position=?, DepartmentID=?, Hamlet=?, Commune=?, Province=?, Nationality=?, EmergencyContactName=?, EmergencyContactPhone=?, TaxCode=?, BankName=?, BankAccount=?, Images=? "
                 + "WHERE ID=?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -163,24 +155,31 @@ public class TeacherDAO {
             ps.setString(9, t.getReligion());
             ps.setString(10, t.getGroupDV());
             ps.setString(11, t.getNumberPhone());
-            ps.setString(12, t.getNumberBHXH());
-            ps.setBoolean(13, t.isIsActive());
+            ps.setString(12, t.getEmail());
+            ps.setString(13, t.getNumberBHXH());
+            ps.setBoolean(14, t.isIsActive());
+            ps.setString(15, t.getPosition());
 
             if (t.getDepartmentID() != null)
-                ps.setInt(14, t.getDepartmentID());
+                ps.setInt(16, t.getDepartmentID());
             else
-                ps.setNull(14, Types.INTEGER);
+                ps.setNull(16, Types.INTEGER);
 
             if (t.getHamlet() != null)
-                ps.setInt(15, t.getHamlet());
+                ps.setInt(17, t.getHamlet());
             else
-                ps.setNull(15, Types.INTEGER);
+                ps.setNull(17, Types.INTEGER);
 
-            ps.setString(16, t.getCommune());
-            ps.setString(17, t.getProvince());
-            ps.setString(18, t.getNationality());
-            ps.setString(19, t.getImages());
-            ps.setInt(20, t.getId());
+            ps.setString(18, t.getCommune());
+            ps.setString(19, t.getProvince());
+            ps.setString(20, t.getNationality());
+            ps.setString(21, t.getEmergencyContactName());
+            ps.setString(22, t.getEmergencyPhone());
+            ps.setString(23, t.getTaxCode());
+            ps.setString(24, t.getBankName());
+            ps.setString(25, t.getAccountNumber());
+            ps.setString(26, t.getImages());
+            ps.setInt(27, t.getId());
 
             ps.executeUpdate();
 

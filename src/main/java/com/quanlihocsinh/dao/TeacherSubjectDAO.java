@@ -63,6 +63,62 @@ public class TeacherSubjectDAO {
         return false;
     }
 
+    public List<Integer> findSubjectIdsByTeacher(int teacherID) {
+        List<Integer> subjectIds = new ArrayList<>();
+        String sql = "SELECT SubjectID FROM Teacher_Subject WHERE TeacherID = ? ORDER BY SubjectID";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, teacherID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    subjectIds.add(rs.getInt("SubjectID"));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return subjectIds;
+    }
+
+    public void replaceSubjectsForTeacher(int teacherID, String[] subjectIDs) {
+        String deleteSql = "DELETE FROM Teacher_Subject WHERE TeacherID = ?";
+        String insertSql = "INSERT INTO Teacher_Subject(TeacherID, SubjectID, AssignedBy) VALUES (?,?,?)";
+
+        try (Connection conn = DBUtil.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement deletePs = conn.prepareStatement(deleteSql)) {
+                deletePs.setInt(1, teacherID);
+                deletePs.executeUpdate();
+            }
+
+            if (subjectIDs != null && subjectIDs.length > 0) {
+                try (PreparedStatement insertPs = conn.prepareStatement(insertSql)) {
+                    for (String subjectIdStr : subjectIDs) {
+                        if (subjectIdStr == null || subjectIdStr.trim().isEmpty()) {
+                            continue;
+                        }
+
+                        insertPs.setInt(1, teacherID);
+                        insertPs.setInt(2, Integer.parseInt(subjectIdStr.trim()));
+                        insertPs.setString(3, "admin");
+                        insertPs.addBatch();
+                    }
+                    insertPs.executeBatch();
+                }
+            }
+
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Subject> findSubjectsByTeacher(int teacherID) throws SQLException {
         List<Subject> list = new ArrayList<>();
 

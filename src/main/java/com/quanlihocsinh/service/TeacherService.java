@@ -106,9 +106,8 @@ public class TeacherService {
     private int insertTeacher(Connection conn, Teacher teacher, int personId) throws SQLException {
         String sql = "INSERT INTO tblTeacher(" +
                 "TeacherID, FullName, PersonID, Birth, Gender, Address, StatusTeacher, CCCD, Nation, Religion, " +
-                "GroupDV, NumberPhone, NumberBHXH, IsActive, DepartmentID, Hamlet, Commune, Province, Nationality, Images) "
-                +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "GroupDV, NumberPhone, Email, NumberBHXH, IsActive, Position, DepartmentID, Hamlet, Commune, Province, Nationality, EmergencyContactName, EmergencyContactPhone, TaxCode, BankName, BankAccount, Images) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, teacher.getTeacherID());
@@ -129,25 +128,32 @@ public class TeacherService {
             ps.setString(10, teacher.getReligion());
             ps.setString(11, teacher.getGroupDV());
             ps.setString(12, teacher.getNumberPhone());
-            ps.setString(13, teacher.getNumberBHXH());
-            ps.setBoolean(14, teacher.isIsActive());
+            ps.setString(13, teacher.getEmail());
+            ps.setString(14, teacher.getNumberBHXH());
+            ps.setBoolean(15, teacher.isIsActive());
+            ps.setString(16, teacher.getPosition());
 
             if (teacher.getDepartmentID() != null) {
-                ps.setInt(15, teacher.getDepartmentID());
+                ps.setInt(17, teacher.getDepartmentID());
             } else {
-                ps.setNull(15, Types.INTEGER);
+                ps.setNull(17, Types.INTEGER);
             }
 
             if (teacher.getHamlet() != null) {
-                ps.setInt(16, teacher.getHamlet());
+                ps.setInt(18, teacher.getHamlet());
             } else {
-                ps.setNull(16, Types.INTEGER);
+                ps.setNull(18, Types.INTEGER);
             }
 
-            ps.setString(17, teacher.getCommune());
-            ps.setString(18, teacher.getProvince());
-            ps.setString(19, teacher.getNationality());
-            ps.setString(20, teacher.getImages());
+            ps.setString(19, teacher.getCommune());
+            ps.setString(20, teacher.getProvince());
+            ps.setString(21, teacher.getNationality());
+            ps.setString(22, teacher.getEmergencyContactName());
+            ps.setString(23, teacher.getEmergencyPhone());
+            ps.setString(24, teacher.getTaxCode());
+            ps.setString(25, teacher.getBankName());
+            ps.setString(26, teacher.getAccountNumber());
+            ps.setString(27, teacher.getImages());
 
             int affected = ps.executeUpdate();
             if (affected <= 0) {

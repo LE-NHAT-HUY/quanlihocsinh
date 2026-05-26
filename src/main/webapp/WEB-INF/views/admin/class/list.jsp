@@ -9,6 +9,26 @@
     <section class="section dashboard">
         <div class="card recent-sales overflow-auto">
             <div class="card-body mt-4">
+                <div class="mb-3">
+                    <div class="btn-group flex-wrap mb-2" role="group" aria-label="Lọc theo khóa">
+                        <button type="button" class="btn btn-outline-primary btn-sm filter-cohort active" data-cohort="">
+                            Tất cả các khóa
+                        </button>
+                        <c:forEach var="cohort" items="${cohortList}">
+                            <button type="button" class="btn btn-outline-primary btn-sm filter-cohort" data-cohort="${cohort.cohortID}">
+                                Khóa ${cohort.cohortName}
+                            </button>
+                        </c:forEach>
+                    </div>
+
+                    <div id="gradeFilterBar" class="btn-group flex-wrap" role="group" aria-label="Lọc theo khối" style="display: none;">
+                        <button type="button" class="btn btn-outline-success btn-sm filter-grade" data-grade="6">Khối 6</button>
+                        <button type="button" class="btn btn-outline-success btn-sm filter-grade" data-grade="7">Khối 7</button>
+                        <button type="button" class="btn btn-outline-success btn-sm filter-grade" data-grade="8">Khối 8</button>
+                        <button type="button" class="btn btn-outline-success btn-sm filter-grade" data-grade="9">Khối 9</button>
+                    </div>
+                </div>
+
                 <table class="table table-borderless datatable">
                     <thead>
                         <tr>
@@ -27,13 +47,11 @@
                         <c:set var="stt" value="0"/>
                         <c:forEach var="cls" items="${classes}">
                             <c:set var="stt" value="${stt + 1}" />
-                            <tr>
+                            <tr data-cohort="${cls.cohortID}" data-grade="${cls.gradeID}">
                                 <td class="text-center">${stt}</td>
                                 <td class="text-center">${cls.classID}</td>
                                 <td class="text-center"> ${cls.gradeID}${cls.className}</td>
-                                <td class="text-center">
-                                    ${cls.gradeID}
-                                </td>
+                                <td class="text-center">${cls.gradeID}</td>
 
                                 <td class="text-center">
                                     <c:choose>
@@ -49,16 +67,14 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
-                               <td class="text-center">
+
+                                <td class="text-center">
                                     <c:forEach var="cohort" items="${cohortList}">
                                         <c:if test="${cohort.cohortID == cls.cohortID}">
                                             ${cohort.cohortName}
                                         </c:if>
                                     </c:forEach>
                                 </td>
-
-
-
 
                                 <td class="text-center">${cls.currentStudents} / ${cls.maxStudents}</td>
                                 <td class="text-center">
@@ -81,7 +97,7 @@
                         </c:forEach>
                         <c:if test="${empty classes}">
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">
+                                <td colspan="9" class="text-center py-4 text-muted">
                                     <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                                     Chưa có lớp học nào
                                 </td>
@@ -97,15 +113,74 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<c:if test="${not empty classes}">
 <script>
 $(document).ready(function() {
-  $('.datatable').DataTable({
-    "pageLength": 10,
-    "lengthMenu": [5,10,25,50,100],
-    "order": [],
-    "columnDefs": [ { "orderable": false, "targets": [6,7] } ]
-  });
+    var selectedCohort = '';
+    var selectedGrade = '';
+
+    var table = $('.datatable').DataTable({
+        pageLength: 10,
+        lengthMenu: [5, 10, 25, 50, 100],
+        order: [],
+        columnDefs: [{ orderable: false, targets: [6, 7, 8] }]
+    });
+
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        if (settings.nTable !== table.table().node()) {
+            return true;
+        }
+
+        var rowNode = settings.aoData[dataIndex] && settings.aoData[dataIndex].nTr;
+        if (!rowNode) {
+            return true;
+        }
+
+        var row = $(rowNode);
+        var rowCohort = String(row.data('cohort') || '');
+        var rowGrade = String(row.data('grade') || '');
+
+        if (selectedCohort && rowCohort !== selectedCohort) {
+            return false;
+        }
+
+        if (selectedGrade && rowGrade !== selectedGrade) {
+            return false;
+        }
+
+        return true;
+    });
+
+    function redrawTable() {
+        table.draw();
+    }
+
+    $('.filter-cohort').on('click', function() {
+        selectedCohort = String($(this).data('cohort') || '');
+        selectedGrade = '';
+
+        $('.filter-cohort').removeClass('active');
+        $(this).addClass('active');
+
+        $('.filter-grade').removeClass('active');
+
+        if (selectedCohort) {
+            $('#gradeFilterBar').show();
+        } else {
+            $('#gradeFilterBar').hide();
+        }
+
+        redrawTable();
+    });
+
+    $('.filter-grade').on('click', function() {
+        selectedGrade = String($(this).data('grade') || '');
+
+        $('.filter-grade').removeClass('active');
+        $(this).addClass('active');
+
+        redrawTable();
+    });
+
+    redrawTable();
 });
 </script>
-</c:if>

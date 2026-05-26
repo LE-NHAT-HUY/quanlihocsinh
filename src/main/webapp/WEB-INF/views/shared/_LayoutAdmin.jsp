@@ -358,6 +358,16 @@
                 <i class="bi bi-circle"></i><span>Danh sách giáo viên</span>
             </a>
         </li>
+        <li>
+          <a href="${pageContext.request.contextPath}/admin/teacher-degree">
+            <i class="bi bi-circle"></i><span>Quản lý bằng cấp</span>
+          </a>
+        </li>
+        <li>
+          <a href="${pageContext.request.contextPath}/admin/teacher-contract">
+            <i class="bi bi-circle"></i><span>Quản lý hợp đồng</span>
+          </a>
+        </li>
     </ul>
 </li>
 

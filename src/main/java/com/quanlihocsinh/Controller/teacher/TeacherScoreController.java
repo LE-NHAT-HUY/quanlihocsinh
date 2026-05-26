@@ -67,7 +67,7 @@ public class TeacherScoreController extends HttpServlet {
             if (path == null || "/".equals(path) || "/list".equals(path)) {
 
                 // ... (Logic lấy dữ liệu giữ nguyên như cũ) ...
-                List<tblClass> classes = tblClassDAO.getAll();
+                List<tblClass> classes = tblClassDAO.getAllActive();
                 req.setAttribute("classes", classes != null ? classes : new ArrayList<>());
 
                 List<YearSemester> yearSemesters = yearSemesterDAO.getAllActive();

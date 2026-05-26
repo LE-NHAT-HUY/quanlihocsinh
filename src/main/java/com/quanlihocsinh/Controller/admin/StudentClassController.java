@@ -103,21 +103,23 @@ public class StudentClassController extends HttpServlet {
                 }
 
                 List<StudentClass> studentsInClass = scDAO.getByClassAndYear(classID, yearSemesterID);
-                List<tblClass> classes = classDAO.getAll();
+                List<tblClass> allClasses = classDAO.getAll();
+                List<tblClass> classes = classDAO.getAllActive();
 
                 // --- MỚI: LỌC DANH SÁCH LỚP CÙNG KHỐI ĐỂ CHUYỂN ---
                 List<tblClass> transferableClasses = new ArrayList<>();
                 if (classID > 0) {
                     tblClass currentClass = null;
-                    // 1. Tìm thông tin lớp hiện tại từ danh sách
-                    for (tblClass c : classes) {
+                    // 1. Tìm thông tin lớp hiện tại từ danh sách đầy đủ để vẫn xử lý được lớp đang
+                    // ẩn
+                    for (tblClass c : allClasses) {
                         if (c.getClassID() == classID) {
                             currentClass = c;
                             break;
                         }
                     }
 
-                    // 2. Lọc ra các lớp có cùng GradeID và khác lớp hiện tại
+                    // 2. Lọc ra các lớp đang hoạt động có cùng GradeID và khác lớp hiện tại
                     if (currentClass != null) {
                         for (tblClass c : classes) {
                             // Dùng String.valueOf để so sánh an toàn bất kể getGradeID trả về int hay
@@ -162,7 +164,7 @@ public class StudentClassController extends HttpServlet {
                 // ✅ FIX: Lấy CHỈ những học sinh CHƯA có lớp trong năm học này
                 List<Student> availableStudents = scDAO.getStudentsNotInClass(classID, yearSemesterID);
 
-                request.setAttribute("classes", classDAO.getAll());
+                request.setAttribute("classes", classDAO.getAllActive());
                 request.setAttribute("students", availableStudents);
                 request.setAttribute("cohorts", cohortDAO.getAll());
                 request.setAttribute("classID", classID);

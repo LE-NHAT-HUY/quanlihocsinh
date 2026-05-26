@@ -1,7 +1,12 @@
 package com.quanlihocsinh.Controller.admin;
 
 import com.quanlihocsinh.dao.TeacherDAO;
+import com.quanlihocsinh.dao.SubjectDAO;
+import com.quanlihocsinh.dao.TeacherSubjectDAO;
+import com.quanlihocsinh.dao.DepartmentRepository;
 import com.quanlihocsinh.model.Teacher;
+import com.quanlihocsinh.model.Subject;
+import com.quanlihocsinh.model.Department;
 import com.quanlihocsinh.service.TeacherService;
 import com.quanlihocsinh.util.FileUploadUtil;
 
@@ -11,7 +16,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/admin/teacher/*")
 @MultipartConfig(maxFileSize = 5 * 1024 * 1024, // 5MB
@@ -20,6 +27,9 @@ import java.util.List;
 public class TeacherController extends HttpServlet {
 
     private TeacherDAO teacherDAO = new TeacherDAO();
+    private SubjectDAO subjectDAO = new SubjectDAO();
+    private TeacherSubjectDAO teacherSubjectDAO = new TeacherSubjectDAO();
+    private DepartmentRepository departmentRepository = new DepartmentRepository();
     private TeacherService teacherService = new TeacherService();
 
     private void setFlashMessage(HttpServletRequest request, String success, String error) {
@@ -42,6 +52,8 @@ public class TeacherController extends HttpServlet {
 
         switch (action) {
             case "add":
+                request.setAttribute("subjects", subjectDAO.findAllActive());
+                request.setAttribute("departments", departmentRepository.getAll());
                 request.getRequestDispatcher("/WEB-INF/views/admin/teacher/add.jsp")
                         .forward(request, response);
                 break;
@@ -50,6 +62,10 @@ public class TeacherController extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("id"));
                 Teacher teacher = teacherDAO.getById(id);
                 request.setAttribute("teacher", teacher);
+                request.setAttribute("subjects", subjectDAO.findAllActive());
+                request.setAttribute("departments", departmentRepository.getAll());
+                request.setAttribute("assignedSubjectMap",
+                        buildAssignedSubjectMap(teacher != null ? teacher.getId() : 0));
                 request.getRequestDispatcher("/WEB-INF/views/admin/teacher/edit.jsp")
                         .forward(request, response);
                 break;
@@ -88,6 +104,8 @@ public class TeacherController extends HttpServlet {
             Teacher t = getTeacherFromRequest(request);
             try {
                 TeacherService.RegistrationResult result = teacherService.createTeacherWithAccount(t);
+                teacherSubjectDAO.replaceSubjectsForTeacher(result.getTeacherDbId(),
+                        request.getParameterValues("subjectIDs"));
                 setFlashMessage(request, "Thêm giáo viên thành công. Tài khoản: " + t.getTeacherID()
                         + " | Mật khẩu tạm: " + result.getRawPassword(), null);
             } catch (IllegalArgumentException e) {
@@ -106,8 +124,17 @@ public class TeacherController extends HttpServlet {
             Teacher t = getTeacherFromRequest(request);
             t.setId(id);
             teacherDAO.update(t);
+            teacherSubjectDAO.replaceSubjectsForTeacher(id, request.getParameterValues("subjectIDs"));
             response.sendRedirect(request.getContextPath() + "/admin/teacher");
         }
+    }
+
+    private Map<Integer, Boolean> buildAssignedSubjectMap(int teacherDbId) {
+        Map<Integer, Boolean> map = new HashMap<>();
+        for (Integer subjectId : teacherSubjectDAO.findSubjectIdsByTeacher(teacherDbId)) {
+            map.put(subjectId, true);
+        }
+        return map;
     }
 
     private Teacher getTeacherFromRequest(HttpServletRequest request) {
@@ -129,13 +156,20 @@ public class TeacherController extends HttpServlet {
         t.setReligion(request.getParameter("religion"));
         t.setGroupDV(request.getParameter("groupDV"));
         t.setNumberPhone(request.getParameter("numberPhone"));
+        t.setEmail(request.getParameter("email"));
         t.setNumberBHXH(request.getParameter("numberBHXH"));
         t.setIsActive(request.getParameter("isActive") != null);
+        t.setPosition(request.getParameter("position"));
         t.setDepartmentID(parseIntOrZero(request.getParameter("departmentID")));
         t.setHamlet(parseIntOrZero(request.getParameter("hamlet")));
         t.setCommune(request.getParameter("commune"));
         t.setProvince(request.getParameter("province"));
         t.setNationality(request.getParameter("nationality"));
+        t.setEmergencyContactName(request.getParameter("emergencyContactName"));
+        t.setEmergencyPhone(request.getParameter("emergencyPhone"));
+        t.setTaxCode(request.getParameter("taxCode"));
+        t.setBankName(request.getParameter("bankName"));
+        t.setAccountNumber(request.getParameter("accountNumber"));
 
         // Xử lý upload ảnh
         try {

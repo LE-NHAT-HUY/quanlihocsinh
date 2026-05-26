@@ -93,6 +93,9 @@ public class ClassController extends HttpServlet {
                 }
                 response.sendRedirect(request.getContextPath() + "/admin/class?action=list");
                 break;
+            case "toggleStatus":
+                toggleStatus(request, response);
+                break;
             default:
                 response.sendRedirect(request.getContextPath() + "/admin/class?action=list");
         }
@@ -164,5 +167,17 @@ public class ClassController extends HttpServlet {
         c.setActive(request.getParameter("isActive") != null);
 
         return c;
+    }
+
+    private void toggleStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String idToggle = request.getParameter("id");
+        String isActive = request.getParameter("isActive");
+
+        if (idToggle != null && !idToggle.isEmpty()) {
+            boolean status = "on".equals(isActive) || "true".equals(isActive);
+            dao.toggleStatus(Integer.parseInt(idToggle), status);
+        }
+
+        response.sendRedirect(request.getContextPath() + "/admin/class?action=list");
     }
 }

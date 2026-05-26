@@ -51,7 +51,7 @@ public class ScoreController extends HttpServlet {
         try {
 
             if (path == null || "/".equals(path) || "/list".equals(path)) {
-                List<tblClass> classes = tblClassDAO.getAll();
+                List<tblClass> classes = tblClassDAO.getAllActive();
                 req.setAttribute("classes", classes);
 
                 List<Subject> subjects = subjectDAO.findAllActive();

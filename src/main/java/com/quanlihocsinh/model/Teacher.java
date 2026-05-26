@@ -17,13 +17,20 @@ public class Teacher {
     private String religion;
     private String groupDV;
     private String numberPhone;
+    private String email;
     private String numberBHXH;
     private boolean isActive;
+    private String position;
     private Integer departmentID;
     private Integer hamlet;
     private String commune;
     private String province;
     private String nationality;
+    private String emergencyContactName;
+    private String emergencyPhone;
+    private String taxCode;
+    private String bankName;
+    private String accountNumber;
     private String images;
 
     public int getId() {
@@ -130,6 +137,14 @@ public class Teacher {
         this.numberPhone = numberPhone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getNumberBHXH() {
         return numberBHXH;
     }
@@ -144,6 +159,14 @@ public class Teacher {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Integer getDepartmentID() {
@@ -184,6 +207,46 @@ public class Teacher {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public String getEmergencyContactName() {
+        return emergencyContactName;
+    }
+
+    public void setEmergencyContactName(String emergencyContactName) {
+        this.emergencyContactName = emergencyContactName;
+    }
+
+    public String getEmergencyPhone() {
+        return emergencyPhone;
+    }
+
+    public void setEmergencyPhone(String emergencyPhone) {
+        this.emergencyPhone = emergencyPhone;
+    }
+
+    public String getTaxCode() {
+        return taxCode;
+    }
+
+    public void setTaxCode(String taxCode) {
+        this.taxCode = taxCode;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public String getImages() {

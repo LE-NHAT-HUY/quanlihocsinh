@@ -38,6 +38,21 @@ public class TblClassDAO {
         return list;
     }
 
+    public List<tblClass> getAllActive() {
+        List<tblClass> list = new ArrayList<>();
+        String sql = "SELECT * FROM tblClass WHERE IsActive = 1 ORDER BY ClassName";
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public tblClass getById(int id) {
         tblClass c = null;
         String sql = "SELECT * FROM tblClass WHERE ClassID=?";
