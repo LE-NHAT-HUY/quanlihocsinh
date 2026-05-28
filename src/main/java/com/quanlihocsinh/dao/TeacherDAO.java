@@ -256,4 +256,17 @@ public class TeacherDAO {
         return list;
     }
 
+    public boolean updatePersonId(int teacherDbId, int personId) {
+        String sql = "UPDATE tblTeacher SET PersonID = ? WHERE ID = ?";
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, personId);
+            ps.setInt(2, teacherDbId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -213,6 +213,8 @@ public class TeacherScoreController extends HttpServlet {
                 conn.setAutoCommit(false); // Bắt đầu Transaction
 
                 try {
+                    List<ScoreLog> pendingLogs = new ArrayList<>();
+
                     for (StudentClass sc : students) {
                         int key = sc.getStudentClassID();
                         String studentID = sc.getStudentID();
@@ -248,8 +250,11 @@ public class TeacherScoreController extends HttpServlet {
 
                         if (existing != null) {
                             // UPDATE: So sánh để tìm thay đổi
-                            changeLog = getChangeDetails(existing, newScoreState);
-                            action = "UPDATE";
+                            changeLog = getChangeDetailsJson(existing, newScoreState);
+                            if (changeLog == null || changeLog.trim().isEmpty() || "{}".equals(changeLog.trim())) {
+                                continue;
+                            }
+                            action = isBlankExistingScore(existing) ? "INSERT" : "UPDATE";
 
                             // Cập nhật giá trị mới vào object existing để lưu
                             existing.setOralScore1(oral1);
@@ -271,7 +276,7 @@ public class TeacherScoreController extends HttpServlet {
                         } else {
                             // INSERT
                             action = "INSERT";
-                            changeLog = "Nhập mới điểm lần đầu.";
+                            changeLog = "{\"type\":\"INSERT\"}";
 
                             Score s = new Score();
                             s.setStudentID(studentID);
@@ -291,17 +296,18 @@ public class TeacherScoreController extends HttpServlet {
                         }
 
                         // === UPDATE: GHI LOG NẾU CÓ THAY ĐỔI HOẶC THÊM MỚI ===
-                        if (changeLog != null && !changeLog.isEmpty()) {
-                            ScoreLog log = new ScoreLog(
-                                    teacherID,
-                                    studentID,
-                                    subjectID,
-                                    yearSemesterID,
-                                    action,
-                                    changeLog);
-                            scoreLogDAO.insert(conn, log); // Truyền conn để cùng transaction
-                        }
+                        ScoreLog log = new ScoreLog(
+                                teacherID,
+                                classID,
+                                studentID,
+                                subjectID,
+                                yearSemesterID,
+                                action,
+                                changeLog);
+                        pendingLogs.add(log);
                     }
+
+                    scoreLogDAO.insertBatch(conn, pendingLogs);
                     conn.commit(); // Commit cả điểm và log
                 } catch (Exception e) {
                     conn.rollback();
@@ -340,12 +346,63 @@ public class TeacherScoreController extends HttpServlet {
         return sb.toString();
     }
 
+    private String getChangeDetailsJson(Score oldS, Score newS) {
+        Map<String, Object> changes = new java.util.LinkedHashMap<>();
+
+        appendChange(changes, "oral1", oldS.getOralScore1(), newS.getOralScore1());
+        appendChange(changes, "oral2", oldS.getOralScore2(), newS.getOralScore2());
+        appendChange(changes, "s15_1", oldS.getScore15Minute1(), newS.getScore15Minute1());
+        appendChange(changes, "s15_2", oldS.getScore15Minute2(), newS.getScore15Minute2());
+        appendChange(changes, "midterm", oldS.getMidtermScore(), newS.getMidtermScore());
+        appendChange(changes, "final", oldS.getFinalScore(), newS.getFinalScore());
+
+        if (!Objects.equals(oldS.getNotes(), newS.getNotes())) {
+            changes.put("notes", new String[] {
+                    oldS.getNotes() == null ? "" : oldS.getNotes(),
+                    newS.getNotes() == null ? "" : newS.getNotes() });
+        }
+
+        try {
+            return mapper.writeValueAsString(changes);
+        } catch (Exception e) {
+            return "{}";
+        }
+    }
+
+    private void appendChange(Map<String, Object> changes, String key, Double oldVal, Double newVal) {
+        if (!Objects.equals(oldVal, newVal)) {
+            changes.put(key, new Double[] { oldVal, newVal });
+        }
+    }
+
     private void compareAndAppend(StringBuilder sb, String label, Double oldVal, Double newVal) {
         if (!Objects.equals(oldVal, newVal)) {
             String o = oldVal == null ? "_" : String.valueOf(oldVal);
             String n = newVal == null ? "_" : String.valueOf(newVal);
             sb.append(label).append(": ").append(o).append(" -> ").append(n).append("; ");
         }
+    }
+
+    private boolean isBlankExistingScore(Score score) {
+        if (score == null) {
+            return true;
+        }
+
+        return isBlankScoreValue(score.getOralScore1())
+                && isBlankScoreValue(score.getOralScore2())
+                && isBlankScoreValue(score.getScore15Minute1())
+                && isBlankScoreValue(score.getScore15Minute2())
+                && isBlankScoreValue(score.getMidtermScore())
+                && isBlankScoreValue(score.getFinalScore())
+                && isBlankText(score.getNotes());
+    }
+
+    private boolean isBlankScoreValue(Double value) {
+        return value == null || value.doubleValue() == 0.0d;
+    }
+
+    private boolean isBlankText(String value) {
+        return value == null || value.trim().isEmpty();
     }
 
     // Các hàm parse giữ nguyên

@@ -64,6 +64,9 @@ public class YearSemesterController extends HttpServlet {
                 case "/edit":
                     updateYearSemester(request, response);
                     break;
+                case "/toggleStatus":
+                    toggleStatus(request, response);
+                    break;
                 default:
                     response.sendRedirect(request.getContextPath() + "/admin/yearsemester/list");
                     break;
@@ -129,6 +132,21 @@ public class YearSemesterController extends HttpServlet {
             throws SQLException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         ysdao.delete(id);
+        response.sendRedirect(request.getContextPath() + "/admin/yearsemester/list");
+    }
+
+    private void toggleStatus(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        boolean active = request.getParameter("isActive") != null;
+        boolean ok = ysdao.setActive(id, active);
+        // optional: set flash message
+        HttpSession session = request.getSession();
+        if (ok) {
+            session.setAttribute("flashSuccess", "Cập nhật trạng thái thành công.");
+        } else {
+            session.setAttribute("flashError", "Không thể cập nhật trạng thái.");
+        }
         response.sendRedirect(request.getContextPath() + "/admin/yearsemester/list");
     }
 }

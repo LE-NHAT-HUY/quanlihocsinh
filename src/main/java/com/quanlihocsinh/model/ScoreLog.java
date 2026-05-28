@@ -5,6 +5,7 @@ import java.util.Date;
 public class ScoreLog {
     private int logID;
     private int teacherID;
+    private int classID;
     private String studentID;
     private int subjectID;
     private int semesterID;
@@ -15,9 +16,10 @@ public class ScoreLog {
     public ScoreLog() {
     }
 
-    public ScoreLog(int teacherID, String studentID, int subjectID, int semesterID, String actionType,
+    public ScoreLog(int teacherID, int classID, String studentID, int subjectID, int semesterID, String actionType,
             String changeContent) {
         this.teacherID = teacherID;
+        this.classID = classID;
         this.studentID = studentID;
         this.subjectID = subjectID;
         this.semesterID = semesterID;
@@ -40,6 +42,14 @@ public class ScoreLog {
 
     public void setTeacherID(int teacherID) {
         this.teacherID = teacherID;
+    }
+
+    public int getClassID() {
+        return classID;
+    }
+
+    public void setClassID(int classID) {
+        this.classID = classID;
     }
 
     public String getStudentID() {

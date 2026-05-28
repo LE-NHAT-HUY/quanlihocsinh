@@ -1,5 +1,6 @@
 package com.quanlihocsinh.Controller.admin;
 
+import com.quanlihocsinh.dao.StatisticsDAO;
 import com.quanlihocsinh.model.ChartData;
 
 import javax.servlet.RequestDispatcher;
@@ -15,48 +16,39 @@ import java.util.List;
 @WebServlet("/admin/home")
 public class HomeController extends HttpServlet {
 
+    private StatisticsDAO statisticsDAO;
+
+    @Override
+    public void init() throws ServletException {
+        statisticsDAO = new StatisticsDAO();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        int totalStudents = 7;
+        try {
+            request.setAttribute("totalStudents", statisticsDAO.countStudents());
+            request.setAttribute("totalTeachers", statisticsDAO.countTeachers());
+            request.setAttribute("totalClasses", statisticsDAO.countClasses());
 
-        int totalTeachers = 4;
+            List<ChartData> classData = statisticsDAO.getClassSizeData();
+            List<ChartData> ratingData = statisticsDAO.getAcademicRatingData();
+            List<ChartData> scoreData = statisticsDAO.getScoreDistributionData();
 
-        int totalClasses = 12;
+            request.setAttribute("classData", classData);
+            request.setAttribute("ratingData", ratingData);
+            request.setAttribute("scoreData", scoreData);
+        } catch (Exception e) {
+            e.printStackTrace();
 
-        request.setAttribute("totalStudents", totalStudents);
-        request.setAttribute("totalTeachers", totalTeachers);
-        request.setAttribute("totalClasses", totalClasses);
-
-        List<ChartData> classData = new ArrayList<>();
-
-        classData.add(new ChartData("10A1", 45));
-        classData.add(new ChartData("10A2", 42));
-        classData.add(new ChartData("11B1", 38));
-        classData.add(new ChartData("11B2", 40));
-        classData.add(new ChartData("12C1", 35));
-
-        request.setAttribute("classData", classData);
-
-        List<ChartData> ratingData = new ArrayList<>();
-
-        ratingData.add(new ChartData("Giỏi", 150));
-        ratingData.add(new ChartData("Khá", 400));
-        ratingData.add(new ChartData("Trung Bình", 500));
-        ratingData.add(new ChartData("Yếu", 150));
-        ratingData.add(new ChartData("Kém", 50));
-
-        request.setAttribute("ratingData", ratingData);
-
-        List<ChartData> scoreData = new ArrayList<>();
-        scoreData.add(new ChartData("< 5", 200));
-        scoreData.add(new ChartData("5 - 7", 500));
-        scoreData.add(new ChartData("7 - 8", 300));
-        scoreData.add(new ChartData("8 - 9", 200));
-        scoreData.add(new ChartData("9 - 10", 50));
-
-        request.setAttribute("scoreData", scoreData);
+            request.setAttribute("totalStudents", 0);
+            request.setAttribute("totalTeachers", 0);
+            request.setAttribute("totalClasses", 0);
+            request.setAttribute("classData", new ArrayList<ChartData>());
+            request.setAttribute("ratingData", new ArrayList<ChartData>());
+            request.setAttribute("scoreData", new ArrayList<ChartData>());
+        }
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/admin/home.jsp");
         rd.forward(request, response);

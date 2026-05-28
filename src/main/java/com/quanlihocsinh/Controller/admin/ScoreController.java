@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +23,11 @@ import java.util.Objects;
 public class ScoreController extends HttpServlet {
 
     private ScoreLogDAO scoreLogDAO;
+    private GradeDAO gradeDAO;
     private StudentClassDAO studentClassDAO;
     private TblClassDAO tblClassDAO;
     private SubjectDAO subjectDAO;
+    private SubjectGradeDAO subjectGradeDAO;
     private YearSemesterDAO yearSemesterDAO;
     private ScoreDAO scoreDAO;
     private ScoreService scoreService;
@@ -32,9 +35,11 @@ public class ScoreController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        gradeDAO = new GradeDAO();
         studentClassDAO = new StudentClassDAO();
         tblClassDAO = new TblClassDAO();
         subjectDAO = new SubjectDAO();
+        subjectGradeDAO = new SubjectGradeDAO();
         yearSemesterDAO = new YearSemesterDAO();
         scoreDAO = new ScoreDAO();
         scoreService = new ScoreService();
@@ -51,18 +56,40 @@ public class ScoreController extends HttpServlet {
         try {
 
             if (path == null || "/".equals(path) || "/list".equals(path)) {
-                List<tblClass> classes = tblClassDAO.getAllActive();
-                req.setAttribute("classes", classes);
-
-                List<Subject> subjects = subjectDAO.findAllActive();
-                req.setAttribute("subjects", subjects);
+                List<Grade> grades = gradeDAO.getAll();
+                req.setAttribute("grades", grades);
 
                 List<YearSemester> yearSemesters = yearSemesterDAO.getAllActive();
                 req.setAttribute("yearSemesters", yearSemesters);
 
+                int gradeID = parseInt(req.getParameter("gradeID"));
                 int classID = parseInt(req.getParameter("classID"));
                 int subjectID = parseInt(req.getParameter("subjectID"));
                 int yearSemesterID = parseInt(req.getParameter("yearSemesterID"));
+
+                tblClass selectedClass = null;
+                List<?> subjects;
+
+                if (classID > 0) {
+                    selectedClass = tblClassDAO.getById(classID);
+                    if (gradeID <= 0 && selectedClass != null) {
+                        gradeID = selectedClass.getGradeID();
+                    }
+                }
+
+                List<tblClass> classes = gradeID > 0
+                        ? tblClassDAO.getAllActiveByGrade(resolveClassGradeValue(gradeID))
+                        : java.util.Collections.emptyList();
+
+                if (gradeID > 0) {
+                    subjects = subjectGradeDAO.getSubjectsByGrade(gradeID);
+                } else {
+                    subjects = java.util.Collections.emptyList();
+                }
+
+                req.setAttribute("gradeID", gradeID);
+                req.setAttribute("classes", classes);
+                req.setAttribute("subjects", subjects);
 
                 req.setAttribute("classID", classID);
                 req.setAttribute("subjectID", subjectID);
@@ -80,7 +107,7 @@ public class ScoreController extends HttpServlet {
                     req.setAttribute("studentsInClass", studentsInClass);
                     req.setAttribute("scoreMap", scoreMap);
 
-                    tblClass cls = tblClassDAO.getById(classID);
+                    tblClass cls = selectedClass != null ? selectedClass : tblClassDAO.getById(classID);
                     Subject sub = subjectDAO.getSubjectById(subjectID);
                     YearSemester ys = yearSemesterDAO.getById(yearSemesterID);
 
@@ -129,8 +156,54 @@ public class ScoreController extends HttpServlet {
             }
 
             if ("/history".equals(path)) {
-                List<ScoreLogDTO> logs = scoreLogDAO.getAllLogs();
-                req.setAttribute("logs", logs);
+                String action = req.getParameter("action");
+
+                List<Grade> grades = gradeDAO.getAll();
+                req.setAttribute("grades", grades);
+
+                List<YearSemester> yearSemesters = yearSemesterDAO.getAllActive();
+                req.setAttribute("yearSemesters", yearSemesters);
+
+                int gradeID = parseInt(req.getParameter("gradeID"));
+                int classID = parseInt(req.getParameter("classID"));
+                int subjectID = parseInt(req.getParameter("subjectID"));
+                int yearSemesterID = parseInt(req.getParameter("yearSemesterID"));
+
+                // If user provided classID but not gradeID, resolve it
+                if (classID > 0 && gradeID <= 0) {
+                    tblClass selectedClass = tblClassDAO.getById(classID);
+                    if (selectedClass != null) {
+                        gradeID = resolveClassGradeValue(selectedClass.getGradeID());
+                    }
+                }
+
+                // Determine whether we should show history: only when user requested it or
+                // provided filters
+                boolean showHistory = false;
+                if ("viewHistory".equals(action) || classID > 0 || subjectID > 0 || yearSemesterID > 0) {
+                    showHistory = true;
+                }
+
+                List<tblClass> classes = gradeID > 0
+                        ? tblClassDAO.getAllActiveByGrade(resolveClassGradeValue(gradeID))
+                        : java.util.Collections.emptyList();
+                List<?> subjects = gradeID > 0
+                        ? subjectGradeDAO.getSubjectsByGrade(gradeID)
+                        : java.util.Collections.emptyList();
+
+                req.setAttribute("gradeID", gradeID);
+                req.setAttribute("classID", classID);
+                req.setAttribute("subjectID", subjectID);
+                req.setAttribute("yearSemesterID", yearSemesterID);
+                req.setAttribute("classes", classes);
+                req.setAttribute("subjects", subjects);
+                req.setAttribute("showHistory", showHistory);
+
+                if (showHistory) {
+                    List<ScoreLogDTO> logs = scoreLogDAO.getFilteredLogs(classID, subjectID, yearSemesterID);
+                    System.out.println("=== DEBUG SCORE LOG SIZE: " + (logs != null ? logs.size() : "NULL") + " ===");
+                    req.setAttribute("logs", logs);
+                }
                 req.getRequestDispatcher("/WEB-INF/views/admin/score/history.jsp").forward(req, resp);
                 return;
             }
@@ -172,6 +245,8 @@ public class ScoreController extends HttpServlet {
                 Connection conn = DBUtil.getConnection();
                 conn.setAutoCommit(false);
                 try {
+                    List<ScoreLog> pendingLogs = new ArrayList<>();
+
                     for (StudentClass sc : students) {
                         int key = sc.getStudentClassID();
                         String studentID = sc.getStudentID();
@@ -201,11 +276,16 @@ public class ScoreController extends HttpServlet {
 
                         String changeLog = "";
                         String action = "";
+                        boolean changed = false;
 
                         if (existing != null) {
 
-                            changeLog = getChangeDetails(existing, newScoreState);
-                            action = "UPDATE";
+                            changeLog = getChangeDetailsJson(existing, newScoreState);
+                            action = isBlankExistingScore(existing) ? "INSERT" : "UPDATE";
+                            if ("INSERT".equals(action)) {
+                                changeLog = "{\"type\":\"INSERT\"}";
+                            }
+                            changed = true;
 
                             existing.setOralScore1(oral1);
                             existing.setOralScore2(oral2);
@@ -221,7 +301,8 @@ public class ScoreController extends HttpServlet {
                         } else {
 
                             action = "INSERT";
-                            changeLog = "Nhập mới điểm lần đầu (Admin).";
+                            changeLog = "{\"type\":\"INSERT\"}";
+                            changed = true;
 
                             Score s = new Score();
                             s.setStudentID(studentID);
@@ -240,17 +321,20 @@ public class ScoreController extends HttpServlet {
                             scoreDAO.insert(s);
                         }
 
-                        if (changeLog != null && !changeLog.isEmpty()) {
+                        if (changed && changeLog != null && !"{}".equals(changeLog.trim())) {
                             ScoreLog log = new ScoreLog(
                                     adminID,
+                                    classID,
                                     studentID,
                                     subjectID,
                                     yearSemesterID,
                                     action,
                                     changeLog);
-                            scoreLogDAO.insert(conn, log);
+                            pendingLogs.add(log);
                         }
                     }
+
+                    scoreLogDAO.insertBatch(conn, pendingLogs);
                     conn.commit();
                 } catch (Exception e) {
                     conn.rollback();
@@ -300,6 +384,19 @@ public class ScoreController extends HttpServlet {
         }
     }
 
+    private int resolveClassGradeValue(int gradeID) {
+        Grade grade = gradeDAO.getById(gradeID);
+        if (grade == null || grade.getGradeName() == null) {
+            return gradeID;
+        }
+
+        try {
+            return Integer.parseInt(grade.getGradeName().trim());
+        } catch (Exception e) {
+            return gradeID;
+        }
+    }
+
     private Double parseDouble(String v) {
         if (v == null || v.trim().isEmpty())
             return null;
@@ -330,11 +427,62 @@ public class ScoreController extends HttpServlet {
         return sb.toString();
     }
 
+    private String getChangeDetailsJson(Score oldS, Score newS) {
+        Map<String, Object> changes = new java.util.LinkedHashMap<>();
+
+        appendChange(changes, "oral1", oldS.getOralScore1(), newS.getOralScore1());
+        appendChange(changes, "oral2", oldS.getOralScore2(), newS.getOralScore2());
+        appendChange(changes, "s15_1", oldS.getScore15Minute1(), newS.getScore15Minute1());
+        appendChange(changes, "s15_2", oldS.getScore15Minute2(), newS.getScore15Minute2());
+        appendChange(changes, "mid", oldS.getMidtermScore(), newS.getMidtermScore());
+        appendChange(changes, "fin", oldS.getFinalScore(), newS.getFinalScore());
+
+        if (!Objects.equals(oldS.getNotes(), newS.getNotes())) {
+            changes.put("notes", new String[] {
+                    oldS.getNotes() == null ? "" : oldS.getNotes(),
+                    newS.getNotes() == null ? "" : newS.getNotes() });
+        }
+
+        try {
+            return mapper.writeValueAsString(changes);
+        } catch (Exception e) {
+            return "{}";
+        }
+    }
+
+    private void appendChange(Map<String, Object> changes, String key, Double oldVal, Double newVal) {
+        if (!Objects.equals(oldVal, newVal)) {
+            changes.put(key, new Double[] { oldVal, newVal });
+        }
+    }
+
     private void compareAndAppend(StringBuilder sb, String label, Double oldVal, Double newVal) {
         if (!Objects.equals(oldVal, newVal)) {
             String o = oldVal == null ? "_" : String.valueOf(oldVal);
             String n = newVal == null ? "_" : String.valueOf(newVal);
             sb.append(label).append(": ").append(o).append(" -> ").append(n).append("; ");
         }
+    }
+
+    private boolean isBlankExistingScore(Score score) {
+        if (score == null) {
+            return true;
+        }
+
+        return isBlankScoreValue(score.getOralScore1())
+                && isBlankScoreValue(score.getOralScore2())
+                && isBlankScoreValue(score.getScore15Minute1())
+                && isBlankScoreValue(score.getScore15Minute2())
+                && isBlankScoreValue(score.getMidtermScore())
+                && isBlankScoreValue(score.getFinalScore())
+                && isBlankText(score.getNotes());
+    }
+
+    private boolean isBlankScoreValue(Double value) {
+        return value == null || value.doubleValue() == 0.0d;
+    }
+
+    private boolean isBlankText(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

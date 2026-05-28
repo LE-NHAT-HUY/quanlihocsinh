@@ -34,6 +34,7 @@ com\quanlihocsinh\Controller\admin\LogoutController.class
 com\quanlihocsinh\Controller\admin\MenuController.class
 com\quanlihocsinh\model\YearAchievement.class
 com\quanlihocsinh\dao\CohortDAO.class
+com\quanlihocsinh\Controller\admin\TeacherAccountAPIController$1.class
 com\quanlihocsinh\Controller\admin\DbTestController.class
 com\quanlihocsinh\model\ScoreLogDTO.class
 com\quanlihocsinh\model\AdminMenu.class
@@ -43,6 +44,7 @@ com\quanlihocsinh\util\FileUploadUtil.class
 com\quanlihocsinh\model\TeacherSubject.class
 com\quanlihocsinh\Controller\admin\ATSubjectController.class
 com\quanlihocsinh\model\ScoreLog.class
+com\quanlihocsinh\Controller\admin\StudentAccountAPIController$1.class
 com\quanlihocsinh\dao\StatisticsDAO.class
 com\quanlihocsinh\dao\YearSemesterDAO.class
 com\quanlihocsinh\dao\TeacherDAO.class

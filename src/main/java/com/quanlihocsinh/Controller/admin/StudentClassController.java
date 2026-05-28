@@ -225,18 +225,17 @@ public class StudentClassController extends HttpServlet {
             }
 
             // --- LOGIC XỬ LÝ THÊM MỚI HỌC SINH VÀO LỚP ---
-            String studentID = request.getParameter("studentID");
+            String[] studentIDs = request.getParameterValues("studentID");
             String classIDStr = request.getParameter("classID");
             String yearSemesterIDStr = request.getParameter("yearSemesterID");
-            String cohortIDStr = request.getParameter("cohortID");
 
             System.out.println("[StudentClassController.add] Enter doPost /add");
-            System.out.println("[StudentClassController.add] studentID=" + studentID
+            System.out.println("[StudentClassController.add] studentIDs="
+                    + (studentIDs == null ? null : java.util.Arrays.toString(studentIDs))
                     + ", classID=" + classIDStr
-                    + ", yearSemesterID=" + yearSemesterIDStr
-                    + ", cohortID=" + cohortIDStr);
+                    + ", yearSemesterID=" + yearSemesterIDStr);
 
-            if (studentID == null || studentID.isEmpty() ||
+            if (studentIDs == null || studentIDs.length == 0 ||
                     classIDStr == null || classIDStr.isEmpty() ||
                     yearSemesterIDStr == null || yearSemesterIDStr.isEmpty()) {
                 setFlashMessage(request, null, "Thông tin không hợp lệ");
@@ -247,7 +246,6 @@ public class StudentClassController extends HttpServlet {
 
             int classID = Integer.parseInt(classIDStr);
             int yearSemesterID = Integer.parseInt(yearSemesterIDStr);
-            int cohortID = (cohortIDStr != null && !cohortIDStr.isEmpty()) ? Integer.parseInt(cohortIDStr) : 0;
 
             if (classID <= 0) {
                 setFlashMessage(request, null, "Vui lòng chọn lớp hợp lệ, không được dùng '-- Tất cả lớp --'");
@@ -257,49 +255,66 @@ public class StudentClassController extends HttpServlet {
             }
 
             System.out.println("[StudentClassController.add] Parsed values: classID=" + classID
-                    + ", yearSemesterID=" + yearSemesterID
-                    + ", cohortID=" + cohortID);
+                    + ", yearSemesterID=" + yearSemesterID);
 
-            // ✅ KIỂM TRA: Học sinh đã tồn tại trong lớp khác chưa?
-            System.out.println("[StudentClassController.add] Checking existing class assignment...");
-            if (scDAO.isStudentInAnyClass(studentID, yearSemesterID)) {
-                // Học sinh đã thuộc một lớp khác
-                setFlashMessage(request, null, "Học sinh này đã được xếp vào lớp khác");
-                response.sendRedirect(request.getContextPath() + "/admin/studentclass/add?classID=" + classID
-                        + "&yearSemesterID=" + yearSemesterID);
-                return;
+            int addedCount = 0;
+            int skippedCount = 0;
+            int failedCount = 0;
+
+            for (String studentID : studentIDs) {
+                if (studentID == null || studentID.trim().isEmpty()) {
+                    continue;
+                }
+
+                String trimmedStudentID = studentID.trim();
+                System.out.println("[StudentClassController.add] Checking studentID=" + trimmedStudentID);
+
+                if (scDAO.isStudentInAnyClass(trimmedStudentID, yearSemesterID)) {
+                    skippedCount++;
+                    continue;
+                }
+
+                StudentClass sc = new StudentClass();
+                sc.setStudentID(trimmedStudentID);
+                sc.setClassID(classID);
+                sc.setCohortID(0);
+                sc.setActive(true);
+                sc.setYearSemesterID(yearSemesterID);
+
+                System.out.println("[StudentClassController.add] Before DAO insert: studentID=" + sc.getStudentID()
+                        + ", classID=" + sc.getClassID()
+                        + ", cohortID=" + sc.getCohortID()
+                        + ", active=" + sc.isActive()
+                        + ", yearSemesterID=" + sc.getYearSemesterID());
+
+                try {
+                    boolean isAdded = scDAO.add(sc);
+                    System.out.println(
+                            "[StudentClassController.add] DAO insert result for " + trimmedStudentID + " = " + isAdded);
+                    if (isAdded) {
+                        addedCount++;
+                        classDAO.incrementCurrentStudents(classID);
+                    } else {
+                        failedCount++;
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    failedCount++;
+                }
             }
 
-            StudentClass sc = new StudentClass();
-            sc.setStudentID(studentID);
-            sc.setClassID(classID);
-            sc.setCohortID(cohortID);
-            sc.setActive(true);
-            sc.setYearSemesterID(yearSemesterID);
-
-            System.out.println("[StudentClassController.add] Before DAO insert: studentID=" + sc.getStudentID()
-                    + ", classID=" + sc.getClassID()
-                    + ", cohortID=" + sc.getCohortID()
-                    + ", active=" + sc.isActive()
-                    + ", yearSemesterID=" + sc.getYearSemesterID());
-
-            // ✅ FIX: Kiểm tra kết quả thêm và xử lý lỗi
-            try {
-                boolean isAdded = scDAO.add(sc);
-                System.out.println("[StudentClassController.add] DAO insert result=" + isAdded);
-                if (isAdded) {
-                    classDAO.incrementCurrentStudents(classID);
-                    setFlashMessage(request, "Thêm học sinh thành công", null);
-                    response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID=" + classID
-                            + "&yearSemesterID=" + yearSemesterID);
-                } else {
-                    setFlashMessage(request, null, "Thêm học sinh thất bại. Vui lòng thử lại");
-                    response.sendRedirect(request.getContextPath() + "/admin/studentclass/add?classID=" + classID
-                            + "&yearSemesterID=" + yearSemesterID);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                setFlashMessage(request, null, "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            if (addedCount > 0 && failedCount == 0 && skippedCount == 0) {
+                setFlashMessage(request, "Thêm " + addedCount + " học sinh thành công", null);
+                response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID=" + classID
+                        + "&yearSemesterID=" + yearSemesterID);
+            } else if (addedCount > 0) {
+                setFlashMessage(request,
+                        "Đã thêm " + addedCount + " học sinh, bỏ qua " + skippedCount + " và lỗi " + failedCount,
+                        null);
+                response.sendRedirect(request.getContextPath() + "/admin/studentclass/list?classID=" + classID
+                        + "&yearSemesterID=" + yearSemesterID);
+            } else {
+                setFlashMessage(request, null, "Không có học sinh nào được thêm");
                 response.sendRedirect(request.getContextPath() + "/admin/studentclass/add?classID=" + classID
                         + "&yearSemesterID=" + yearSemesterID);
             }

@@ -11,20 +11,33 @@
     <section class="section dashboard">
         <form method="get" action="${pageContext.request.contextPath}/admin/scores">
             <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">Lớp</label>
-                    <select name="classID" class="form-select" required>
-                        <option value="">-- Chọn lớp --</option>
-                        <c:forEach var="cls" items="${classes}">
-                                <option value="${cls.classID}" ${classID == cls.classID ? 'selected' : ''}>
-                                    ${cls.gradeID}${cls.className} (${cls.currentStudents}/${cls.maxStudents})
+                <div class="col-md-2">
+                    <label class="form-label">Khối</label>
+                    <select id="gradeSelect" name="gradeID" class="form-select" required>
+                        <option value="">-- Chọn khối --</option>
+                        <c:forEach var="grade" items="${grades}">
+                            <c:if test="${grade.isActive && (grade.gradeName == '6' || grade.gradeName == '7' || grade.gradeName == '8' || grade.gradeName == '9')}">
+                                <option value="${grade.gradeID}" ${gradeID == grade.gradeID ? 'selected' : ''}>
+                                    Khối ${grade.gradeName}
                                 </option>
-                            </c:forEach>
+                            </c:if>
+                        </c:forEach>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <label class="form-label">Lớp</label>
+                    <select id="classSelect" name="classID" class="form-select" required>
+                        <option value="">-- Chọn lớp --</option>
+                        <c:forEach var="cls" items="${classes}">
+                            <option value="${cls.classID}" ${classID == cls.classID ? 'selected' : ''}>
+                                ${cls.gradeID}${cls.className} (${cls.currentStudents}/${cls.maxStudents})
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <label class="form-label">Môn học</label>
-                    <select name="subjectID" class="form-select" required>
+                    <select id="subjectSelect" name="subjectID" class="form-select" required>
                         <option value="">-- Chọn môn --</option>
                         <c:forEach var="s" items="${subjects}">
                             <option value="${s.subjectID}" <c:if test="${s.subjectID == subjectID}">selected</c:if>>
@@ -33,7 +46,7 @@
                         </c:forEach>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label">Học kỳ</label>
                     <select name="yearSemesterID" class="form-select" required>
                         <option value="">-- Chọn học kỳ --</option>
@@ -44,7 +57,7 @@
                         </c:forEach>
                     </select>
                 </div>
-                <div class="col-md-3 align-self-end">
+                <div class="col-md-4 align-self-end">
                     <button class="btn btn-primary">Xem</button>
                     <c:if test="${classID > 0 && subjectID > 0 && yearSemesterID > 0}">
                         <a class="btn btn-success"
@@ -123,7 +136,72 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
+const contextPath = '${pageContext.request.contextPath}';
+
+function buildOptions($select, items, valueKey, labelBuilder, placeholder) {
+    $select.empty();
+    $select.append($('<option>', { value: '', text: placeholder }));
+    items.forEach(function(item) {
+        $select.append($('<option>', {
+            value: item[valueKey],
+            text: labelBuilder(item)
+        }));
+    });
+}
+
+function loadDependentDropdowns(gradeID, selectedClassID, selectedSubjectID) {
+    const $classSelect = $('#classSelect');
+    const $subjectSelect = $('#subjectSelect');
+
+    if (!gradeID) {
+        buildOptions($classSelect, [], 'classID', function() { return ''; }, '-- Chọn lớp --');
+        buildOptions($subjectSelect, [], 'subjectID', function() { return ''; }, '-- Chọn môn --');
+        $classSelect.prop('disabled', true);
+        $subjectSelect.prop('disabled', true);
+        return;
+    }
+
+    $classSelect.prop('disabled', false);
+    $subjectSelect.prop('disabled', false);
+
+    $.getJSON(contextPath + '/admin/api/classes', { gradeID: gradeID })
+        .done(function(data) {
+            buildOptions($classSelect, data, 'classID', function(item) {
+                return item.gradeID + item.className + ' (' + item.currentStudents + '/' + item.maxStudents + ')';
+            }, '-- Chọn lớp --');
+            if (selectedClassID) {
+                $classSelect.val(String(selectedClassID));
+            }
+        });
+
+    $.getJSON(contextPath + '/admin/api/subjects', { gradeID: gradeID })
+        .done(function(data) {
+            buildOptions($subjectSelect, data, 'subjectID', function(item) {
+                return item.subjectName;
+            }, '-- Chọn môn --');
+            if (selectedSubjectID) {
+                $subjectSelect.val(String(selectedSubjectID));
+            }
+        });
+}
+
 $(document).ready(function() {
+    const initialGradeID = $('#gradeSelect').val();
+    const initialClassID = $('#classSelect').val();
+    const initialSubjectID = $('#subjectSelect').val();
+    $('#classSelect').prop('disabled', !initialGradeID);
+    $('#subjectSelect').prop('disabled', !initialGradeID);
+
+    $('#gradeSelect').on('change', function() {
+        loadDependentDropdowns($(this).val(), '', '');
+    });
+
+    if (initialGradeID) {
+        loadDependentDropdowns(initialGradeID, initialClassID, initialSubjectID);
+    } else {
+        loadDependentDropdowns('', '', '');
+    }
+
     $('.datatable').DataTable({
         "pageLength": 10,
         "lengthMenu": [5,10,25,50,100],

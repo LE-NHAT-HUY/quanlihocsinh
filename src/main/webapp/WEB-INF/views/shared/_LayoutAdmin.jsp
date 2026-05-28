@@ -252,6 +252,11 @@
                 <i class="bi bi-circle"></i><span>Danh sách môn học</span>
             </a>
         </li>
+      <li>
+        <a href="${pageContext.request.contextPath}/admin/subject-grade">
+          <i class="bi bi-circle"></i><span>Quản lý môn học theo khối lớp</span>
+        </a>
+      </li>
     </ul>
 </li>
 
@@ -259,7 +264,7 @@
   <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#department-nav" data-bs-toggle="collapse" href="#">
       <i class="bi bi-diagram-3"></i>
-      <span>Quản lý Khoa / Tổ bộ môn</span>
+      <span>Quản lý Tổ bộ môn</span>
       <i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="department-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">

@@ -152,4 +152,17 @@ public class YearSemesterDAO {
         return 0;
     }
 
+    public boolean setActive(int id, boolean active) {
+        String sql = "UPDATE tblYearSemester SET IsActive = ? WHERE YearSemesterID = ?";
+        try (java.sql.Connection conn = DBUtil.getConnection();
+                java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, active);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

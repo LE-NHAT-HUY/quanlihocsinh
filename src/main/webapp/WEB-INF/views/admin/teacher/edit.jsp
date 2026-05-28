@@ -147,14 +147,16 @@
 
                             <h5 class="card-title mt-4 pb-2 border-bottom">Phân công giảng dạy</h5>
                             <div class="border rounded-3 p-3 bg-light">
+                                <div id="subjectHint" class="text-muted mb-2">Hãy chọn phòng ban trước để hiển thị môn học phù hợp.</div>
                                 <c:choose>
                                     <c:when test="${not empty subjects}">
                                         <div class="row g-2">
                                             <c:forEach var="s" items="${subjects}">
-                                                <div class="col-md-4 col-sm-6">
+                                                <div class="col-md-4 col-sm-6 subject-item" data-department="${s.departmentID}" style="display: none;">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox"
                                                                name="subjectIDs" value="${s.subjectID}"
+                                                               disabled
                                                                id="subject-${s.subjectID}"
                                                                <c:if test="${assignedSubjectMap[s.subjectID]}">checked</c:if> />
                                                         <label class="form-check-label" for="subject-${s.subjectID}">
@@ -204,6 +206,40 @@
 </main>
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const departmentSelect = document.querySelector('select[name="departmentID"]');
+    const subjectItems = document.querySelectorAll('.subject-item');
+    const subjectHint = document.getElementById('subjectHint');
+
+    function filterSubjects() {
+        const selectedDepartmentId = departmentSelect ? departmentSelect.value : '';
+
+        subjectItems.forEach(function (item) {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            const itemDepartmentId = item.dataset.department || '';
+            const shouldShow = selectedDepartmentId && itemDepartmentId === selectedDepartmentId;
+
+            item.style.display = shouldShow ? '' : 'none';
+
+            if (!shouldShow && checkbox) {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+            } else if (checkbox) {
+                checkbox.disabled = false;
+            }
+        });
+
+        if (subjectHint) {
+            subjectHint.style.display = selectedDepartmentId ? 'none' : '';
+        }
+    }
+
+    if (departmentSelect) {
+        departmentSelect.addEventListener('change', filterSubjects);
+        filterSubjects();
+    }
+});
+
 document.getElementById('imageFile').addEventListener('change', function(e) {
     const file = e.target.files[0];
     const preview = document.getElementById('imagePreview');

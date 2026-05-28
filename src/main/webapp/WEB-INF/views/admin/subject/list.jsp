@@ -3,8 +3,11 @@
 <%@ include file="/WEB-INF/views/shared/_LayoutAdmin.jsp" %>
 
 <main id="main" class="main">
-    <div class="pagetitle">
-        <h2>Danh sách Môn học</h2>
+    <div class="pagetitle d-flex justify-content-between align-items-center gap-2 flex-wrap">
+        <h2 class="mb-0">Danh sách Môn học</h2>
+        <a href="${pageContext.request.contextPath}/admin/subject-grade" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-diagram-3 me-1"></i> Quản lý theo khối lớp
+        </a>
     </div>
 
     <section class="section dashboard">

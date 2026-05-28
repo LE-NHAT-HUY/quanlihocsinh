@@ -39,37 +39,40 @@
             <input type="hidden" name="classID" value="${not empty classID ? classID : selectedClassID}">
             <input type="hidden" name="yearSemesterID" value="${yearSemesterID}">
 
-            <!-- Chọn học sinh -->
             <div class="mb-3">
                 <label class="form-label">Học sinh</label>
-                <select name="studentID" class="form-control" required>
-                    <option value="">-- Chọn học sinh --</option>
-                    <c:forEach var="s" items="${students}">
-                        <option value="${s.studentID}">
-                            ${s.studentID} - ${s.fullName}
-                        </option>
-                    </c:forEach>
-                </select>
+                <input type="text" id="searchInput" class="form-control mb-3"
+                       placeholder="Nhập mã học sinh (MHS) hoặc tên để tìm nhanh..." />
 
-                <c:if test="${empty students}">
-                    <small class="text-danger">
-                        Không còn học sinh nào có thể thêm
-                    </small>
-                </c:if>
-            </div>
-
-            <!-- Chọn khóa -->
-            <div class="mb-3">
-                <label class="form-label">Khóa học</label>
-                <select name="cohortID" class="form-control">
-                    <option value="">-- Chọn khóa --</option>
-                    <c:forEach var="co" items="${cohorts}">
-                        <option value="${co.cohortID}"
-                            <c:if test="${currentClass.cohortID == co.cohortID}">selected</c:if>>
-                            Khóa ${co.cohortName} (${co.startYear} - ${co.endYear})
-                        </option>
-                    </c:forEach>
-                </select>
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-bordered table-hover align-middle mb-0">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th class="text-center" style="width: 90px;">Chọn</th>
+                                <th>Mã Học Sinh</th>
+                                <th>Họ và Tên</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <c:forEach var="s" items="${students}">
+                                <tr class="student-row" data-search="${s.studentID} ${s.fullName}">
+                                    <td class="text-center">
+                                        <input type="checkbox" name="studentID" value="${s.studentID}">
+                                    </td>
+                                    <td>${s.studentID}</td>
+                                    <td>${s.fullName}</td>
+                                </tr>
+                            </c:forEach>
+                            <c:if test="${empty students}">
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-4">
+                                        Không còn học sinh nào có thể thêm
+                                    </td>
+                                </tr>
+                            </c:if>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Nút -->
@@ -88,3 +91,44 @@
     </section>
 
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchInput');
+    const rows = document.querySelectorAll('#studentTableBody .student-row');
+    const tableBody = document.getElementById('studentTableBody');
+
+    if (!searchInput || rows.length === 0) return;
+
+    function filterRows() {
+        const keyword = searchInput.value.trim().toLowerCase();
+
+        rows.forEach(function (row) {
+            const checkbox = row.querySelector('input[type="checkbox"][name="studentID"]');
+            const searchText = (row.dataset.search || '').toLowerCase();
+            const isChecked = checkbox ? checkbox.checked : false;
+            const matches = searchText.includes(keyword);
+
+            row.style.display = matches || isChecked ? '' : 'none';
+        });
+    }
+
+    if (tableBody) {
+        tableBody.addEventListener('change', function (e) {
+            const checkbox = e.target.closest('input[type="checkbox"][name="studentID"]');
+            if (!checkbox) return;
+
+            const row = checkbox.closest('tr');
+            if (row) {
+                row.classList.toggle('table-warning', checkbox.checked);
+            }
+
+            filterRows();
+        });
+    }
+
+    searchInput.addEventListener('keyup', filterRows);
+
+    filterRows();
+});
+</script>

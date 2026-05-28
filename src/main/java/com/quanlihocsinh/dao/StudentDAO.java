@@ -264,6 +264,17 @@ public class StudentDAO {
         return s;
     }
 
+    public void updatePersonId(int studentDbId, int personId) throws SQLException {
+        String sql = "UPDATE dbo.tblStudent SET PersonID=? WHERE ID=?";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, personId);
+            ps.setInt(2, studentDbId);
+            ps.executeUpdate();
+        }
+    }
+
     public tblClass getCurrentClassByStudentId(String studentId) {
         tblClass cls = null;
 
